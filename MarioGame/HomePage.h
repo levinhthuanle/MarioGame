@@ -1,6 +1,6 @@
 #pragma once
 #include "BasePage.h"
-#include "Global.h"
+#include "ResourcesManager.h"
 class HomePage : public BasePage
 {
 public:

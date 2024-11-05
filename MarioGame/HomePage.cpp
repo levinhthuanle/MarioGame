@@ -2,6 +2,7 @@
 
 int HomePage::loadPage()
 {
+    sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
