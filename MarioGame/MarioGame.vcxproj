@@ -135,14 +135,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BasePage.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameInformationPage.cpp" />
+    <ClCompile Include="GameSettingPage.cpp" />
+    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="HomePage.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MovementManager.cpp" />
     <ClCompile Include="PageManager.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="ResourcesManager.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Constant.h" />
+    <ClInclude Include="BasePage.h" />
+    <ClInclude Include="GameInformationPage.h" />
+    <ClInclude Include="GameSettingPage.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="HomePage.h" />
+    <ClInclude Include="MovementManager.h" />
     <ClInclude Include="PageManager.h" />
+    <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="ResourcesManager.h" />
+    <ClInclude Include="SoundManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

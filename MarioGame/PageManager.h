@@ -1,6 +1,19 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include "HomePage.h"
+#include "GameInformationPage.h"
 class PageManager
 {
+public:
+	int m_currentPage = 0;
+	HomePage m_homePage;
+	GameInformationPage m_GameInformationPage;
+
+public:
+	PageManager() {
+		m_currentPage = 0;
+	}
+
+	void loadPage();
 };
 
