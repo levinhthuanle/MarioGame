@@ -11,4 +11,6 @@ void Game::run()
 	while (m_IsRunning) {
 		m_IsRunning = m_PageManager.loadPage();
 	}
+
+	std::cout << "Game ended\n";
 }

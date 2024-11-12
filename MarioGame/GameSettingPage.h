@@ -1,21 +1,17 @@
 #pragma once
 #include "BasePage.h"
+#include "ResourcesManager.h"
 class GameSettingPage : public BasePage
 {
+public:
+	Button m_gobackButton;
 public:
 	GameSettingPage() {
 		loadResources();
 	}
 
-	void loadResources() override {
+	void loadResources();
 
-	}
-
-	int loadPage() override {
-		system("cls");
-		std::cout << "Game Setting Page" << std::endl;
-
-		return 0;
-	}
+	int loadPage() override;
 };
 

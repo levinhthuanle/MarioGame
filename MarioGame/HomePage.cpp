@@ -2,17 +2,7 @@
 
 void HomePage::loadResources()
 {
-    if (!m_backgroundTexture.loadFromFile("./Resources/Background/PagesBackground/HomePageBackground.png")){
-        std::cerr << "Can not load background Texture \n";
-        return;
-    }
 
-    if (!m_startButtonTexture.loadFromFile("./Resources/Background/PagesBackground/StartButton.png")){
-        std::cerr << "Can not load background Texture \n";
-        return;
-    }
-
-    m_bacgroundSprite.setTexture(m_backgroundTexture);
 
     m_startButton.loadButton("./Resources/Background/PagesBackground/StartButton.png");
     m_settingButton.loadButton("./Resources/Background/PagesBackground/SettingButton.png");
@@ -42,6 +32,7 @@ int HomePage::loadPage()
 
             if (m_settingButton.isClicked(window, event)) {
                 std::cout << "Setting Button clicked\n";
+                return 2;
             }
             if (m_settingButton.isHover(window)) {
                 m_settingButton.setOpacity(255);
@@ -52,6 +43,7 @@ int HomePage::loadPage()
 
             if (m_informationButton.isClicked(window, event)) {
                 std::cout << "information Button clicked\n";
+                return 1;
             }
             if (m_informationButton.isHover(window)) {
                 m_informationButton.setOpacity(255);
@@ -63,7 +55,7 @@ int HomePage::loadPage()
 
         window.clear(sf::Color::Black);
         
-        window.draw(m_bacgroundSprite);
+        window.draw(m_backgroundSprite);
         m_startButton.draw(window, 700.f, 250.f);
         m_settingButton.draw(window, 700.f, 400.f);
         m_informationButton.draw(window, 700.f, 550.f);

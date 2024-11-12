@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasePage.cpp" />
+    <ClCompile Include="Components.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInformationPage.cpp" />
     <ClCompile Include="GameSettingPage.cpp" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasePage.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="GameInformationPage.h" />
     <ClInclude Include="GameSettingPage.h" />
     <ClInclude Include="Global.h" />
