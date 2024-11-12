@@ -14,6 +14,6 @@ public:
 		m_currentPage = 0;
 	}
 
-	void loadPage();
+	int loadPage();
 };
 

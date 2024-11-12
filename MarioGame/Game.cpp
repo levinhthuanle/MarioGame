@@ -7,7 +7,8 @@ Game::Game()
 
 void Game::run()
 {
+	std::cout << "Run game\n";
 	while (m_IsRunning) {
-		m_PageManager.loadPage();
+		m_IsRunning = m_PageManager.loadPage();
 	}
 }

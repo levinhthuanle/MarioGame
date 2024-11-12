@@ -3,8 +3,8 @@
 // This file is use to define all the constant variables such as 
 // The link to images, sounds, width, height, ...
 
-#define WIDTH 480
-#define HEIGHT 240
+#define WIDTH 1660
+#define HEIGHT 830
 #define CELL_SIZE 16
 
 
