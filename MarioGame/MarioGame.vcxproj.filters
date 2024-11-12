@@ -16,14 +16,20 @@
     <Filter Include="Source Files\Pages">
       <UniqueIdentifier>{f75b3c8e-453c-40e0-8a79-6ce2c0da7ef5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Manager">
-      <UniqueIdentifier>{a523a92a-9f98-4b6a-9e83-06187beaec4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Pages">
       <UniqueIdentifier>{60aeffde-4221-41b1-910f-8a27074d6d5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Manager">
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{56f692a1-d905-4b9c-b0da-7680cae79bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{a523a92a-9f98-4b6a-9e83-06187beaec4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Managers">
       <UniqueIdentifier>{ad6cdae2-5aed-405c-b85e-c869cfd204aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{e120747d-54a1-404d-8eaf-8ba49f78f543}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,16 +52,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourcesManager.cpp">
-      <Filter>Source Files\Manager</Filter>
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager.cpp">
-      <Filter>Source Files\Manager</Filter>
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
-      <Filter>Source Files\Manager</Filter>
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="MovementManager.cpp">
-      <Filter>Source Files\Manager</Filter>
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
@@ -67,7 +73,10 @@
       <Filter>Source Files\Pages</Filter>
     </ClCompile>
     <ClCompile Include="PageManager.cpp">
-      <Filter>Source Files\Manager</Filter>
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,25 +99,28 @@
       <Filter>Header Files\Pages</Filter>
     </ClInclude>
     <ClInclude Include="MovementManager.h">
-      <Filter>Header Files\Manager</Filter>
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="PageManager.h">
-      <Filter>Header Files\Manager</Filter>
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsManager.h">
-      <Filter>Header Files\Manager</Filter>
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="ResourcesManager.h">
-      <Filter>Header Files\Manager</Filter>
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="SoundManager.h">
-      <Filter>Header Files\Manager</Filter>
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Components.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SelectDiffPage.h">
       <Filter>Header Files\Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

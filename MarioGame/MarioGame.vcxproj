@@ -139,6 +139,7 @@
     <ClCompile Include="Components.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInformationPage.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameSettingPage.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="HomePage.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="BasePage.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="GameInformationPage.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameSettingPage.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Game.h" />
