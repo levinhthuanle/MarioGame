@@ -3,8 +3,9 @@
 // This file is use to define all the constant variables such as 
 // The link to images, sounds, width, height, ...
 
-#define WIDTH 1500
-#define HEIGHT 900
+#define WIDTH 480
+#define HEIGHT 240
+#define CELL_SIZE 16
 
 
 #define ARIAL_PATH ".\Resources\fonts\arial.ttf"
