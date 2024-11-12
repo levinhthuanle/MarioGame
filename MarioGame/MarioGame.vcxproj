@@ -147,6 +147,7 @@
     <ClCompile Include="PageManager.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
+    <ClCompile Include="SelectDiffPage.cpp" />
     <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +162,7 @@
     <ClInclude Include="PageManager.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ResourcesManager.h" />
+    <ClInclude Include="SelectDiffPage.h" />
     <ClInclude Include="SoundManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

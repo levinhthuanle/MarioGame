@@ -3,6 +3,7 @@
 #include "HomePage.h"
 #include "GameInformationPage.h"
 #include "GameSettingPage.h"
+#include "SelectDiffPage.h"
 class PageManager
 {
 public:
@@ -10,6 +11,7 @@ public:
 	HomePage m_homePage;
 	GameInformationPage m_GameInformationPage;
 	GameSettingPage m_GameSettingPage;
+	SelectDiffPage m_SelectDiffPage;
 
 public:
 	PageManager() {

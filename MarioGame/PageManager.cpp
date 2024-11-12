@@ -11,6 +11,9 @@ int PageManager::loadPage()
 	if (m_currentPage == 2)
 		m_currentPage = m_GameSettingPage.loadPage();
 
+	if (m_currentPage == 3)
+		m_currentPage = m_SelectDiffPage.loadPage();
+
 	if (m_currentPage == 4)
 		return 0;
 	return 1;

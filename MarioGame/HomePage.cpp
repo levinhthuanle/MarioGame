@@ -22,6 +22,7 @@ int HomePage::loadPage()
 
             if (m_startButton.isClicked(window, event)) {
                 std::cout << "Start Button clicked\n";
+                return 3;
             }
             if (m_startButton.isHover(window)) {
                 m_startButton.setOpacity(255);
