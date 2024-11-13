@@ -1,5 +1,6 @@
 #pragma once
 #include "PageManager.h"
+#include "SoundManager.h"
 class Game
 {
 public:
