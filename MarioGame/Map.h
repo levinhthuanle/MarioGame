@@ -27,7 +27,7 @@ class Cell {
 private:
     int x;
     int y;
-    int type; // 0 = empty, 1 = brick, 2 = lucky block, 3 = grass, 4 = dirt, 5 = pipe top left, 6 = pipe top right, 7 = pipe body left, 8 = pipe body right, 9 = steel, 10 = flag body, 11 = flag top
+    int type;
 public:
     Cell();
     Cell(int x, int y, int type);
@@ -46,6 +46,8 @@ private:
 
 public:
     Map();
+    Map(const std::map<int, CellProperties>& cellProps,
+        const std::map<sf::Color, int, ColorComparator>& colorMap);
 
     bool isBreakable(const Cell& cell) const;
     bool isCollectable(const Cell& cell) const;
@@ -65,43 +67,86 @@ public:
 
 //Sample usage
 //#include "Map.h"
+//#include <iostream>
+//
+//using namespace std;
+//using namespace sf;
+//
 //int main() {
+//    //level 1-1
 //    RenderWindow window(VideoMode(800, 240), "Mario Game");
 //
-//	Map map;
-//  map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/background.png", 0);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/brick.png", 1);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/luckyblock.png", 2);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/grass.png", 3);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/dirt.png", 4);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/pipetopleft.png", 5);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/pipetopright.png", 6);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/pipebodyleft.png", 7);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/pipebodyright.png", 8);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/steel.png", 9);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/flagbody.png", 10);
-//	map.loadTexture("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/flagtop.png", 11);
+//    // Initialize cell properties and color-to-type mappings
+//    map<int, CellProperties> cellProperties = {
+//        {1, {true, false}},   // Brick
+//        {2, {false, true}},   // Lucky Block
+//        {3, {false, false}},  // Grass
+//        {4, {false, false}},  // Dirt
+//        {5, {false, false}},  // Pipe Top Left
+//        {6, {false, false}},  // Pipe Top Right
+//        {7, {false, false}},  // Pipe Body Left
+//        {8, {false, false}},  // Pipe Body Right
+//        {9, {false, false}},  // Steel
+//        {10, {false, false}}, // Flag Body
+//        {11, {false, false}}  // Flag Top
+//    };
 //
+//    map<Color, int, ColorComparator> colorToType = {
+//        {Color(254, 138, 24), 1},  // Brick
+//        {Color(255, 255, 0), 2},   // Lucky Block
+//        {Color(161, 124, 49), 3},  // Grass
+//        {Color(101, 49, 19), 4},   // Dirt
+//        {Color(17, 221, 17), 5},   // Pipe Top Left
+//        {Color(17, 58, 17), 6},    // Pipe Top Right
+//        {Color(17, 177, 17), 7},   // Pipe Body Left
+//        {Color(17, 116, 17), 8},   // Pipe Body Right
+//        {Color(114, 114, 114), 9}, // Steel
+//        {Color(255, 255, 255), 10},// Flag Body
+//        {Color(0, 0, 0), 11}       // Flag Top
+//    };
+//
+//    // Create the map with specific properties
+//    Map map(cellProperties, colorToType);
+//
+//    // Load textures for the level
+//    if (!map.loadTexture("Resources/Stages/1-1/background.png", 0) ||
+//        !map.loadTexture("Resources/Stages/1-1/brick.png", 1) ||
+//        !map.loadTexture("Resources/Stages/1-1/luckyblock.png", 2) ||
+//        !map.loadTexture("Resources/Stages/1-1/grass.png", 3) ||
+//        !map.loadTexture("Resources/Stages/1-1/dirt.png", 4) ||
+//        !map.loadTexture("Resources/Stages/1-1/pipetopleft.png", 5) ||
+//        !map.loadTexture("Resources/Stages/1-1/pipetopright.png", 6) ||
+//        !map.loadTexture("Resources/Stages/1-1/pipebodyleft.png", 7) ||
+//        !map.loadTexture("Resources/Stages/1-1/pipebodyright.png", 8) ||
+//        !map.loadTexture("Resources/Stages/1-1/steel.png", 9) ||
+//        !map.loadTexture("Resources/Stages/1-1/flagbody.png", 10) ||
+//        !map.loadTexture("Resources/Stages/1-1/flagtop.png", 11)) {
+//        cerr << "Failed to load textures!" << endl;
+//        return -1;
+//    }
 //    cout << "Textures loaded" << endl;
 //
-//	map.readSketch("C:/C++/Sem2Year1/MarioGame/MarioGame/MarioGame/Resources/Stages/1-1/1-1-sketch.png");
-//
+//    // Load the sketch for the level
+//    if (!map.readSketch("Resources/Stages/1-1/1-1-sketch.png")) {
+//        cerr << "Failed to load map sketch!" << endl;
+//        return -1;
+//    }
 //    cout << "Map loaded" << endl;
 //
-//	int view = 0;
-//
+//    // Main game loop
+//    int view = 0;
 //    while (window.isOpen()) {
-//		Event event;
+//        Event event;
 //        while (window.pollEvent(event)) {
 //            if (event.type == Event::Closed) {
-//				window.close();
-//			}
-//		}
+//                window.close();
+//            }
+//        }
 //
-//		window.clear(Color::Cyan);
-//		map.drawMap(view, window);
-//		window.display();
-//	}
+//        window.clear(Color::Cyan);
+//        map.drawMap(view, window);
+//        window.display();
+//    }
 //
-//	return 0;
+//    return 0;
 //}

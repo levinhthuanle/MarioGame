@@ -25,36 +25,15 @@ int Cell::getType() const{
 
 // Map Implementation
 Map::Map() : textures(50) {
-    // Initialize default cell properties
-    cellProperties = {
-        {1, {true, false}},  // Brick
-        {2, {false, true}},  // Lucky Block
-        {3, {false, false}}, // Grass
-        {4, {false, false}}, // Dirt
-        {5, {false, false}}, // Pipe Top Left
-        {6, {false, false}}, // Pipe Top Right
-        {7, {false, false}}, // Pipe Body Left
-        {8, {false, false}}, // Pipe Body Right
-        {9, {false, false}}, // Steel
-        {10, {false, false}}, // Flag Body
-        {11, {false, false}}  // Flag Top
-    };
-
-    // Initialize color-to-type mapping
-    colorToType = {
-        {Color(254, 138, 24), 1},  // Brick
-        {Color(255, 255, 0), 2},   // Lucky Block
-        {Color(161, 124, 49), 3},  // Grass
-        {Color(101, 49, 19), 4},   // Dirt
-        {Color(17, 221, 17), 5},   // Pipe Top Left
-        {Color(17, 58, 17), 6},    // Pipe Top Right
-        {Color(17, 177, 17), 7},   // Pipe Body Left
-        {Color(17, 116, 17), 8},   // Pipe Body Right
-        {Color(114, 114, 114), 9}, // Steel
-        {Color(255, 255, 255), 10},// Flag Body
-        {Color(0, 0, 0), 11}       // Flag Top
-    };
+    cellProperties = {};
+    colorToType = {};
 }
+
+Map::Map(const std::map<int, CellProperties>& cellProps,
+    const std::map<sf::Color, int, ColorComparator>& colorMap) 
+    : cellProperties(cellProps),
+    colorToType(colorMap.begin(), colorMap.end(), ColorComparator()), // Explicitly construct with comparator
+    textures(50) {}
 
 bool Map::isBreakable(const Cell& cell) const {
     int type = cell.getType();
