@@ -65,6 +65,8 @@ public:
     void drawMap(int view, RenderWindow& window);
 };
 
+Map loadMap(string lv);
+
 //Sample usage
 //#include "Map.h"
 //#include <iostream>
@@ -133,6 +135,8 @@ public:
 //        return -1;
 //    }
 //    cout << "Map loaded" << endl;
+
+//    Map map = loadMap("1-1");
 //
 //    // Main game loop
 //    int view = 0;

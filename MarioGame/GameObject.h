@@ -6,6 +6,8 @@ class GameObject
 public:
 	sf::Texture m_texture;
 	sf::Sprite m_sprite;
+	std::string m_isBreakable;
+	std::string m_path;
 public:
 	GameObject() {};
 
