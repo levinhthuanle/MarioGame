@@ -13,7 +13,6 @@ void Game::run()
 
 	SoundManager* soundManager = SoundManager::getInstance();
 	soundManager->playBackground();
-
 	while (m_IsRunning) {
 		m_IsRunning = m_PageManager.loadPage();
 	}
