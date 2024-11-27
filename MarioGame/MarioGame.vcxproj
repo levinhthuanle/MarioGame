@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasePage.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Components.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInformationPage.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="GameSettingPage.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="HomePage.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MovementManager.cpp" />
@@ -154,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasePage.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="GameInformationPage.h" />
     <ClInclude Include="GameObject.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="HomePage.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MovementManager.h" />
     <ClInclude Include="PageManager.h" />

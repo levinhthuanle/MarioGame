@@ -78,6 +78,7 @@ public:
 //
 //    // Initialize cell properties and color-to-type mappings
 //    map<int, CellProperties> cellProperties = {
+//        {0, {true, false}},
 //        {1, {true, false}},   // Brick
 //        {2, {false, true}},   // Lucky Block
 //        {3, {false, false}},  // Grass
