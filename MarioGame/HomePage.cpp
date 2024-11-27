@@ -1,5 +1,5 @@
 #include "HomePage.h"
-
+#include "SoundManager.h"
 void HomePage::loadResources()
 {
 

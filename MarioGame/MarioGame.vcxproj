@@ -136,16 +136,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasePage.cpp" />
+    <ClCompile Include="Coins.cpp" />
     <ClCompile Include="Components.cpp" />
+    <ClCompile Include="FireFlower.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInformationPage.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GamePlayState.cpp" />
     <ClCompile Include="GameSettingPage.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="HomePage.cpp" />
+    <ClCompile Include="Items.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="MovementManager.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PageManager.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
@@ -154,15 +161,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasePage.h" />
+    <ClInclude Include="Coins.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="FireFlower.h" />
     <ClInclude Include="GameInformationPage.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GamePlayState.h" />
     <ClInclude Include="GameSettingPage.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="HomePage.h" />
+    <ClInclude Include="Items.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="MovementManager.h" />
+    <ClInclude Include="Mushroom.h" />
     <ClInclude Include="PageManager.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ResourcesManager.h" />
