@@ -65,6 +65,8 @@ public:
     void drawMap(int view, RenderWindow& window);
 };
 
+Map loadMap(string lv);
+
 //Sample usage
 //#include "Map.h"
 //#include <iostream>
@@ -76,62 +78,7 @@ public:
 //    //level 1-1
 //    RenderWindow window(VideoMode(800, 240), "Mario Game");
 //
-//    // Initialize cell properties and color-to-type mappings
-//    map<int, CellProperties> cellProperties = {
-//        {1, {true, false}},   // Brick
-//        {2, {false, true}},   // Lucky Block
-//        {3, {false, false}},  // Grass
-//        {4, {false, false}},  // Dirt
-//        {5, {false, false}},  // Pipe Top Left
-//        {6, {false, false}},  // Pipe Top Right
-//        {7, {false, false}},  // Pipe Body Left
-//        {8, {false, false}},  // Pipe Body Right
-//        {9, {false, false}},  // Steel
-//        {10, {false, false}}, // Flag Body
-//        {11, {false, false}}  // Flag Top
-//    };
-//
-//    map<Color, int, ColorComparator> colorToType = {
-//        {Color(254, 138, 24), 1},  // Brick
-//        {Color(255, 255, 0), 2},   // Lucky Block
-//        {Color(161, 124, 49), 3},  // Grass
-//        {Color(101, 49, 19), 4},   // Dirt
-//        {Color(17, 221, 17), 5},   // Pipe Top Left
-//        {Color(17, 58, 17), 6},    // Pipe Top Right
-//        {Color(17, 177, 17), 7},   // Pipe Body Left
-//        {Color(17, 116, 17), 8},   // Pipe Body Right
-//        {Color(114, 114, 114), 9}, // Steel
-//        {Color(255, 255, 255), 10},// Flag Body
-//        {Color(0, 0, 0), 11}       // Flag Top
-//    };
-//
-//    // Create the map with specific properties
-//    Map map(cellProperties, colorToType);
-//
-//    // Load textures for the level
-//    if (!map.loadTexture("Resources/Stages/1-1/background.png", 0) ||
-//        !map.loadTexture("Resources/Stages/1-1/brick.png", 1) ||
-//        !map.loadTexture("Resources/Stages/1-1/luckyblock.png", 2) ||
-//        !map.loadTexture("Resources/Stages/1-1/grass.png", 3) ||
-//        !map.loadTexture("Resources/Stages/1-1/dirt.png", 4) ||
-//        !map.loadTexture("Resources/Stages/1-1/pipetopleft.png", 5) ||
-//        !map.loadTexture("Resources/Stages/1-1/pipetopright.png", 6) ||
-//        !map.loadTexture("Resources/Stages/1-1/pipebodyleft.png", 7) ||
-//        !map.loadTexture("Resources/Stages/1-1/pipebodyright.png", 8) ||
-//        !map.loadTexture("Resources/Stages/1-1/steel.png", 9) ||
-//        !map.loadTexture("Resources/Stages/1-1/flagbody.png", 10) ||
-//        !map.loadTexture("Resources/Stages/1-1/flagtop.png", 11)) {
-//        cerr << "Failed to load textures!" << endl;
-//        return -1;
-//    }
-//    cout << "Textures loaded" << endl;
-//
-//    // Load the sketch for the level
-//    if (!map.readSketch("Resources/Stages/1-1/1-1-sketch.png")) {
-//        cerr << "Failed to load map sketch!" << endl;
-//        return -1;
-//    }
-//    cout << "Map loaded" << endl;
+//    Map map = loadMap("1-1");
 //
 //    // Main game loop
 //    int view = 0;
