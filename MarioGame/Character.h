@@ -13,8 +13,16 @@ protected:
 	// 11-12: slide
 	vector<sf::Texture> textures = vector<sf::Texture>(17);
 
+	// 0-1: stand
+	// 2-3: crouch
+	// 4-5: jump
+	// 6-7: slide
+	// 8-13: walk
+	// 14-17: climb
 	vector<sf::Texture> superTextures = vector<sf::Texture>(18);
 	vector<sf::Texture> fireTextures = vector<sf::Texture>(10);
+
+	vector<sf::Texture> currentTexture = textures;
 
 	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
 
@@ -36,7 +44,7 @@ public:
 
 	void update(float deltaTime, Map map);
 
-	virtual void changeMovementTexture() = 0;
+	virtual void updateTexture() = 0;
 
 	virtual ~Character() = default;
 };
@@ -68,6 +76,8 @@ public:
 	Decorator();
 
 	Decorator(shared_ptr<Character> c);
+
+	void updateTexture();
 
 	virtual ~Decorator() = default;
 };

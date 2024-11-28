@@ -1,19 +1,22 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <thread>
 #include "Map.h"
 #include "GameObject.h"
 #include "Character.h"
 
 using namespace std;
 
-class LevelManager
+class Level
 {
 protected:
 	Map map;
-	vector<GameObject> gameObjects;
-	shared_ptr<Character> character;
+	PhysicsManager physicsManager;
+	vector<GameObject*> gameObjects;
 
 public:
+	Level(vector<GameObject*> objects, Character* c);
+
 	int run(string lv);
 };

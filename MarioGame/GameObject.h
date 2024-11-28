@@ -36,5 +36,7 @@ public:
 	sf::FloatRect getBounds() {
 		return m_sprite.getLocalBounds(); // ?? Does it correct
 	}
+
+	virtual ~GameObject() = default;
 };
 
