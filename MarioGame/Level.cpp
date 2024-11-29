@@ -17,6 +17,8 @@ int Level::run(string lv)
 {
 	map = loadMap(lv);
 	shared_ptr<Character> mario = make_shared<Mario>();
+	physicsManager.addObserver(mario.get());
+
 
 
 	//while (true) {

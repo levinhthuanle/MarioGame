@@ -14,6 +14,10 @@ protected:
 	Map map;
 	PhysicsManager physicsManager;
 	vector<GameObject*> gameObjects;
+
+	vector<GameObject*> enemies;
+	vector<GameObject*> items;
+
 	shared_ptr<Character> character = nullptr;
 
 public:
