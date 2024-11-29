@@ -13,7 +13,7 @@ using namespace std;
 class PhysicsObserver
 {
 public:
-	virtual void update(float deltaTime) = 0;
+	virtual void update(float deltaTime, Map map) = 0;
 };
 
 class PhysicsManager
@@ -26,7 +26,7 @@ public:
 
 	void rermoveObserver(PhysicsObserver* observer);
 
-	void updatePhysics(float deltaTime);
+	void updatePhysics(float deltaTime, Map map);
 };
 
 class PhysicsAppliedObject : public GameObject, public PhysicsObserver

@@ -28,7 +28,7 @@ protected:
 
 	float lastXVelocity;
 	bool direction;	// face direction: 0 - right, 1 - left		
-	static int currentWalkTexture;	// 0 1 2
+	int currentWalkTexture;	// 0 1 2
 
 	float jumpHeight;
 	float inertia;
@@ -42,7 +42,7 @@ protected:
 public:
 	Character();
 
-	void update(float deltaTime, Map map);
+	void update(float deltaTime, Map map) override;
 
 	virtual void updateTexture() = 0;
 
@@ -54,6 +54,10 @@ class Mario : public Character
 public:
 	Mario();
 
+	void updateTexture() override {
+
+	}
+
 	~Mario() = default;
 };
 
@@ -61,6 +65,10 @@ class Luigi : public Character
 {
 public:
 	Luigi();
+
+	void updateTexture() override {
+
+	}
 
 	~Luigi() = default;
 };

@@ -1,5 +1,6 @@
 #include "Level.h"
-
+#include "ResourcesManager.h"
+#include "Components.h"
 using namespace std;
 
 Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects)
@@ -14,10 +15,32 @@ Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects)
 
 int Level::run(string lv)
 {
-	while (true) {
-		this_thread::sleep_for(chrono::microseconds(25));
+	map = loadMap(lv);
+	shared_ptr<Character> mario = make_shared<Mario>();
 
-		physicsManager.updatePhysics(0.025);
 
+	//while (true) {
+	//	this_thread::sleep_for(chrono::microseconds(25));
+
+	//	physicsManager.updatePhysics(0.025);
+
+	//}
+
+	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
+	sf::Event event;
+
+	while (window.isOpen()) {
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				window.close();
+				return 4;
+			}
+
+		}
+		window.clear(sf::Color::Black);
+		map.drawMap(1200, window);
+		window.display();
 	}
+
+	return 0;
 }

@@ -4,6 +4,7 @@
 #include "GameInformationPage.h"
 #include "GameSettingPage.h"
 #include "SelectDiffPage.h"
+#include "Level.h"
 class PageManager
 {
 public:
@@ -12,6 +13,7 @@ public:
 	GameInformationPage m_GameInformationPage;
 	GameSettingPage m_GameSettingPage;
 	SelectDiffPage m_SelectDiffPage;
+	Level level;
 
 public:
 	PageManager() {

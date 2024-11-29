@@ -14,8 +14,11 @@ protected:
 	Map map;
 	PhysicsManager physicsManager;
 	vector<GameObject*> gameObjects;
+	shared_ptr<Character> character = nullptr;
 
 public:
+	Level() {}
+
 	Level(vector<GameObject*> objects, Character* c);
 
 	int run(string lv);

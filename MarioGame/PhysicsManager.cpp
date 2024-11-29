@@ -13,10 +13,10 @@ void PhysicsManager::rermoveObserver(PhysicsObserver* observer)
 			observers.erase(i);
 }
 
-void PhysicsManager::updatePhysics(float deltaTime)
+void PhysicsManager::updatePhysics(float deltaTime, Map map)
 {
 	for (PhysicsObserver* o : observers)
-		o->update(deltaTime);
+		o->update(deltaTime, map);
 }
 
 

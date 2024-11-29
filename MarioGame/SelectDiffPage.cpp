@@ -37,6 +37,7 @@ int SelectDiffPage::loadPage()
             if (m_easyButton.isClicked(window, event)) {
                 std::cout << "Easy Button clicked\n";
                 // Add return statement
+                return 5;
             }
             if (m_easyButton.isHover(window)) {
                 m_easyButton.setOpacity(255);

@@ -11,8 +11,8 @@ void Game::run()
 {
 	std::cout << "Run game\n";
 
-	SoundManager* soundManager = SoundManager::getInstance();
-	soundManager->playBackground();
+	//SoundManager* soundManager = SoundManager::getInstance();
+	//soundManager->playBackground();
 	while (m_IsRunning) {
 		m_IsRunning = m_PageManager.loadPage();
 	}

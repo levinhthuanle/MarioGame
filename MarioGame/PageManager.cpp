@@ -16,5 +16,9 @@ int PageManager::loadPage()
 
 	if (m_currentPage == 4)
 		return 0;
+
+	// Easy 1.1 
+	if (m_currentPage == 5)
+		level.run("1-1");
 	return 1;
 }
