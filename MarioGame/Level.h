@@ -25,5 +25,7 @@ public:
 
 	Level(vector<GameObject*> objects, Character* c);
 
+	int selectCharacter();
+
 	int run(string lv);
 };
