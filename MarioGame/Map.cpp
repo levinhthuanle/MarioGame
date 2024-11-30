@@ -140,7 +140,9 @@ void Map::drawMap(int view, RenderWindow& window) {
             if (type >= 0 && type < textures.size() && textures[type].getSize().x > 0) {
                 Sprite cell;
                 cell.setTexture(textures[type]);
-                cell.setPosition(x * CELL_SIZE - view, y * CELL_SIZE);
+                float scale = 3.4;
+                cell.setScale(scale, scale); // Set the scale to 3x
+                cell.setPosition((x * CELL_SIZE - view) * scale, (y * CELL_SIZE) *  scale);
                 window.draw(cell);
             }
         }
@@ -203,6 +205,11 @@ Map loadMap(string lv) {
             cerr << "Failed to load map sketch!" << endl;
             return Map();
         }
+
+
+
+
+
         cout << "Map loaded" << endl;
         return map;
 	}
