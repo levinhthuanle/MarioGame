@@ -41,7 +41,7 @@ int SelectDiffPage::loadPage()
             if (m_easyButton.isClicked(window, event)) {
                 std::cout << "Easy Button clicked\n";
                 // Add return statement
-                return selectLevel(1);
+                return 10 + selectLevel(1); 
             }
             if (m_easyButton.isHover(window)) {
                 m_easyButton.setOpacity(255);
@@ -54,7 +54,7 @@ int SelectDiffPage::loadPage()
             if (m_mediumButton.isClicked(window, event)) {
                 std::cout << "Medium Button clicked\n";
                 // Add return statement
-                return selectLevel(2);
+                return 13 + selectLevel(2);
             }
             if (m_mediumButton.isHover(window)) {
                 m_mediumButton.setOpacity(255);
@@ -67,7 +67,7 @@ int SelectDiffPage::loadPage()
             if (m_hardButton.isClicked(window, event)) {
                 std::cout << "Hard Button clicked\n";
                 // Add return statement
-                return selectLevel(3);
+                return 16 + selectLevel(3);
             }
             if (m_hardButton.isHover(window)) {
                 m_hardButton.setOpacity(255);
@@ -117,7 +117,7 @@ int SelectDiffPage::selectLevel(int diff)
             // GO BACK
             if (m_gobackButton.isClicked(window, event)) {
                 std::cout << "Go back Button clicked\n";
-                return 0;
+                return -10; // This will return 10 - 10 = 0. Means go back
             }
             if (m_gobackButton.isHover(window)) {
                 m_gobackButton.setOpacity(255);
@@ -130,7 +130,7 @@ int SelectDiffPage::selectLevel(int diff)
             if (m_level1Button.isClicked(window, event)) {
                 std::cout << "Level " << diff << " - " << "1 clicked \n";
                 // Add return statement to go to level 1-1
-                return 0;
+                return 1;
             }
             if (m_level1Button.isHover(window)) {
                 m_level1Button.setOpacity(255);
@@ -143,7 +143,7 @@ int SelectDiffPage::selectLevel(int diff)
             if (m_level2Button.isClicked(window, event)) {
                 std::cout << "Level " << diff << " - " << "2 clicked \n";
                 // Add return statement to go to level 1-1
-                return 0;
+                return 2;
             }
             if (m_level2Button.isHover(window)) {
                 m_level2Button.setOpacity(255);
@@ -156,7 +156,7 @@ int SelectDiffPage::selectLevel(int diff)
             if (m_level3Button.isClicked(window, event)) {
                 std::cout << "Level " << diff << " - " << "3 clicked \n";
                 // Add return statement to go to level 1-1
-                return 0;
+                return 3;
             }
             if (m_level3Button.isHover(window)) {
                 m_level3Button.setOpacity(255);
