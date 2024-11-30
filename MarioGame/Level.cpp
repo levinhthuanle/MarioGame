@@ -16,8 +16,8 @@ Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects)
 int Level::run(string lv)
 {
 	map = loadMap(lv);
-	shared_ptr<Character> mario = make_shared<Mario>();
-	physicsManager.addObserver(mario.get());
+	//shared_ptr<Character> mario = make_shared<Mario>();
+	//physicsManager.addObserver(mario.get());
 
 
 

@@ -12,7 +12,8 @@ bool ResourcesManager::loadFont()
 sf::RenderWindow& ResourcesManager::getWindow()
 {
     if (!window.isOpen()) {
-        window.create(sf::VideoMode(WIDTH, HEIGHT), "Mario Game");
+        window.create(sf::VideoMode(WIDTH, HEIGHT), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+
     }
     return window;
 }

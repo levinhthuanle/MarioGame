@@ -8,6 +8,9 @@
 class PageManager
 {
 public:
+	int m_currentCharacter = 1; // 1 for Mario and 2 for Luigi
+	std::string m_currentHard = "1-1";
+
 	int m_currentPage = 0;
 	HomePage m_homePage;
 	GameInformationPage m_GameInformationPage;
