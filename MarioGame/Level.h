@@ -16,8 +16,17 @@ protected:
 	shared_ptr<Character> character;
 	vector<GameObject*> gameObjects;
 
+	vector<GameObject*> enemies;
+	vector<GameObject*> items;
+
+	shared_ptr<Character> character = nullptr;
+
 public:
+	Level() {}
+
 	Level(vector<GameObject*> objects, Character* c);
+
+	int selectCharacter();
 
 	int run(string lv);
 };
