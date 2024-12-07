@@ -69,17 +69,6 @@ int Level::run(string lv)
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 	map = loadMap(lv);
-	//shared_ptr<Character> mario = make_shared<Mario>();
-	//physicsManager.addObserver(mario.get());
-
-
-
-	//while (true) {
-	//	this_thread::sleep_for(chrono::microseconds(25));
-
-	//	physicsManager.updatePhysics(0.025);
-
-	//}
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
@@ -91,21 +80,22 @@ int Level::run(string lv)
 				return 4;
 			}
 
-		this_thread::sleep_for(chrono::microseconds(25));
+			float deltaTime = 0.025;
+			this_thread::sleep_for(chrono::microseconds(25));
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			character->setForceY(-60);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				character->setForceY(-60);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			character->setForceX(-30);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+				character->setForceX(-30);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			character->setCrouch();
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+				character->setCrouch();
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			character->setForceX(30);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+				character->setForceX(30);
 
-		physicsManager.updatePhysics(deltaTime, map);
+			physicsManager.updatePhysics(deltaTime, map);
 		}
 
 		window.clear(sf::Color::Black);
@@ -114,5 +104,4 @@ int Level::run(string lv)
 	}
 
 	return 0;
-	}
 }
