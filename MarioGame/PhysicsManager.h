@@ -33,10 +33,10 @@ class PhysicsAppliedObject : public GameObject, public PhysicsObserver
 {
 protected:
 	sf::Vector2f velocity;
-	const float gravity = 30;
+	const float gravity = 10;
 
 public:
-	virtual void update(float deltaTime, Map map);
+	virtual void update(float deltaTime, Map map) override;
 
 	void checkObstacle(float deltaTime, Map map);
 

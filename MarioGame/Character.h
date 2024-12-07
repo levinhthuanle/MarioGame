@@ -19,8 +19,8 @@ protected:
 	// 6-7: slide
 	// 8-13: walk
 	// 14-17: climb
-	vector<sf::Texture> superTextures = vector<sf::Texture>(18);
-	vector<sf::Texture> fireTextures = vector<sf::Texture>(10);
+	vector<sf::Texture> superTextures = vector<sf::Texture>(14);
+	vector<sf::Texture> fireTextures = vector<sf::Texture>(16);
 
 	vector<sf::Texture> currentTexture = textures;
 
@@ -54,9 +54,9 @@ public:
 
 	void setForceY(float y);
 
-	void update(float deltaTime, Map map);
+	void update(float deltaTime, Map map) override;
 
-	virtual void updateTexture() = 0;
+	virtual void updateTexture();
 
 	virtual void setCrouch() = 0;
 

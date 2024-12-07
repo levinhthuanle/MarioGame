@@ -13,7 +13,6 @@ class Level
 protected:
 	Map map;
 	PhysicsManager physicsManager;
-	shared_ptr<Character> character;
 	vector<GameObject*> gameObjects;
 
 	vector<GameObject*> enemies;

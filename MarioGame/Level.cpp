@@ -32,6 +32,7 @@ int Level::selectCharacter()
 
 		if (marioBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Mario! \n";
+			character = make_shared<Mario>();
 			return 1;
 		}
 		if (marioBtn.isHover(chooseWindow)) {
@@ -43,6 +44,7 @@ int Level::selectCharacter()
 
 		if (luigiBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Luigi! \n";
+			character = make_shared<Luigi>();
 			return 2;
 		}
 		if (luigiBtn.isHover(chooseWindow)) {
@@ -70,8 +72,13 @@ int Level::run(string lv)
 	selectCharacter();
 	map = loadMap(lv);
 
+	//physicsManager.addObserver(character.get());
+
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
+		
+	sf::Clock clock;
+	float deltaTime = 0.025f;
 
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
@@ -79,27 +86,32 @@ int Level::run(string lv)
 				window.close();
 				return 4;
 			}
-
-			float deltaTime = 0.025;
-			this_thread::sleep_for(chrono::microseconds(25));
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-				character->setForceY(-60);
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-				character->setForceX(-30);
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-				character->setCrouch();
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-				character->setForceX(30);
-
-			physicsManager.updatePhysics(deltaTime, map);
 		}
+
+		sf::Time elapsed = clock.restart();
+		if (elapsed.asSeconds() < deltaTime) {
+			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			character->setForceY(-60);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			character->setForceX(-500);
+			//character->m_sprite.move(-60, 0);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			character->setCrouch();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			character->setForceX(500);
+
+		//physicsManager.updatePhysics(deltaTime, map);
+		character->update(deltaTime, map);
 
 		window.clear(sf::Color::Black);
 		map.drawMap(1200, window);
+		window.draw(character->m_sprite);
 		window.display();
 	}
 

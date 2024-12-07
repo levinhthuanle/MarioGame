@@ -4,6 +4,8 @@ using namespace std;
 
 Character::Character()
 {
+	m_sprite.setPosition(50, 50);
+	m_sprite.setScale(4, 4);
 }
 
 void Character::setForceX(float x)
@@ -13,21 +15,34 @@ void Character::setForceX(float x)
 
 void Character::setForceY(float y)
 {
-	forceY = y;
+	if (velocity.y == 0)
+		forceY = y;
 }
 
 void Character::update(float deltaTime, Map map)
 {
+	velocity.x += forceX * deltaTime;
+	if (velocity.x > maxVelocityX)
+		velocity.x = maxVelocityX;
+	else if (velocity.x < -maxVelocityX)
+		velocity.x = -maxVelocityX;
+
 	velocity.y += (gravity + forceY) * deltaTime;
 
-	checkObstacle(deltaTime, map);
+	//checkObstacle(deltaTime, map);
+
+	//updateTexture();
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 
-	updateTexture();
-
-	forceX = (forceX < 0) ? forceX + inertia : forceX - inertia;
-	forceY += gravity;
+	if (forceX < 0)
+		forceX += inertia;
+	else if (forceX > 0)
+		forceX -= inertia;
+	if (forceY < 0)
+		forceY += gravity;
+	else if (forceY > 0)
+		forceY = 0;
 }
 
 void Character::updateTexture()
@@ -63,69 +78,61 @@ void Character::updateTexture()
 Mario::Mario()
 {
 	jumpHeight = 80;
-	inertia = 10;
-	maxVelocityX = 50;
+	inertia = 250;
+	maxVelocityX = 300;
 
-	textures[0].loadFromFile("Resources/Character/Mario/SmallMario/stand_0.png");
-	textures[1].loadFromFile("Resources/Character/Mario/SmallMario/stand_1.png");
-	textures[2].loadFromFile("Resources/Character/Mario/SmallMario/jump_0.png");
-	textures[3].loadFromFile("Resources/Character/Mario/SmallMario/jump_1.png");
-	textures[4].loadFromFile("Resources/Character/Mario/SmallMario/die.png");
-	textures[5].loadFromFile("Resources/Character/Mario/SmallMario/walk_0_0.png");
-	textures[6].loadFromFile("Resources/Character/Mario/SmallMario/walk_0_1.png");
-	textures[7].loadFromFile("Resources/Character/Mario/SmallMario/walk_0_2.png");
-	textures[8].loadFromFile("Resources/Character/Mario/SmallMario/walk_1_0.png");
-	textures[9].loadFromFile("Resources/Character/Mario/SmallMario/walk_1_1.png");
-	textures[10].loadFromFile("Resources/Character/Mario/SmallMario/walk_1_2.png");
-	textures[11].loadFromFile("Resources/Character/Mario/SmallMario/slide_0.png");
-	textures[12].loadFromFile("Resources/Character/Mario/SmallMario/slide_1.png");
-	textures[13].loadFromFile("Resources/Character/Mario/SmallMario/climb_0_0.png");
-	textures[14].loadFromFile("Resources/Character/Mario/SmallMario/climb_0_1.png");
-	textures[15].loadFromFile("Resources/Character/Mario/SmallMario/climb_1_0.png");
-	textures[16].loadFromFile("Resources/Character/Mario/SmallMario/climb_1_1.png");
+	textures[0].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(1, 1, 20, 30));
+	textures[1].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(22, 1, 20, 30));
+	textures[2].loadFromFile("./Resources/Character/Mario/SmallMario/jump.png", sf::IntRect(1, 1, 20, 30));
+	textures[3].loadFromFile("./Resources/Character/Mario/SmallMario/jump.png", sf::IntRect(22, 1, 20, 30));
+	textures[4].loadFromFile("./Resources/Character/Mario/SmallMario/die.png", sf::IntRect(1, 1, 20, 30));
+	textures[5].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(1, 1, 20, 30));
+	textures[6].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(22, 1, 20, 30));
+	textures[7].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(43, 1, 20, 30));
+	textures[8].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(64, 1, 20, 30));
+	textures[9].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(85, 1, 20, 30));
+	textures[10].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(106, 1, 20, 30));
+	textures[11].loadFromFile("./Resources/Character/Mario/SmallMario/slide.png", sf::IntRect(1, 1, 20, 30));
+	textures[12].loadFromFile("./Resources/Character/Mario/SmallMario/slide.png", sf::IntRect(22, 1, 20, 30));
 
-	superTextures[0].loadFromFile("Resources/Character/Mario/SuperMario/stand_0.png");
-	superTextures[1].loadFromFile("Resources/Character/Mario/SuperMario/stand_1.png");
-	superTextures[2].loadFromFile("Resources/Character/Mario/SuperMario/crouch_0.png");
-	superTextures[3].loadFromFile("Resources/Character/Mario/SuperMario/crouch_1.png");
-	superTextures[4].loadFromFile("Resources/Character/Mario/SuperMario/jump_0.png");
-	superTextures[5].loadFromFile("Resources/Character/Mario/SuperMario/jump_1.png");
-	superTextures[6].loadFromFile("Resources/Character/Mario/SuperMario/slide_0.png");
-	superTextures[7].loadFromFile("Resources/Character/Mario/SuperMario/slide_1.png");
-	superTextures[8].loadFromFile("Resources/Character/Mario/SuperMario/walk_0_0.png");
-	superTextures[9].loadFromFile("Resources/Character/Mario/SuperMario/walk_0_1.png");
-	superTextures[10].loadFromFile("Resources/Character/Mario/SuperMario/walk_0_2.png");
-	superTextures[11].loadFromFile("Resources/Character/Mario/SuperMario/walk_1_0.png");
-	superTextures[12].loadFromFile("Resources/Character/Mario/SuperMario/walk_1_1.png");
-	superTextures[13].loadFromFile("Resources/Character/Mario/SuperMario/walk_1_2.png");
-	superTextures[14].loadFromFile("Resources/Character/Mario/SuperMario/climb_0_0.png");
-	superTextures[15].loadFromFile("Resources/Character/Mario/SuperMario/climb_0_1.png");
-	superTextures[16].loadFromFile("Resources/Character/Mario/SuperMario/climb_1_0.png");
-	superTextures[17].loadFromFile("Resources/Character/Mario/SuperMario/climb_1_1.png");
+	superTextures[0].loadFromFile("./Resources/Character/Mario/BigMario/bigStand.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[1].loadFromFile("./Resources/Character/Mario/BigMario/bigStand.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[2].loadFromFile("./Resources/Character/Mario/BigMario/bigCrouch.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[3].loadFromFile("./Resources/Character/Mario/BigMario/bigCrouch.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[4].loadFromFile("./Resources/Character/Mario/BigMario/bigJump.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[5].loadFromFile("./Resources/Character/Mario/BigMario/bigJump.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[6].loadFromFile("./Resources/Character/Mario/BigMario/bigSlide.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[7].loadFromFile("./Resources/Character/Mario/BigMario/bigSlide.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[8].loadFromFile("./Resources/Character/Mario/BigMario/bigWalk.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[9].loadFromFile("./Resources/Character/Mario/BigMario/bigWalk.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[10].loadFromFile("./Resources/Character/Mario/BigMario/bigWalk.png", sf::IntRect(43, 1, 20, 30));
+	superTextures[11].loadFromFile("./Resources/Character/Mario/BigMario/bigWalk.png", sf::IntRect(64, 1, 20, 30));
+	superTextures[12].loadFromFile("./Resources/Character/Mario/BigMario/bigWalk.png", sf::IntRect(85, 1, 20, 30));
+	superTextures[13].loadFromFile("./Resources/Character/Mario/BigMario/bigWalk.png", sf::IntRect(106, 1, 20, 30));
 
-	fireTextures[0].loadFromFile("Resources/Character/Mario/FireMario/stand_0.png");
-	fireTextures[1].loadFromFile("Resources/Character/Mario/FireMario/stand_1.png");
-	fireTextures[2].loadFromFile("Resources/Character/Mario/FireMario/crouch_0.png");
-	fireTextures[3].loadFromFile("Resources/Character/Mario/FireMario/crouch_1.png");
-	fireTextures[4].loadFromFile("Resources/Character/Mario/FireMario/jump_0.png");
-	fireTextures[5].loadFromFile("Resources/Character/Mario/FireMario/jump_1.png");
-	fireTextures[6].loadFromFile("Resources/Character/Mario/FireMario/slide_0.png");
-	fireTextures[7].loadFromFile("Resources/Character/Mario/FireMario/slide_1.png");
-	fireTextures[8].loadFromFile("Resources/Character/Mario/FireMario/walk_0_0.png");
-	fireTextures[9].loadFromFile("Resources/Character/Mario/FireMario/walk_0_1.png");
-	fireTextures[10].loadFromFile("Resources/Character/Mario/FireMario/walk_0_2.png");
-	fireTextures[11].loadFromFile("Resources/Character/Mario/FireMario/walk_1_0.png");
-	fireTextures[12].loadFromFile("Resources/Character/Mario/FireMario/walk_1_1.png");
-	fireTextures[13].loadFromFile("Resources/Character/Mario/FireMario/walk_1_2.png");
-	fireTextures[14].loadFromFile("Resources/Character/Mario/FireMario/climb_0_0.png");
-	fireTextures[15].loadFromFile("Resources/Character/Mario/FireMario/climb_0_1.png");
-	fireTextures[16].loadFromFile("Resources/Character/Mario/FireMario/climb_1_0.png");
-	fireTextures[17].loadFromFile("Resources/Character/Mario/FireMario/climb_1_1.png");
+	fireTextures[0].loadFromFile("./Resources/Character/Mario/FireMario/fireStand.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[1].loadFromFile("./Resources/Character/Mario/FireMario/fireStand.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[2].loadFromFile("./Resources/Character/Mario/FireMario/fireCrouch.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[3].loadFromFile("./Resources/Character/Mario/FireMario/fireCrouch.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[4].loadFromFile("./Resources/Character/Mario/FireMario/fireJump.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[5].loadFromFile("./Resources/Character/Mario/FireMario/fireJump.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[6].loadFromFile("./Resources/Character/Mario/FireMario/fireSlide.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[7].loadFromFile("./Resources/Character/Mario/FireMario/fireSlide.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[8].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[9].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[10].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(43, 1, 20, 30));
+	fireTextures[11].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(64, 1, 20, 30));
+	fireTextures[12].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(85, 1, 20, 30));
+	fireTextures[13].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(106, 1, 20, 30));
+	fireTextures[14].loadFromFile("./Resources/Character/Mario/FireMario/fireShoot.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[15].loadFromFile("./Resources/Character/Mario/FireMario/fireShoot.png", sf::IntRect(22, 1, 20, 30));
+
+	m_sprite.setTexture(textures[0]);
 }
 
 void Mario::setCrouch()
 {
-
+	return;
 }
 
 
@@ -136,66 +143,56 @@ Luigi::Luigi()
 	inertia = 20;
 	maxVelocityX = 60;
 
-	textures[0].loadFromFile("Resources/Character/Luigi/SmallLuigi/stand_0.png");
-	textures[1].loadFromFile("Resources/Character/Luigi/SmallLuigi/stand_1.png");
-	textures[2].loadFromFile("Resources/Character/Luigi/SmallLuigi/jump_0.png");
-	textures[3].loadFromFile("Resources/Character/Luigi/SmallLuigi/jump_1.png");
-	textures[4].loadFromFile("Resources/Character/Luigi/SmallLuigi/die.png");
-	textures[5].loadFromFile("Resources/Character/Luigi/SmallLuigi/walk_0_0.png");
-	textures[6].loadFromFile("Resources/Character/Luigi/SmallLuigi/walk_0_1.png");
-	textures[7].loadFromFile("Resources/Character/Luigi/SmallLuigi/walk_0_2.png");
-	textures[8].loadFromFile("Resources/Character/Luigi/SmallLuigi/walk_1_0.png");
-	textures[9].loadFromFile("Resources/Character/Luigi/SmallLuigi/walk_1_1.png");
-	textures[10].loadFromFile("Resources/Character/Luigi/SmallLuigi/walk_1_2.png");
-	textures[11].loadFromFile("Resources/Character/Luigi/SmallLuigi/slide_0.png");
-	textures[12].loadFromFile("Resources/Character/Luigi/SmallLuigi/slide_1.png");
-	textures[13].loadFromFile("Resources/Character/Luigi/SmallLuigi/climb_0_0.png");
-	textures[14].loadFromFile("Resources/Character/Luigi/SmallLuigi/climb_0_1.png");
-	textures[15].loadFromFile("Resources/Character/Luigi/SmallLuigi/climb_1_0.png");
-	textures[16].loadFromFile("Resources/Character/Luigi/SmallMario/climb_1_1.png");
+	textures[0].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(1, 1, 20, 30));
+	textures[1].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(22, 1, 20, 30));
+	textures[2].loadFromFile("./Resources/Character/Luigi/SmallLuigi/jump.png", sf::IntRect(1, 1, 20, 30));
+	textures[3].loadFromFile("./Resources/Character/Luigi/SmallLuigi/jump.png", sf::IntRect(22, 1, 20, 30));
+	textures[4].loadFromFile("./Resources/Character/Luigi/SmallLuigi/die.png", sf::IntRect(1, 1, 20, 30));
+	textures[5].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(1, 1, 20, 30));
+	textures[6].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(22, 1, 20, 30));
+	textures[7].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(43, 1, 20, 30));
+	textures[8].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(64, 1, 20, 30));
+	textures[9].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(85, 1, 20, 30));
+	textures[10].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(106, 1, 20, 30));
+	textures[11].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(1, 1, 20, 30));
+	textures[12].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(22, 1, 20, 30));
 
-	superTextures[0].loadFromFile("Resources/Character/Luigi/SuperLuigi/stand_0.png");
-	superTextures[1].loadFromFile("Resources/Character/Luigi/SuperLuigi/stand_1.png");
-	superTextures[2].loadFromFile("Resources/Character/Luigi/SuperLuigi/crouch_0.png");
-	superTextures[3].loadFromFile("Resources/Character/Luigi/SuperLuigi/crouch_1.png");
-	superTextures[4].loadFromFile("Resources/Character/Luigi/SuperLuigi/jump_0.png");
-	superTextures[5].loadFromFile("Resources/Character/Luigi/SuperLuigi/jump_1.png");
-	superTextures[6].loadFromFile("Resources/Character/Luigi/SuperLuigi/slide_0.png");
-	superTextures[7].loadFromFile("Resources/Character/Luigi/SuperLuigi/slide_1.png");
-	superTextures[8].loadFromFile("Resources/Character/Luigi/SuperLuigi/walk_0_0.png");
-	superTextures[9].loadFromFile("Resources/Character/Luigi/SuperLuigi/walk_0_1.png");
-	superTextures[10].loadFromFile("Resources/Character/Luigi/SuperLuigi/walk_0_2.png");
-	superTextures[11].loadFromFile("Resources/Character/Luigi/SuperLuigi/walk_1_0.png");
-	superTextures[12].loadFromFile("Resources/Character/Luigi/SuperLuigi/walk_1_1.png");
-	superTextures[13].loadFromFile("Resources/Character/Luigi/SuperLuigi/walk_1_2.png");
-	superTextures[14].loadFromFile("Resources/Character/Luigi/SuperLuigi/climb_0_0.png");
-	superTextures[15].loadFromFile("Resources/Character/Luigi/SuperLuigi/climb_0_1.png");
-	superTextures[16].loadFromFile("Resources/Character/Luigi/SuperLuigi/climb_1_0.png");
-	superTextures[17].loadFromFile("Resources/Character/Luigi/SuperLuigi/climb_1_1.png");
+	superTextures[0].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigStand.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[1].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigStand.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[2].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigCrouch.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[3].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigCrouch.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[4].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigJump.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[5].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigJump.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[6].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigSlide.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[7].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigSlide.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[8].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(1, 1, 20, 30));
+	superTextures[9].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(22, 1, 20, 30));
+	superTextures[10].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(43, 1, 20, 30));
+	superTextures[11].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(64, 1, 20, 30));
+	superTextures[12].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(85, 1, 20, 30));
+	superTextures[13].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(106, 1, 20, 30));
 
-	fireTextures[0].loadFromFile("Resources/Character/Luigi/FireLuigi/stand_0.png");
-	fireTextures[1].loadFromFile("Resources/Character/Luigi/FireLuigi/stand_1.png");
-	fireTextures[2].loadFromFile("Resources/Character/Luigi/FireLuigi/crouch_0.png");
-	fireTextures[3].loadFromFile("Resources/Character/Luigi/FireLuigi/crouch_1.png");
-	fireTextures[4].loadFromFile("Resources/Character/Luigi/FireLuigi/jump_0.png");
-	fireTextures[5].loadFromFile("Resources/Character/Luigi/FireLuigi/jump_1.png");
-	fireTextures[6].loadFromFile("Resources/Character/Luigi/FireLuigi/slide_0.png");
-	fireTextures[7].loadFromFile("Resources/Character/Luigi/FireLuigi/slide_1.png");
-	fireTextures[8].loadFromFile("Resources/Character/Luigi/FireLuigi/walk_0_0.png");
-	fireTextures[9].loadFromFile("Resources/Character/Luigi/FireLuigi/walk_0_1.png");
-	fireTextures[10].loadFromFile("Resources/Character/Luigi/FireLuigi/walk_0_2.png");
-	fireTextures[11].loadFromFile("Resources/Character/Luigi/FireLuigi/walk_1_0.png");
-	fireTextures[12].loadFromFile("Resources/Character/Luigi/FireLuigi/walk_1_1.png");
-	fireTextures[13].loadFromFile("Resources/Character/Luigi/FireLuigi/walk_1_2.png");
-	fireTextures[14].loadFromFile("Resources/Character/Luigi/FireLuigi/climb_0_0.png");
-	fireTextures[15].loadFromFile("Resources/Character/Luigi/FireLuigi/climb_0_1.png");
-	fireTextures[16].loadFromFile("Resources/Character/Luigi/FireLuigi/climb_1_0.png");
-	fireTextures[17].loadFromFile("Resources/Character/Luigi/FireLuigi/climb_1_1.png");
+	fireTextures[0].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireStand.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[1].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireStand.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[2].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireCrouch.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[3].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireCrouch.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[4].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireJump.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[5].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireJump.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[6].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireSlide.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[7].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireSlide.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[8].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[9].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(22, 1, 20, 30));
+	fireTextures[10].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(43, 1, 20, 30));
+	fireTextures[11].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(64, 1, 20, 30));
+	fireTextures[12].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(85, 1, 20, 30));
+	fireTextures[13].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(106, 1, 20, 30));
+	fireTextures[14].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireShoot.png", sf::IntRect(1, 1, 20, 30));
+	fireTextures[15].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireShoot.png", sf::IntRect(22, 1, 20, 30));
 }
 
 void Luigi::setCrouch()
 {
-
+	return;
 }
 
 
@@ -211,6 +208,8 @@ void Decorator::updateTexture()
 			m_sprite.setTexture(currentTexture[2]);
 		else
 			m_sprite.setTexture(currentTexture[3]);
+		crouch = false;
+		return;
 	}
 	if (velocity.y != 0) {
 		if (direction)
@@ -235,7 +234,9 @@ void Decorator::updateTexture()
 
 void Decorator::setCrouch()
 {
-	Character::crouch = true;
+	if (velocity.y == 0) {
+		Character::crouch = true;
+	}
 }
 
 

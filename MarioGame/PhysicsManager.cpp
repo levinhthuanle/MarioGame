@@ -51,8 +51,7 @@ void PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
 
 bool PhysicsAppliedObject::isObjectCollision(GameObject* gameObject)
 {
-	sf::FloatRect bounds = m_sprite.getGlobalBounds();
-	if (bounds.intersects(gameObject->m_sprite.getGlobalBounds()))
+	if (m_sprite.getGlobalBounds().intersects(gameObject->m_sprite.getGlobalBounds()))
 		return true;
 	return false;
 }
