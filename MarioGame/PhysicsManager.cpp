@@ -13,10 +13,10 @@ void PhysicsManager::rermoveObserver(PhysicsObserver* observer)
 			observers.erase(i);
 }
 
-void PhysicsManager::updatePhysics(float deltaTime)
+void PhysicsManager::updatePhysics(float deltaTime, Map map)
 {
 	for (PhysicsObserver* o : observers)
-		o->update(deltaTime);
+		o->update(deltaTime, map);
 }
 
 
@@ -27,6 +27,8 @@ void PhysicsAppliedObject::update(float deltaTime, Map map)
 	velocity.y += gravity * deltaTime;
 
 	checkObstacle(deltaTime, map);
+
+	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 }
 
 void PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)

@@ -26,25 +26,39 @@ protected:
 
 	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
 
-	float lastXVelocity;
-	bool direction;	// face direction: 0 - right, 1 - left		
-	static int currentWalkTexture;	// 0 1 2
+	// Texture's time control attributes
+	//chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
+	//const chrono::milliseconds updateInterval{250};
 
-	float jumpHeight;
-	float inertia;
-	float maxVelocityX;
+	// Information attributes
+	float jumpHeight = -1;
+	float inertia = -1;
+	float maxVelocityX = -1;
 	bool breakBrick = 0;
 	bool fire = 0;
 
-	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
-	const chrono::milliseconds updateInterval{250};
+	// User control attributes
+	float forceX = 0;
+	float forceY = 0;
+
+	// Support attributes
+	bool crouch = false;
+	float lastXVelocity = 0;
+	bool direction = 0;	// face direction: 0 - right, 1 - left		
+	int currentWalkTexture = 0;	// 0 1 2
 
 public:
 	Character();
 
+	void setForceX(float x);
+
+	void setForceY(float y);
+
 	void update(float deltaTime, Map map);
 
 	virtual void updateTexture() = 0;
+
+	virtual void setCrouch() = 0;
 
 	virtual ~Character() = default;
 };
@@ -54,6 +68,8 @@ class Mario : public Character
 public:
 	Mario();
 
+	void setCrouch();
+
 	~Mario() = default;
 };
 
@@ -61,6 +77,8 @@ class Luigi : public Character
 {
 public:
 	Luigi();
+
+	void setCrouch();
 
 	~Luigi() = default;
 };
@@ -78,6 +96,8 @@ public:
 	Decorator(shared_ptr<Character> c);
 
 	void updateTexture();
+
+	void setCrouch();
 
 	virtual ~Decorator() = default;
 };

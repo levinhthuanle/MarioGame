@@ -4,42 +4,58 @@ using namespace std;
 
 Character::Character()
 {
-	currentWalkTexture = 0;
+}
+
+void Character::setForceX(float x)
+{
+	forceX = x;
+}
+
+void Character::setForceY(float y)
+{
+	forceY = y;
 }
 
 void Character::update(float deltaTime, Map map)
 {
-	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
-	if (now - lastUpdate >= updateInterval) {
-		lastUpdate = now;
+	velocity.y += (gravity + forceY) * deltaTime;
 
-		PhysicsAppliedObject::update(deltaTime, map);
+	checkObstacle(deltaTime, map);
 
-		updateTexture();
-	}
+	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
+
+	updateTexture();
+
+	forceX = (forceX < 0) ? forceX + inertia : forceX - inertia;
+	forceY += gravity;
 }
 
 void Character::updateTexture()
 {
-	if (velocity.y != 0) {
-		if (direction)
-			m_sprite.setTexture(textures[2]);
-		else
-			m_sprite.setTexture(textures[3]);
-	}
-	else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
-		currentWalkTexture = (currentWalkTexture + 1) % 3;
-		if (velocity.x > 0)
-			m_sprite.setTexture(textures[currentWalkTexture + 5]);
-		else if (velocity.x < 0)
-			m_sprite.setTexture(textures[currentWalkTexture + 8]);
-	}
-	else {
-		if (velocity.x > 0)
-			m_sprite.setTexture(textures[11]);
-		else if (velocity.x < 0)
-			m_sprite.setTexture(textures[12]);
-	}
+	//chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
+	//if (now - lastUpdate >= updateInterval) {
+	//	lastUpdate = now;
+
+		if (velocity.y != 0) {
+			if (direction)
+				m_sprite.setTexture(textures[2]);
+			else
+				m_sprite.setTexture(textures[3]);
+		}
+		else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
+			currentWalkTexture = (currentWalkTexture + 1) % 3;
+			if (velocity.x > 0)
+				m_sprite.setTexture(textures[currentWalkTexture + 5]);
+			else if (velocity.x < 0)
+				m_sprite.setTexture(textures[currentWalkTexture + 8]);
+		}
+		else {
+			if (velocity.x > 0)
+				m_sprite.setTexture(textures[11]);
+			else if (velocity.x < 0)
+				m_sprite.setTexture(textures[12]);
+		}
+	//}
 }
 
 
@@ -107,6 +123,11 @@ Mario::Mario()
 	fireTextures[17].loadFromFile("Resources/Character/Mario/FireMario/climb_1_1.png");
 }
 
+void Mario::setCrouch()
+{
+
+}
+
 
 
 Luigi::Luigi()
@@ -172,6 +193,11 @@ Luigi::Luigi()
 	fireTextures[17].loadFromFile("Resources/Character/Luigi/FireLuigi/climb_1_1.png");
 }
 
+void Luigi::setCrouch()
+{
+
+}
+
 
 
 Decorator::Decorator() : character(nullptr) {}
@@ -180,25 +206,36 @@ Decorator::Decorator(shared_ptr<Character> c) : character(c) {}
 
 void Decorator::updateTexture()
 {
-	//if (velocity.y != 0) {
-	//	if (direction)
-	//		m_sprite.setTexture(textures[2]);
-	//	else
-	//		m_sprite.setTexture(textures[3]);
-	//}
-	//else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
-	//	currentWalkTexture = (currentWalkTexture + 1) % 3;
-	//	if (velocity.x > 0)
-	//		m_sprite.setTexture(textures[currentWalkTexture + 5]);
-	//	else if (velocity.x < 0)
-	//		m_sprite.setTexture(textures[currentWalkTexture + 8]);
-	//}
-	//else {
-	//	if (velocity.x > 0)
-	//		m_sprite.setTexture(textures[11]);
-	//	else if (velocity.x < 0)
-	//		m_sprite.setTexture(textures[12]);
-	//}
+	if (crouch) {
+		if (direction)
+			m_sprite.setTexture(currentTexture[2]);
+		else
+			m_sprite.setTexture(currentTexture[3]);
+	}
+	if (velocity.y != 0) {
+		if (direction)
+			m_sprite.setTexture(textures[2]);
+		else
+			m_sprite.setTexture(textures[3]);
+	}
+	else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
+		currentWalkTexture = (currentWalkTexture + 1) % 3;
+		if (velocity.x > 0)
+			m_sprite.setTexture(textures[currentWalkTexture + 5]);
+		else if (velocity.x < 0)
+			m_sprite.setTexture(textures[currentWalkTexture + 8]);
+	}
+	else {
+		if (velocity.x > 0)
+			m_sprite.setTexture(textures[11]);
+		else if (velocity.x < 0)
+			m_sprite.setTexture(textures[12]);
+	}
+}
+
+void Decorator::setCrouch()
+{
+	Character::crouch = true;
 }
 
 
