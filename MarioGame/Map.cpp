@@ -57,8 +57,12 @@ bool Map::isCollectable(const Cell& cell) const {
 	return false;
 }
 
-vector<vector<Cell>> Map::getMap() {
+vector<vector<Cell>>& Map::getMap() {
     return cellGrid;
+}
+
+vector<vector<Sprite>>& Map::getSpriteGrid() {
+	return spriteGrid;
 }
 
 void Map::setMap(vector<vector<Cell>> map) {
@@ -97,6 +101,7 @@ bool Map::readSketch(string sketch_file_name) {
     int height = sketch.getSize().y;
 
     cellGrid = vector<vector<Cell>>(width, vector<Cell>(height, Cell()));
+    spriteGrid = vector<vector<Sprite>>(width, vector<Sprite>(height, Sprite()));
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
@@ -104,6 +109,11 @@ bool Map::readSketch(string sketch_file_name) {
             auto it = colorToType.find(color);
             int type = (it != colorToType.end()) ? it->second : 0;
             cellGrid[x][y] = Cell(x, y, type);
+            Sprite cell;
+            cell.setTexture(textures[type]);
+            cell.setScale(SCALE, SCALE);
+            cell.setPosition((x * CELL_SIZE), (y * CELL_SIZE));
+            spriteGrid[x][y] = cell;
         }
     }
     return true;
@@ -125,123 +135,19 @@ bool Map::loadTexture(string texture_file_name, int type) {
 }
 
 void Map::drawMap(int view, RenderWindow& window) {
-    if (cellGrid.empty()) return;
+    View mapView(FloatRect(view, 0, window.getSize().x, window.getSize().y));
+    window.setView(mapView);
 
-    if (view < 0) view = 0;
-    if (view > cellGrid.size() * CELL_SIZE - WIDTH) view = cellGrid.size() * CELL_SIZE - WIDTH;
+    int cellWidth = CELL_SIZE;
+    int visibleStart = view / cellWidth;
+    int visibleEnd = (view + window.getSize().x) / cellWidth;
 
-    int map_start = static_cast<int>(view / static_cast<float>(CELL_SIZE));
-    int map_end = map_start + static_cast<int>(WIDTH / static_cast<float>(CELL_SIZE));
-    int map_height = cellGrid[0].size();
+    visibleStart = std::max(0, visibleStart);
+    visibleEnd = std::min(static_cast<int>(spriteGrid.size()), visibleEnd);
 
-    cout<< map_start << " " << map_end << " " << map_height << endl;
-
-    for (int y = 0; y < map_height; ++y) {
-        for (int x = map_start; x < map_end; ++x) {
-            int type = cellGrid[x][y].getType();
-            if (type >= 0 && type < textures.size() && textures[type].getSize().x > 0) {
-                Sprite cell;
-                cell.setTexture(textures[type]);
-                cell.setScale(SCALE, SCALE); // Set the scale to 3x
-                cell.setPosition((x * CELL_SIZE - view), (y * CELL_SIZE));
-                window.draw(cell);
-            }
+    for (int i = visibleStart; i < visibleEnd; ++i) {
+        for (int j = 0; j < spriteGrid[i].size(); ++j) {
+            window.draw(spriteGrid[i][j]);
         }
     }
-}
-
-Map loadMap(string lv) {
-    if (lv == "1-1") {
-        map<int, CellProperties> cellProperties = {
-        {0, {true, true}},    // Empty
-        {1, {true, false}},   // Brick
-        {2, {false, true}},   // Lucky Block
-        {3, {false, false}},  // Grass
-        {4, {false, false}},  // Dirt
-        {5, {false, false}},  // Pipe Top Left
-        {6, {false, false}},  // Pipe Top Right
-        {7, {false, false}},  // Pipe Body Left
-        {8, {false, false}},  // Pipe Body Right
-        {9, {false, false}},  // Steel
-        {10, {false, false}}, // Flag Body
-        {11, {false, false}}  // Flag Top
-        };
-
-        map<Color, int, ColorComparator> colorToType = {
-            {Color(0, 0, 0), 0},       // Empty
-            {Color(254, 138, 24), 1},  // Brick
-            {Color(255, 255, 0), 2},   // Lucky Block
-            {Color(161, 124, 49), 3},  // Grass
-            {Color(101, 49, 19), 4},   // Dirt
-            {Color(17, 221, 17), 5},   // Pipe Top Left
-            {Color(17, 58, 17), 6},    // Pipe Top Right
-            {Color(17, 177, 17), 7},   // Pipe Body Left
-            {Color(17, 116, 17), 8},   // Pipe Body Right
-            {Color(114, 114, 114), 9}, // Steel
-            {Color(255, 255, 255), 10},// Flag Body
-            {Color(0, 0, 0), 11}       // Flag Top
-        };
-
-        // Create the map with specific properties
-        Map map(cellProperties, colorToType);
-
-        // Load textures for the level
-        if (!map.loadTexture("Resources/Stages/1-1/background.png", 0) ||
-            !map.loadTexture("Resources/Stages/1-1/brick.png", 1) ||
-            !map.loadTexture("Resources/Stages/1-1/luckyblock.png", 2) ||
-            !map.loadTexture("Resources/Stages/1-1/grass.png", 3) ||
-            !map.loadTexture("Resources/Stages/1-1/dirt.png", 4) ||
-            !map.loadTexture("Resources/Stages/1-1/pipetopleft.png", 5) ||
-            !map.loadTexture("Resources/Stages/1-1/pipetopright.png", 6) ||
-            !map.loadTexture("Resources/Stages/1-1/pipebodyleft.png", 7) ||
-            !map.loadTexture("Resources/Stages/1-1/pipebodyright.png", 8) ||
-            !map.loadTexture("Resources/Stages/1-1/steel.png", 9) ||
-            !map.loadTexture("Resources/Stages/1-1/flagbody.png", 10) ||
-            !map.loadTexture("Resources/Stages/1-1/flagtop.png", 11)) {
-            cerr << "Failed to load textures!" << endl;
-            return Map();
-        }
-        cout << "Textures loaded" << endl;
-
-        // Load the sketch for the level
-        if (!map.readSketch("Resources/Stages/1-1/1-1-sketch.png")) {
-            cerr << "Failed to load map sketch!" << endl;
-            return Map();
-        }
-
-
-        vector<vector<Cell>> grids = map.getMap();
-        for (int i = 0; i < grids.size(); i++) {
-            for (int j = 0; j < grids[i].size(); j++) {
-				cout << grids[i][j].getType() << " ";
-			}
-			cout << endl;
-		}
-
-
-        cout << "Map loaded" << endl;
-        return map;
-	}
-    else if (lv == "1-2") {
-
-    }
-    else if (lv == "1-3") {
-
-	}
-    else if (lv == "1-4") {
-
-    }
-    else if (lv == "2-1") {
-
-	}
-    else if (lv == "2-2") {
-
-	}
-    else if (lv == "2-4") {
-
-	}
-    else {
-		cerr << "Invalid level: " << lv << endl;
-        return Map();
-	}
 }

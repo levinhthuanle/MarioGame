@@ -40,6 +40,7 @@ public:
 class Map {
 private:
     vector<vector<Cell>> cellGrid;
+    vector<vector<Sprite>> spriteGrid;
     vector<Texture> textures;
     map<int, CellProperties> cellProperties;
     map<Color, int, ColorComparator> colorToType;
@@ -51,9 +52,9 @@ public:
 
     bool isBreakable(const Cell& cell) const;
     bool isCollectable(const Cell& cell) const;
-    bool isPassable(const Cell& cell) const;
 
-    vector<vector<Cell>> getMap();
+    vector<vector<Cell>>& getMap();
+    vector<vector<Sprite>>& getSpriteGrid();
     void setMap(vector<vector<Cell>> map);
 
     void addCell(Cell cell);
@@ -65,9 +66,6 @@ public:
 
     void drawMap(int view, RenderWindow& window);
 };
-
-Map loadMap(string lv);
-
 //Sample usage
 //#include "Map.h"
 //#include <iostream>

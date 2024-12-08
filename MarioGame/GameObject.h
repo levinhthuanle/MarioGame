@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include <string>
+
 class GameObject
 {
 public:
@@ -30,6 +32,10 @@ public:
 
 	void draw(sf::RenderWindow& window, float x, float y) {
 		m_sprite.setPosition(x, y);
+		window.draw(m_sprite);
+	}
+
+	void draw(sf::RenderWindow& window) {
 		window.draw(m_sprite);
 	}
 

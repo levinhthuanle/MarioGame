@@ -34,6 +34,7 @@ void PhysicsAppliedObject::update(float deltaTime, Map map)
 void PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
 {
     const vector<vector<Cell>>& grids = map.getMap();
+    const vector<vector<Sprite>>& sprites = map.getSpriteGrid();
     float x = m_sprite.getPosition().x;
     float y = m_sprite.getPosition().y;
 
@@ -54,7 +55,7 @@ void PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
 
     // Check collisions and adjust position/velocity
     if (velocity.x > 0) { // Moving right
-        if (grids[right][midY].getType() != 0) {
+        if (grids[right][midY].getType() != 0 && sprites[x][y].getLocalBounds().intersects(m_sprite.getLocalBounds())) {
             velocity.x = 0;
         }
     }
@@ -70,7 +71,7 @@ void PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
         }
     }
     else if (velocity.y < 0) { // Moving up
-        if (grids[midX][top].getType() != 0) {
+        if (grids[midX][top].getType() != 0 ) {
             velocity.y = 0;
         }
     }

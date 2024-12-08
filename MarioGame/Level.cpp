@@ -1,6 +1,7 @@
 #include "Level.h"
 #include "ResourcesManager.h"
 #include "Components.h"
+#include "ConvertSketch.h"
 using namespace std;
 
 Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects), character(c)
@@ -70,7 +71,8 @@ int Level::run(string lv)
 {
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
-	map = loadMap(lv);
+	
+	convertSketch(lv, map, enemies, items);
 
 	physicsManager.addObserver(character.get());
 
@@ -94,23 +96,26 @@ int Level::run(string lv)
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			character->setForceY(-60);
+			character->setForceY(-50);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			character->setForceX(-500);
+			character->setForceX(-60);
 			//character->m_sprite.move(-60, 0);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			character->setCrouch();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			character->setForceX(500);
+			character->setForceX(60);
 
 		//physicsManager.updatePhysics(deltaTime, map);
 		character->update(deltaTime, map);
 
 		window.clear(sf::Color::Cyan);
 		map.drawMap(0, window);
+		for (GameObject* o : items) {
+			o->draw(window);
+		}
 		window.draw(character->m_sprite);
 		window.display();
 	}
