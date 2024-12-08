@@ -130,9 +130,11 @@ void Map::drawMap(int view, RenderWindow& window) {
     if (view < 0) view = 0;
     if (view > cellGrid.size() * CELL_SIZE - WIDTH) view = cellGrid.size() * CELL_SIZE - WIDTH;
 
-    int map_start = view / CELL_SIZE;
-    int map_end = map_start + WIDTH / CELL_SIZE;
+    int map_start = static_cast<int>(view / static_cast<float>(CELL_SIZE));
+    int map_end = map_start + static_cast<int>(WIDTH / static_cast<float>(CELL_SIZE));
     int map_height = cellGrid[0].size();
+
+    cout<< map_start << " " << map_end << " " << map_height << endl;
 
     for (int y = 0; y < map_height; ++y) {
         for (int x = map_start; x < map_end; ++x) {
@@ -140,9 +142,8 @@ void Map::drawMap(int view, RenderWindow& window) {
             if (type >= 0 && type < textures.size() && textures[type].getSize().x > 0) {
                 Sprite cell;
                 cell.setTexture(textures[type]);
-                float scale = 3.4;
-                cell.setScale(scale, scale); // Set the scale to 3x
-                cell.setPosition((x * CELL_SIZE - view) * scale, (y * CELL_SIZE) *  scale);
+                cell.setScale(SCALE, SCALE); // Set the scale to 3x
+                cell.setPosition((x * CELL_SIZE - view), (y * CELL_SIZE));
                 window.draw(cell);
             }
         }
@@ -152,6 +153,7 @@ void Map::drawMap(int view, RenderWindow& window) {
 Map loadMap(string lv) {
     if (lv == "1-1") {
         map<int, CellProperties> cellProperties = {
+        {0, {true, true}},    // Empty
         {1, {true, false}},   // Brick
         {2, {false, true}},   // Lucky Block
         {3, {false, false}},  // Grass
@@ -166,6 +168,7 @@ Map loadMap(string lv) {
         };
 
         map<Color, int, ColorComparator> colorToType = {
+            {Color(0, 0, 0), 0},       // Empty
             {Color(254, 138, 24), 1},  // Brick
             {Color(255, 255, 0), 2},   // Lucky Block
             {Color(161, 124, 49), 3},  // Grass
@@ -207,7 +210,13 @@ Map loadMap(string lv) {
         }
 
 
-
+        vector<vector<Cell>> grids = map.getMap();
+        for (int i = 0; i < grids.size(); i++) {
+            for (int j = 0; j < grids[i].size(); j++) {
+				cout << grids[i][j].getType() << " ";
+			}
+			cout << endl;
+		}
 
 
         cout << "Map loaded" << endl;

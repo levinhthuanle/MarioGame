@@ -51,6 +51,7 @@ public:
 
     bool isBreakable(const Cell& cell) const;
     bool isCollectable(const Cell& cell) const;
+    bool isPassable(const Cell& cell) const;
 
     vector<vector<Cell>> getMap();
     void setMap(vector<vector<Cell>> map);

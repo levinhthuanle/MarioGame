@@ -5,7 +5,8 @@
 
 #define WIDTH 1660
 #define HEIGHT 830
-#define CELL_SIZE 16
+#define SCALE 3.4
+#define CELL_SIZE 16 * SCALE
 
 
 #define ARIAL_PATH ".\Resources\fonts\arial.ttf"

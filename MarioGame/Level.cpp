@@ -72,7 +72,7 @@ int Level::run(string lv)
 	selectCharacter();
 	map = loadMap(lv);
 
-	//physicsManager.addObserver(character.get());
+	physicsManager.addObserver(character.get());
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
@@ -109,8 +109,8 @@ int Level::run(string lv)
 		//physicsManager.updatePhysics(deltaTime, map);
 		character->update(deltaTime, map);
 
-		window.clear(sf::Color::Black);
-		map.drawMap(1200, window);
+		window.clear(sf::Color::Cyan);
+		map.drawMap(0, window);
 		window.draw(character->m_sprite);
 		window.display();
 	}

@@ -33,20 +33,47 @@ void PhysicsAppliedObject::update(float deltaTime, Map map)
 
 void PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
 {
-	vector<vector<Cell>> grids = map.getMap();
-	sf::FloatRect futureBounds = m_sprite.getGlobalBounds();
-	futureBounds.top += velocity.y * deltaTime;
-	futureBounds.left += velocity.x * deltaTime;
+    const vector<vector<Cell>>& grids = map.getMap();
+    float x = m_sprite.getPosition().x;
+    float y = m_sprite.getPosition().y;
 
-	int top = futureBounds.top / CELL_SIZE;
-	int bot = (futureBounds.top + futureBounds.height) / CELL_SIZE;
-	int left = futureBounds.left / CELL_SIZE;
-	int right = (futureBounds.left + futureBounds.width) / CELL_SIZE;
-	if (!map.isCollectable(grids[left][top]) or !map.isCollectable(grids[right][top])
-		or !map.isCollectable(grids[left][bot]) or !map.isCollectable(grids[right][bot])) {
-		velocity.x = 0;
-		velocity.y = 0;
-	}
+    int midX = static_cast<int>((x + m_sprite.getGlobalBounds().width / 2) / static_cast<float>(CELL_SIZE));
+    int midY = static_cast<int>((y + m_sprite.getGlobalBounds().height / 2) / static_cast<float>(CELL_SIZE));
+    int left = static_cast<int>(x / static_cast<float>(CELL_SIZE));
+    int right = static_cast<int>((x + m_sprite.getGlobalBounds().width) / static_cast<float>(CELL_SIZE));
+    int top = static_cast<int>(y / static_cast<float>(CELL_SIZE));
+    int bottom = static_cast<int>((y + m_sprite.getGlobalBounds().height) / static_cast<float>(CELL_SIZE));
+
+    cout << left << " " << right << " " << top << " " << bottom << endl;
+
+    // Check bounds to prevent out-of-range access
+    if (left < 0 || right >= grids.size() || top < 0 || bottom >= grids[0].size()) {
+        cout << "Out of bounds access detected!" << endl;
+        return;
+    }
+
+    // Check collisions and adjust position/velocity
+    if (velocity.x > 0) { // Moving right
+        if (grids[right][midY].getType() != 0) {
+            velocity.x = 0;
+        }
+    }
+    else if (velocity.x < 0) { // Moving left
+        if (grids[left][midY].getType() != 0) {
+            velocity.x = 0;
+        }
+    }
+
+    if (velocity.y > 0) { // Moving down
+        if (grids[midX][bottom].getType() != 0) {
+            velocity.y = 0;
+        }
+    }
+    else if (velocity.y < 0) { // Moving up
+        if (grids[midX][top].getType() != 0) {
+            velocity.y = 0;
+        }
+    }
 }
 
 bool PhysicsAppliedObject::isObjectCollision(GameObject* gameObject)

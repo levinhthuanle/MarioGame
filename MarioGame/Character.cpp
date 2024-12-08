@@ -29,9 +29,9 @@ void Character::update(float deltaTime, Map map)
 
 	velocity.y += (gravity + forceY) * deltaTime;
 
-	//checkObstacle(deltaTime, map);
+	checkObstacle(deltaTime, map);
 
-	//updateTexture();
+	updateTexture();
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 
