@@ -12,7 +12,7 @@ void Character::update(float deltaTime, Map map)
 {
 	velocity.y += gravity * deltaTime;
 
-	if (checkObstacle(deltaTime, map) == 2)
+	if (checkObstacle(deltaTime, map) == 1)
 		jumping = false;
 
 	updateTexture(lastXVelocity);
@@ -68,19 +68,19 @@ Mario::Mario()
 {
 	jumpHeight = 80;
 
-	textures[0].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(1, 1, 20, 30));
-	textures[1].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(22, 1, 20, 30));
-	textures[2].loadFromFile("./Resources/Character/Mario/SmallMario/jump.png", sf::IntRect(1, 1, 20, 30));
-	textures[3].loadFromFile("./Resources/Character/Mario/SmallMario/jump.png", sf::IntRect(22, 1, 20, 30));
-	textures[4].loadFromFile("./Resources/Character/Mario/SmallMario/die.png", sf::IntRect(1, 1, 20, 30));
-	textures[5].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(1, 1, 20, 30));
-	textures[6].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(22, 1, 20, 30));
-	textures[7].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(43, 1, 20, 30));
-	textures[8].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(64, 1, 20, 30));
-	textures[9].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(85, 1, 20, 30));
-	textures[10].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(106, 1, 20, 30));
-	textures[11].loadFromFile("./Resources/Character/Mario/SmallMario/slide.png", sf::IntRect(1, 1, 20, 30));
-	textures[12].loadFromFile("./Resources/Character/Mario/SmallMario/slide.png", sf::IntRect(22, 1, 20, 30));
+	textures[0].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(3, 16, 16, 16));
+	textures[1].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(24, 16, 16, 16));
+	textures[2].loadFromFile("./Resources/Character/Mario/SmallMario/jump.png", sf::IntRect(3, 16, 16, 16));
+	textures[3].loadFromFile("./Resources/Character/Mario/SmallMario/jump.png", sf::IntRect(24, 16, 16, 16));
+	textures[4].loadFromFile("./Resources/Character/Mario/SmallMario/die.png", sf::IntRect(3, 16, 16, 16));
+	textures[5].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(3, 16, 16, 16));
+	textures[6].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(24, 16, 16, 16));
+	textures[7].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(45, 16, 16, 16));
+	textures[8].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(66, 16, 16, 16));
+	textures[9].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(87, 16, 16, 16));
+	textures[10].loadFromFile("./Resources/Character/Mario/SmallMario/walk.png", sf::IntRect(108, 16, 16, 16));
+	textures[11].loadFromFile("./Resources/Character/Mario/SmallMario/slide.png", sf::IntRect(3, 16, 16, 16));
+	textures[12].loadFromFile("./Resources/Character/Mario/SmallMario/slide.png", sf::IntRect(24, 16, 16, 16));
 
 	superTextures[0].loadFromFile("./Resources/Character/Mario/BigMario/bigStand.png", sf::IntRect(1, 1, 20, 30));
 	superTextures[1].loadFromFile("./Resources/Character/Mario/BigMario/bigStand.png", sf::IntRect(22, 1, 20, 30));
@@ -127,11 +127,13 @@ void Mario::jump()
 
 void Mario::moveLeft()
 {
+	direction = 1;
 	velocity.x = -300;
 }
 
 void Mario::moveRight()
 {
+	direction = 0;
 	velocity.x = 300;
 }
 
@@ -201,11 +203,13 @@ void Luigi::jump()
 
 void Luigi::moveLeft()
 {
+	direction = 1;
 	velocity.x = -40;
 }
 
 void Luigi::moveRight()
 {
+	direction = 0;
 	velocity.x = 40;
 }
 

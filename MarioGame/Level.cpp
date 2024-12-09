@@ -111,12 +111,19 @@ int Level::run(string lv)
 		//physicsManager.updatePhysics(deltaTime, map);
 		character->update(deltaTime, map);
 
+		sf::RectangleShape border(sf::Vector2f(character->m_sprite.getGlobalBounds().width, character->m_sprite.getGlobalBounds().height));
+		border.setPosition(character->m_sprite.getPosition());
+		border.setOutlineThickness(5);
+		border.setOutlineColor(sf::Color::Red);
+		border.setFillColor(sf::Color::Transparent);
+
 		window.clear(sf::Color::Cyan);
 		map.drawMap(0, window);
 		for (GameObject* o : items) {
 			o->draw(window);
 		}
 		window.draw(character->m_sprite);
+		window.draw(border);
 		window.display();
 	}
 

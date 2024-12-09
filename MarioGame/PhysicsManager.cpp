@@ -31,20 +31,33 @@ void PhysicsAppliedObject::update(float deltaTime, Map map)
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 }
 
-// 0 - right, 1 - left, 2 - down, 3 - up
+// 0 - not collision below, 1 - collision below
 int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
 {
     const vector<vector<Cell>>& grids = map.getMap();
     //const vector<vector<Sprite>>& sprites = map.getSpriteGrid();
+
+    // Changing these float to int would create gaps before collisions.
+    // Consult Phan Tan Dat before change it. Please!
     float x = m_sprite.getPosition().x;
     float y = m_sprite.getPosition().y;
 
-    int midX = static_cast<int>((x + m_sprite.getGlobalBounds().width / 2) / static_cast<float>(CELL_SIZE));
-    int midY = static_cast<int>((y + m_sprite.getGlobalBounds().height / 2) / static_cast<float>(CELL_SIZE));
-    int left = static_cast<int>(x / static_cast<float>(CELL_SIZE));
-    int right = static_cast<int>((x + m_sprite.getGlobalBounds().width) / static_cast<float>(CELL_SIZE));
-    int top = static_cast<int>(y / static_cast<float>(CELL_SIZE));
-    int bottom = static_cast<int>((y + m_sprite.getGlobalBounds().height) / static_cast<float>(CELL_SIZE));
+    float left = x / static_cast<float>(CELL_SIZE);
+    float right = (x + m_sprite.getGlobalBounds().width) / static_cast<float>(CELL_SIZE);
+    float top = y / static_cast<float>(CELL_SIZE);
+    float bottom = (y + m_sprite.getGlobalBounds().height) / static_cast<float>(CELL_SIZE);
+    float midX = (left + right) / 2;
+    float midY = (top + bottom) / 2;
+
+    float futureX = x + velocity.x * deltaTime;
+    float futureY = y + velocity.y * deltaTime;
+
+    float futureLeft = futureX / static_cast<float>(CELL_SIZE);
+    float futureRight = (futureX + m_sprite.getGlobalBounds().width) / static_cast<float>(CELL_SIZE);
+    float futureTop = futureY / static_cast<float>(CELL_SIZE);
+    float futureBottom = (futureY + m_sprite.getGlobalBounds().height) / static_cast<float>(CELL_SIZE);
+    float futureMidX = (futureLeft + futureRight) / 2;
+    float futureMidY = (futureTop + futureBottom) / 2;
 
     cout << left << " " << right << " " << top << " " << bottom << endl;
 
@@ -54,32 +67,34 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
         return 0;
     }
 
-    // Check collisions and adjust position/velocity
-    if (velocity.x > 0) { // Moving right
-        if (grids[right][midY].getType() != 0 /*&& sprites[x][y].getLocalBounds().intersects(m_sprite.getLocalBounds())*/) {
-            velocity.x = 0;
-            return 0;
-        }
-    }
-    else if (velocity.x < 0) { // Moving left
-        if (grids[left][midY].getType() != 0) {
-            velocity.x = 0;
-            return 1;
-        }
-    }
+    bool ground = false;
 
-    if (velocity.y > 0) { // Moving down
-        if (grids[midX][bottom].getType() != 0) {
-            velocity.y = 0;
-            return 2;
-        }
+    // right
+    if (grids[floor(futureRight)][int(top)].getType() != 0
+        or grids[floor(futureRight)][int(bottom)].getType() != 0
+        or grids[floor(futureRight)][int(midY)].getType() != 0) {
+        velocity.x = 0;
     }
-    else if (velocity.y < 0) { // Moving up
-        if (grids[midX][top].getType() != 0 ) {
-            velocity.y = 0;
-            return 3;
-        }
+    // left
+    if (grids[floor(futureLeft)][int(top)].getType() != 0
+        or grids[floor(futureLeft)][int(bottom)].getType() != 0
+        or grids[floor(futureLeft)][int(midY)].getType() != 0) {
+        velocity.x = 0;
     }
+    // down
+    if (grids[int(left)][floor(futureBottom)].getType() != 0
+        or grids[int(right)][floor(futureBottom)].getType() != 0
+        or grids[int(midX)][floor(futureBottom)].getType() != 0) {
+        velocity.y = 0;
+        ground = true;
+    }
+    // up
+    if (grids[int(left)][floor(futureTop)].getType() != 0
+        or grids[int(right)][floor(futureTop)].getType() != 0
+        or grids[int(midX)][floor(futureTop)].getType() != 0) {
+        velocity.y = 0;
+    }
+    return ground;
 }
 
 bool PhysicsAppliedObject::isObjectCollision(GameObject* gameObject)
