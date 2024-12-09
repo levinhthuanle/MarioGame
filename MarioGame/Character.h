@@ -27,36 +27,34 @@ protected:
 	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
 
 	// Texture's time control attributes
-	//chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
-	//const chrono::milliseconds updateInterval{250};
+	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
+	const chrono::milliseconds updateInterval{100};
 
 	// Information attributes
 	float jumpHeight = -1;
-	float inertia = -1;
-	float maxVelocityX = -1;
+	int inertia = 15;
 	bool breakBrick = 0;
 	bool fire = 0;
 
-	// User control attributes
-	float forceX = 0;
-	float forceY = 0;
-
 	// Support attributes
-	bool crouch = false;
-	float lastXVelocity = 0;
+	bool jumping = false;
+	bool crouching = false;
+	int lastXVelocity = 0;
 	bool direction = 0;	// face direction: 0 - right, 1 - left		
 	int currentWalkTexture = 0;	// 0 1 2
 
 public:
 	Character();
 
-	void setForceX(float x);
-
-	void setForceY(float y);
-
 	void update(float deltaTime, Map map) override;
 
-	virtual void updateTexture();
+	virtual void updateTexture(int lastXVelocity);
+
+	virtual void jump() = 0;
+
+	virtual void moveLeft() = 0;
+
+	virtual void moveRight() = 0;
 
 	virtual void setCrouch() = 0;
 
@@ -68,6 +66,12 @@ class Mario : public Character
 public:
 	Mario();
 
+	void jump();
+
+	void moveLeft();
+
+	void moveRight();
+
 	void setCrouch();
 
 	~Mario() = default;
@@ -77,6 +81,12 @@ class Luigi : public Character
 {
 public:
 	Luigi();
+
+	void jump();
+
+	void moveLeft();
+
+	void moveRight();
 
 	void setCrouch();
 
@@ -95,7 +105,7 @@ public:
 
 	Decorator(shared_ptr<Character> c);
 
-	void updateTexture();
+	void updateTexture(int lastXVelocity);
 
 	void setCrouch();
 

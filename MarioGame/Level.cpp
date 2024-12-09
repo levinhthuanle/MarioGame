@@ -96,17 +96,17 @@ int Level::run(string lv)
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			character->setForceY(-50);
+			character->jump();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			character->setForceX(-60);
+			character->moveLeft();
 			//character->m_sprite.move(-60, 0);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			character->setCrouch();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			character->setForceX(60);
+			character->moveRight();
 
 		//physicsManager.updatePhysics(deltaTime, map);
 		character->update(deltaTime, map);

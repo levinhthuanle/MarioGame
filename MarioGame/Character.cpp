@@ -8,54 +8,43 @@ Character::Character()
 	m_sprite.setScale(4, 4);
 }
 
-void Character::setForceX(float x)
-{
-	forceX = x;
-}
-
-void Character::setForceY(float y)
-{
-	if (velocity.y == 0)
-		forceY = y;
-}
-
 void Character::update(float deltaTime, Map map)
 {
-	velocity.x += forceX * deltaTime;
-	if (velocity.x > maxVelocityX)
-		velocity.x = maxVelocityX;
-	else if (velocity.x < -maxVelocityX)
-		velocity.x = -maxVelocityX;
+	velocity.y += gravity * deltaTime;
 
-	velocity.y += (gravity + forceY) * deltaTime;
+	if (checkObstacle(deltaTime, map) == 2)
+		jumping = false;
 
-	checkObstacle(deltaTime, map);
-
-	updateTexture();
+	updateTexture(lastXVelocity);
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 
-	if (forceX < 0)
-		forceX += inertia;
-	else if (forceX > 0)
-		forceX -= inertia;
-	if (forceY < 0)
-		forceY += gravity;
-	else if (forceY > 0)
-		forceY = 0;
+	lastXVelocity = velocity.x;
+
+	if (velocity.x > 0)
+		velocity.x -= inertia;
+	else if (velocity.x < 0)
+		velocity.x += inertia;
+
 }
 
-void Character::updateTexture()
+void Character::updateTexture(int lastXVelocity)
 {
-	//chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
-	//if (now - lastUpdate >= updateInterval) {
-	//	lastUpdate = now;
+	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
+	if (now - lastUpdate >= updateInterval) {
+		lastUpdate = now;
 
 		if (velocity.y != 0) {
-			if (direction)
+			if (!direction)
 				m_sprite.setTexture(textures[2]);
 			else
 				m_sprite.setTexture(textures[3]);
+		}
+		else if (velocity.x == 0) {
+			if (!direction)
+				m_sprite.setTexture(textures[0]);
+			else
+				m_sprite.setTexture(textures[1]);
 		}
 		else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
 			currentWalkTexture = (currentWalkTexture + 1) % 3;
@@ -70,7 +59,7 @@ void Character::updateTexture()
 			else if (velocity.x < 0)
 				m_sprite.setTexture(textures[12]);
 		}
-	//}
+	}
 }
 
 
@@ -78,8 +67,6 @@ void Character::updateTexture()
 Mario::Mario()
 {
 	jumpHeight = 80;
-	inertia = 250;
-	maxVelocityX = 300;
 
 	textures[0].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(1, 1, 20, 30));
 	textures[1].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(22, 1, 20, 30));
@@ -130,6 +117,24 @@ Mario::Mario()
 	m_sprite.setTexture(textures[0]);
 }
 
+void Mario::jump()
+{
+	if (!jumping) {
+		jumping = true;
+		velocity.y = -600;
+	}
+}
+
+void Mario::moveLeft()
+{
+	velocity.x = -300;
+}
+
+void Mario::moveRight()
+{
+	velocity.x = 300;
+}
+
 void Mario::setCrouch()
 {
 	return;
@@ -140,8 +145,6 @@ void Mario::setCrouch()
 Luigi::Luigi()
 {
 	jumpHeight = 90;
-	inertia = 20;
-	maxVelocityX = 60;
 
 	textures[0].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(1, 1, 20, 30));
 	textures[1].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(22, 1, 20, 30));
@@ -190,6 +193,22 @@ Luigi::Luigi()
 	fireTextures[15].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireShoot.png", sf::IntRect(22, 1, 20, 30));
 }
 
+void Luigi::jump()
+{
+	if (!velocity.y)
+		velocity.y = -60;
+}
+
+void Luigi::moveLeft()
+{
+	velocity.x = -40;
+}
+
+void Luigi::moveRight()
+{
+	velocity.x = 40;
+}
+
 void Luigi::setCrouch()
 {
 	return;
@@ -201,14 +220,14 @@ Decorator::Decorator() : character(nullptr) {}
 
 Decorator::Decorator(shared_ptr<Character> c) : character(c) {}
 
-void Decorator::updateTexture()
+void Decorator::updateTexture(int lastXVelocity)
 {
-	if (crouch) {
+	if (crouching) {
 		if (direction)
 			m_sprite.setTexture(currentTexture[2]);
 		else
 			m_sprite.setTexture(currentTexture[3]);
-		crouch = false;
+		crouching = false;
 		return;
 	}
 	if (velocity.y != 0) {
@@ -235,7 +254,7 @@ void Decorator::updateTexture()
 void Decorator::setCrouch()
 {
 	if (velocity.y == 0) {
-		Character::crouch = true;
+		crouching = true;
 	}
 }
 
