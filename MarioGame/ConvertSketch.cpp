@@ -2,7 +2,7 @@
 #include "Items.h"
 #include "Global.h"
 
-void convertSketch(string lv, Map& new_map, vector<GameObject*> enemies, vector<GameObject*> items) {
+void convertSketch(string lv, Map& new_map, vector<GameObject*>& enemies, vector<GameObject*>& items) {
     if (lv == "1-1") {
         map<int, CellProperties> cellProperties = {
         {0, {true, true}},    // Empty
@@ -72,7 +72,7 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*> enemies, vector<
             for (int x = 0; x < width; ++x) {
                 sf::Color color = sketch.getPixel(x, y);
                 if (color == Color(0, 0, 255)) {
-                    Items* item = new Items("./Resources/Item/coin.png", "false");
+                    Items* item = new Items("./Resources/Item/coin.png", "./Resources/Item/coin1.png",  "false");
                     item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                     item->m_sprite.setScale(SCALE, SCALE);
                     spriteGrid[x][y] = item->m_sprite;

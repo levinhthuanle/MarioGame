@@ -121,20 +121,20 @@ void Mario::jump()
 {
 	if (!jumping) {
 		jumping = true;
-		velocity.y = -600;
+		velocity.y = -500;
 	}
 }
 
 void Mario::moveLeft()
 {
 	direction = 1;
-	velocity.x = -300;
+	velocity.x = -200;
 }
 
 void Mario::moveRight()
 {
 	direction = 0;
-	velocity.x = 300;
+	velocity.x = 200;
 }
 
 void Mario::setCrouch()
