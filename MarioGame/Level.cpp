@@ -111,6 +111,11 @@ int Level::run(string lv)
 		//physicsManager.updatePhysics(deltaTime, map);
 		character->update(deltaTime, map);
 
+		std::cout << "Game object size: " <<  gameObjects.size() << std::endl;
+		std::cout << "Items size: " <<  items.size() << std::endl;
+		for (GameObject* o : items)
+			o->update(deltaTime);
+
 		sf::RectangleShape border(sf::Vector2f(character->m_sprite.getGlobalBounds().width, character->m_sprite.getGlobalBounds().height));
 		border.setPosition(character->m_sprite.getPosition());
 		border.setOutlineThickness(5);
@@ -119,9 +124,9 @@ int Level::run(string lv)
 
 		window.clear(sf::Color::Cyan);
 		map.drawMap(0, window);
-		for (GameObject* o : items) {
+		/*for (GameObject* o : items) {
 			o->draw(window);
-		}
+		}*/
 		window.draw(character->m_sprite);
 		window.draw(border);
 		window.display();
