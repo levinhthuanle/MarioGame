@@ -122,13 +122,14 @@ int Level::run(string lv)
 		border.setOutlineColor(sf::Color::Red);
 		border.setFillColor(sf::Color::Transparent);
 
+
 		window.clear(sf::Color::Cyan);
 		map.drawMap(0, window);
 		/*for (GameObject* o : items) {
 			o->draw(window);
 		}*/
 		window.draw(character->m_sprite);
-		window.draw(border);
+		//window.draw(border);
 		window.display();
 	}
 

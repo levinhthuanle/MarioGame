@@ -4,7 +4,7 @@ using namespace std;
 
 Character::Character()
 {
-	m_sprite.setPosition(0, 200);
+	m_sprite.setPosition(300, 300);
 	m_sprite.setScale(4, 4);
 }
 
