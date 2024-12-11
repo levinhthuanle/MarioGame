@@ -6,7 +6,9 @@
 class GameObject
 {
 public:
+	float m_elapsedTime = 0.f;
 	sf::Texture m_texture;
+	sf::Texture m_textureAfter;
 	sf::Sprite m_sprite;
 	std::string m_isBreakable;
 	std::string m_path;
@@ -18,8 +20,11 @@ public:
 			std::cerr << "Can not load Resources \n";
 			return;
 		}
-
 		m_sprite.setTexture(m_texture);
+	}
+
+	virtual void update(float deltaTime) {
+		std::cout << "Update game objects \n";
 	}
 
 	void load(std::string path) {
