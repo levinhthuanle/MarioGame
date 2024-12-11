@@ -38,7 +38,6 @@ protected:
 public:
 	virtual void update(float deltaTime, Map map) override;
 
-	// 0 - right, 1 - left, 2 - down, 3 - up
 	int checkObstacle(float deltaTime, Map map);
 
 	bool isObjectCollision(GameObject* gameObject);

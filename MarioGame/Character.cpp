@@ -15,20 +15,24 @@ void Character::update(float deltaTime, Map map)
 	if (checkObstacle(deltaTime, map) == 1)
 		jumping = false;
 
-	updateTexture(lastXVelocity);
+	updateTexture();
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 
-	lastXVelocity = velocity.x;
-
-	if (velocity.x > 0)
+	if (velocity.x > 0) {
 		velocity.x -= inertia;
-	else if (velocity.x < 0)
+		if (velocity.x < 0)
+			velocity.x = 0;
+	}
+	else if (velocity.x < 0) {
 		velocity.x += inertia;
+		if (velocity.x > 0)
+			velocity.x = 0;
+	}
 
 }
 
-void Character::updateTexture(int lastXVelocity)
+void Character::updateTexture()
 {
 	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
 	if (now - lastUpdate >= updateInterval) {
@@ -46,7 +50,7 @@ void Character::updateTexture(int lastXVelocity)
 			else
 				m_sprite.setTexture(textures[1]);
 		}
-		else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
+		else if ((velocity.x > 0 and velocity.x == maxVelocityX) or (velocity.x < 0 and velocity.x == -(maxVelocityX))) {
 			currentWalkTexture = (currentWalkTexture + 1) % 3;
 			if (velocity.x > 0)
 				m_sprite.setTexture(textures[currentWalkTexture + 5]);
@@ -62,11 +66,23 @@ void Character::updateTexture(int lastXVelocity)
 	}
 }
 
+void Character::moveLeft()
+{
+	direction = 1;
+	velocity.x = -(maxVelocityX);
+}
+
+void Character::moveRight()
+{
+	direction = 0;
+	velocity.x = maxVelocityX;
+}
+
 
 
 Mario::Mario()
 {
-	jumpHeight = 80;
+	maxVelocityX = 300;
 
 	textures[0].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(3, 16, 16, 16));
 	textures[1].loadFromFile("./Resources/Character/Mario/SmallMario/stand.png", sf::IntRect(24, 16, 16, 16));
@@ -121,20 +137,8 @@ void Mario::jump()
 {
 	if (!jumping) {
 		jumping = true;
-		velocity.y = -600;
+		velocity.y = -500;
 	}
-}
-
-void Mario::moveLeft()
-{
-	direction = 1;
-	velocity.x = -300;
-}
-
-void Mario::moveRight()
-{
-	direction = 0;
-	velocity.x = 300;
 }
 
 void Mario::setCrouch()
@@ -146,7 +150,7 @@ void Mario::setCrouch()
 
 Luigi::Luigi()
 {
-	jumpHeight = 90;
+	maxVelocityX = 350;
 
 	textures[0].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(1, 1, 20, 30));
 	textures[1].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(22, 1, 20, 30));
@@ -197,20 +201,10 @@ Luigi::Luigi()
 
 void Luigi::jump()
 {
-	if (!velocity.y)
-		velocity.y = -60;
-}
-
-void Luigi::moveLeft()
-{
-	direction = 1;
-	velocity.x = -40;
-}
-
-void Luigi::moveRight()
-{
-	direction = 0;
-	velocity.x = 40;
+	if (!jumping) {
+		jumping = true;
+		velocity.y = -550;
+	}
 }
 
 void Luigi::setCrouch()

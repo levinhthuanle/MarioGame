@@ -34,6 +34,7 @@ int Level::selectCharacter()
 		if (marioBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Mario! \n";
 			character = make_shared<Mario>();
+			physicsManager.addObserver(character.get());
 			return 1;
 		}
 		if (marioBtn.isHover(chooseWindow)) {
@@ -46,6 +47,7 @@ int Level::selectCharacter()
 		if (luigiBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Luigi! \n";
 			character = make_shared<Luigi>();
+			physicsManager.addObserver(character.get());
 			return 2;
 		}
 		if (luigiBtn.isHover(chooseWindow)) {
@@ -63,7 +65,6 @@ int Level::selectCharacter()
 		chooseWindow.display();
 	}
 
-
 	return 0;
 }
 
@@ -73,8 +74,6 @@ int Level::run(string lv)
 	selectCharacter();
 	
 	convertSketch(lv, map, enemies, items);
-
-	physicsManager.addObserver(character.get());
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
@@ -100,7 +99,6 @@ int Level::run(string lv)
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 			character->moveLeft();
-			//character->m_sprite.move(-60, 0);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			character->setCrouch();
@@ -108,8 +106,7 @@ int Level::run(string lv)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 			character->moveRight();
 
-		//physicsManager.updatePhysics(deltaTime, map);
-		character->update(deltaTime, map);
+		physicsManager.updatePhysics(deltaTime, map);
 
 		// Character's hitbox. Uncomment with draw(border) below if needed when debugging.
 		//sf::RectangleShape border(sf::Vector2f(character->m_sprite.getGlobalBounds().width, character->m_sprite.getGlobalBounds().height));

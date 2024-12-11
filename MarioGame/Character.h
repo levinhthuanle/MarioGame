@@ -30,16 +30,15 @@ protected:
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
 	const chrono::milliseconds updateInterval{100};
 
-	// Information attributes
-	float jumpHeight = -1;
+	// Constant attributes
+	int maxVelocityX = -1;
 	int inertia = 15;
 	bool breakBrick = 0;
 	bool fire = 0;
 
-	// Support attributes
+	// Temporal attributes
 	bool jumping = false;
 	bool crouching = false;
-	int lastXVelocity = 0;
 	bool direction = 0;	// face direction: 0 - right, 1 - left		
 	int currentWalkTexture = 0;	// 0 1 2
 
@@ -48,13 +47,13 @@ public:
 
 	void update(float deltaTime, Map map) override;
 
-	virtual void updateTexture(int lastXVelocity);
+	virtual void updateTexture();
 
 	virtual void jump() = 0;
 
-	virtual void moveLeft() = 0;
+	virtual void moveLeft();
 
-	virtual void moveRight() = 0;
+	virtual void moveRight();
 
 	virtual void setCrouch() = 0;
 
@@ -68,10 +67,6 @@ public:
 
 	void jump();
 
-	void moveLeft();
-
-	void moveRight();
-
 	void setCrouch();
 
 	~Mario() = default;
@@ -83,10 +78,6 @@ public:
 	Luigi();
 
 	void jump();
-
-	void moveLeft();
-
-	void moveRight();
 
 	void setCrouch();
 

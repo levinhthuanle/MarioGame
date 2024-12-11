@@ -2,7 +2,7 @@
 
 void PhysicsManager::addObserver(PhysicsObserver* observer)
 {
-	if (find(observers.begin(), observers.end(), observer) != observers.end())
+	if (observer and find(observers.begin(), observers.end(), observer) == observers.end())
 		observers.push_back(observer);
 }
 
