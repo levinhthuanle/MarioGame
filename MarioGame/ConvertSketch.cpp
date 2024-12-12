@@ -2,7 +2,7 @@
 #include "Items.h"
 #include "Global.h"
 
-void convertSketch(string lv, Map& new_map, vector<GameObject*> enemies, vector<GameObject*> items) {
+void convertSketch(string lv, Map& new_map, vector<GameObject*>& enemies, vector<GameObject*>& items) {
     if (lv == "1-1") {
         map<int, CellProperties> cellProperties = {
         {0, {true, true}},    // Empty
