@@ -20,6 +20,8 @@ protected:
 
 	shared_ptr<Character> character = nullptr;
 
+	sf::Sprite bg_sprite;
+
 public:
 	Level() {}
 

@@ -34,6 +34,7 @@ int Level::selectCharacter()
 		if (marioBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Mario! \n";
 			character = make_shared<Mario>();
+			physicsManager.addObserver(character.get());
 			return 1;
 		}
 		if (marioBtn.isHover(chooseWindow)) {
@@ -46,6 +47,7 @@ int Level::selectCharacter()
 		if (luigiBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Luigi! \n";
 			character = make_shared<Luigi>();
+			physicsManager.addObserver(character.get());
 			return 2;
 		}
 		if (luigiBtn.isHover(chooseWindow)) {
@@ -63,7 +65,6 @@ int Level::selectCharacter()
 		chooseWindow.display();
 	}
 
-
 	return 0;
 }
 
@@ -73,8 +74,6 @@ int Level::run(string lv)
 	selectCharacter();
 	
 	convertSketch(lv, map, enemies, items);
-
-	physicsManager.addObserver(character.get());
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
@@ -96,27 +95,38 @@ int Level::run(string lv)
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			character->setForceY(-50);
+			character->jump();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			character->setForceX(-60);
-			//character->m_sprite.move(-60, 0);
+			character->moveLeft();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			character->setCrouch();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			character->setForceX(60);
+			character->moveRight();
 
-		//physicsManager.updatePhysics(deltaTime, map);
-		character->update(deltaTime, map);
+		physicsManager.updatePhysics(deltaTime, map);
+
+		std::cout << "Game object size: " <<  gameObjects.size() << std::endl;
+		std::cout << "Items size: " <<  items.size() << std::endl;
+		for (GameObject* o : items)
+			o->update(deltaTime);
+
+		sf::RectangleShape border(sf::Vector2f(character->m_sprite.getGlobalBounds().width, character->m_sprite.getGlobalBounds().height));
+		border.setPosition(character->m_sprite.getPosition());
+		border.setOutlineThickness(5);
+		border.setOutlineColor(sf::Color::Red);
+		border.setFillColor(sf::Color::Transparent);
+
 
 		window.clear(sf::Color::Cyan);
 		map.drawMap(0, window);
-		for (GameObject* o : items) {
+		/*for (GameObject* o : items) {
 			o->draw(window);
-		}
+		}*/
 		window.draw(character->m_sprite);
+		//window.draw(border);
 		window.display();
 	}
 
