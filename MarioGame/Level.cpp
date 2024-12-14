@@ -121,7 +121,8 @@ int Level::run(string lv)
 
 
 		window.clear(sf::Color::Cyan);
-		map.drawMap(0, window);
+		int charPos = (character->m_sprite).getGlobalBounds().left;
+		map.drawMap(charPos - WIDTH / 2, window);
 		/*for (GameObject* o : items) {
 			o->draw(window);
 		}*/
