@@ -33,8 +33,8 @@ int Level::selectCharacter()
 
 		if (marioBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Mario! \n";
-			character = make_shared<Mario>();
-			physicsManager.addObserver(character.get());
+			character = new Mario();
+			physicsManager.addObserver(character);
 			return 1;
 		}
 		if (marioBtn.isHover(chooseWindow)) {
@@ -46,8 +46,8 @@ int Level::selectCharacter()
 
 		if (luigiBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Luigi! \n";
-			character = make_shared<Luigi>();
-			physicsManager.addObserver(character.get());
+			character = new Luigi();
+			physicsManager.addObserver(character);
 			return 2;
 		}
 		if (luigiBtn.isHover(chooseWindow)) {
@@ -121,7 +121,7 @@ int Level::run(string lv)
 
 
 		window.clear(sf::Color::Cyan);
-		map.drawMap(0, window);
+		map.drawMap(character->m_sprite.getGlobalBounds().left - WIDTH / 2, window);
 		/*for (GameObject* o : items) {
 			o->draw(window);
 		}*/

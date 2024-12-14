@@ -18,7 +18,7 @@ protected:
 	vector<GameObject*> enemies;
 	vector<GameObject*> items;
 
-	shared_ptr<Character> character = nullptr;
+	Character* character = nullptr;
 
 	sf::Sprite bg_sprite;
 

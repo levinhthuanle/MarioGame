@@ -3,9 +3,58 @@
 
 using namespace std;
 
+class Character;
+
+// State
+class CharacterState
+{
+protected:
+
+public:
+	virtual void updateTexture(Character& character) = 0;
+
+	virtual void crouch(Character& character) = 0;
+};
+
+class NormalState : public CharacterState
+{
+public:
+	NormalState(Character& character);
+
+	void updateTexture(Character& character);
+
+	void crouch(Character& character);
+};
+
+class SuperState : public CharacterState
+{
+public:
+	SuperState(Character& character);
+
+	void updateTexture(Character& character);
+
+	void crouch(Character& character);
+};
+
+class FireState : public CharacterState
+{
+public:
+	FireState(Character& character);
+
+	void updateTexture(Character& character);
+
+	void crouch(Character& character);
+};
+
+
+
+
+
 class Character : public PhysicsAppliedObject
 {
 protected:
+	CharacterState* currentState;
+
 	// 0-1: stand
 	// 2-3: jump
 	// 4: die
@@ -25,16 +74,19 @@ protected:
 	vector<sf::Texture> currentTexture = textures;
 
 	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
+	vector<sf::Texture> toFire = vector<sf::Texture>(10);
+	vector<sf::Texture> Super2Small = vector<sf::Texture>(10);
+	vector<sf::Texture> Fire2Small = vector<sf::Texture>(10);
 
 	// Texture's time control attributes
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
 	const chrono::milliseconds updateInterval{100};
 
 	// Constant attributes
-	int maxVelocityX = -1;
+	float maxVelocityX = -1;
 	int inertia = 15;
 	bool breakBrick = 0;
-	bool fire = 0;
+	bool fireable = 0;
 
 	// Temporal attributes
 	bool jumping = false;
@@ -51,14 +103,22 @@ public:
 
 	virtual void jump() = 0;
 
-	virtual void moveLeft();
+	void moveLeft();
 
-	virtual void moveRight();
+	void moveRight();
 
-	virtual void setCrouch() = 0;
+	void setCrouch();
 
 	virtual ~Character() = default;
+
+	friend class NormalState;
+	friend class SuperState;
+	friend class FireState;
 };
+
+
+
+
 
 class Mario : public Character
 {
@@ -67,7 +127,7 @@ public:
 
 	void jump();
 
-	void setCrouch();
+	//void setCrouch();
 
 	~Mario() = default;
 };
@@ -79,44 +139,7 @@ public:
 
 	void jump();
 
-	void setCrouch();
+	//void setCrouch();
 
 	~Luigi() = default;
-};
-
-
-class Decorator : public Character
-{
-protected:
-	shared_ptr<Character> character;
-	vector<sf::Texture> altTextures = vector<sf::Texture>(10);
-
-public:
-	Decorator();
-
-	Decorator(shared_ptr<Character> c);
-
-	void updateTexture(int lastXVelocity);
-
-	void setCrouch();
-
-	virtual ~Decorator() = default;
-};
-
-class SuperDecorator : public Decorator
-{
-public:
-	SuperDecorator(shared_ptr<Character> c);
-
-	void toSmall();
-
-	void toFire();
-};
-
-class FireDecorator : public Decorator
-{
-public:
-	FireDecorator(shared_ptr<Character> c);
-
-	void toSmall();
 };

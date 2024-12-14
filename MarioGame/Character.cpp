@@ -2,8 +2,152 @@
 
 using namespace std;
 
+NormalState::NormalState(Character& character)
+{
+	character.breakBrick = false;
+	character.fireable = false;
+}
+
+void NormalState::updateTexture(Character& character)
+{
+	if (character.velocity.y != 0) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.textures[2]);
+		else
+			character.m_sprite.setTexture(character.textures[3]);
+	}
+	else if (character.velocity.x == 0) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.textures[0]);
+		else
+			character.m_sprite.setTexture(character.textures[1]);
+	}
+	else if ((character.velocity.x > 0 and character.velocity.x == character.maxVelocityX) or (character.velocity.x < 0 and character.velocity.x == -(character.maxVelocityX))) {
+		character.currentWalkTexture = (character.currentWalkTexture + 1) % 3;
+		if (character.velocity.x > 0)
+			character.m_sprite.setTexture(character.textures[character.currentWalkTexture + 5]);
+		else if (character.velocity.x < 0)
+			character.m_sprite.setTexture(character.textures[character.currentWalkTexture + 8]);
+	}
+	else {
+		if (character.velocity.x > 0)
+			character.m_sprite.setTexture(character.textures[11]);
+		else if (character.velocity.x < 0)
+			character.m_sprite.setTexture(character.textures[12]);
+	}
+}
+
+void NormalState::crouch(Character& character)
+{
+	return;
+}
+
+SuperState::SuperState(Character& character)
+{
+	character.breakBrick = true;
+}
+
+void SuperState::updateTexture(Character& character)
+{
+	if (character.crouching) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.superTextures[2]);
+		else
+			character.m_sprite.setTexture(character.superTextures[2]);
+		return;
+	}
+	if (character.velocity.y != 0) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.superTextures[4]);
+		else
+			character.m_sprite.setTexture(character.superTextures[5]);
+	}
+	else if (character.velocity.x == 0) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.superTextures[0]);
+		else
+			character.m_sprite.setTexture(character.superTextures[1]);
+	}
+	else if ((character.velocity.x > 0 and character.velocity.x == character.maxVelocityX) or (character.velocity.x < 0 and character.velocity.x == -(character.maxVelocityX))) {
+		character.currentWalkTexture = (character.currentWalkTexture + 1) % 3;
+		if (character.velocity.x > 0)
+			character.m_sprite.setTexture(character.superTextures[character.currentWalkTexture + 8]);
+		else if (character.velocity.x < 0)
+			character.m_sprite.setTexture(character.superTextures[character.currentWalkTexture + 11]);
+	}
+	else {
+		if (character.velocity.x > 0)
+			character.m_sprite.setTexture(character.superTextures[6]);
+		else if (character.velocity.x < 0)
+			character.m_sprite.setTexture(character.superTextures[7]);
+	}
+}
+
+void SuperState::crouch(Character& character)
+{
+	if (character.velocity.y == 0) {
+		character.crouching = true;
+	}
+
+}
+
+FireState::FireState(Character& character)
+{
+	character.fireable = true;
+}
+
+void FireState::updateTexture(Character& character)
+{
+	if (character.crouching) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.fireTextures[2]);
+		else
+			character.m_sprite.setTexture(character.fireTextures[2]);
+		return;
+	}
+	if (character.velocity.y != 0) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.fireTextures[4]);
+		else
+			character.m_sprite.setTexture(character.fireTextures[5]);
+	}
+	else if (character.velocity.x == 0) {
+		if (!character.direction)
+			character.m_sprite.setTexture(character.fireTextures[0]);
+		else
+			character.m_sprite.setTexture(character.fireTextures[1]);
+	}
+	else if ((character.velocity.x > 0 and character.velocity.x == character.maxVelocityX) or (character.velocity.x < 0 and character.velocity.x == -(character.maxVelocityX))) {
+		character.currentWalkTexture = (character.currentWalkTexture + 1) % 3;
+		if (character.velocity.x > 0)
+			character.m_sprite.setTexture(character.fireTextures[character.currentWalkTexture + 8]);
+		else if (character.velocity.x < 0)
+			character.m_sprite.setTexture(character.fireTextures[character.currentWalkTexture + 11]);
+	}
+	else {
+		if (character.velocity.x > 0)
+			character.m_sprite.setTexture(character.fireTextures[6]);
+		else if (character.velocity.x < 0)
+			character.m_sprite.setTexture(character.fireTextures[7]);
+	}
+}
+
+void FireState::crouch(Character& character)
+{
+	if (character.velocity.y == 0) {
+		character.crouching = true;
+	}
+
+}
+
+
+
+
+
 Character::Character()
 {
+	currentState = new NormalState(*this);
+
 	m_sprite.setPosition(300, 300);
 	m_sprite.setScale(4, 4);
 }
@@ -11,6 +155,7 @@ Character::Character()
 void Character::update(float deltaTime, Map map)
 {
 	velocity.y += gravity * deltaTime;
+	jumping = true;
 
 	if (checkObstacle(deltaTime, map) == 1)
 		jumping = false;
@@ -30,6 +175,7 @@ void Character::update(float deltaTime, Map map)
 			velocity.x = 0;
 	}
 
+	crouching = false;
 }
 
 void Character::updateTexture()
@@ -38,31 +184,7 @@ void Character::updateTexture()
 	if (now - lastUpdate >= updateInterval) {
 		lastUpdate = now;
 
-		if (velocity.y != 0) {
-			if (!direction)
-				m_sprite.setTexture(textures[2]);
-			else
-				m_sprite.setTexture(textures[3]);
-		}
-		else if (velocity.x == 0) {
-			if (!direction)
-				m_sprite.setTexture(textures[0]);
-			else
-				m_sprite.setTexture(textures[1]);
-		}
-		else if ((velocity.x > 0 and velocity.x == maxVelocityX) or (velocity.x < 0 and velocity.x == -(maxVelocityX))) {
-			currentWalkTexture = (currentWalkTexture + 1) % 3;
-			if (velocity.x > 0)
-				m_sprite.setTexture(textures[currentWalkTexture + 5]);
-			else if (velocity.x < 0)
-				m_sprite.setTexture(textures[currentWalkTexture + 8]);
-		}
-		else {
-			if (velocity.x > 0)
-				m_sprite.setTexture(textures[11]);
-			else if (velocity.x < 0)
-				m_sprite.setTexture(textures[12]);
-		}
+		currentState->updateTexture(*this);
 	}
 }
 
@@ -77,6 +199,13 @@ void Character::moveRight()
 	direction = 0;
 	velocity.x = maxVelocityX;
 }
+
+void Character::setCrouch()
+{
+	currentState->crouch(*this);
+}
+
+
 
 
 
@@ -130,6 +259,8 @@ Mario::Mario()
 	fireTextures[14].loadFromFile("./Resources/Character/Mario/FireMario/fireShoot.png", sf::IntRect(1, 1, 20, 30));
 	fireTextures[15].loadFromFile("./Resources/Character/Mario/FireMario/fireShoot.png", sf::IntRect(22, 1, 20, 30));
 
+	toSuper[0].loadFromFile("./Resources/Character/Mario/FireMario/fireShoot.png", sf::IntRect(1, 1, 20, 30));
+
 	m_sprite.setTexture(textures[0]);
 }
 
@@ -141,10 +272,7 @@ void Mario::jump()
 	}
 }
 
-void Mario::setCrouch()
-{
-	return;
-}
+
 
 
 
@@ -152,19 +280,19 @@ Luigi::Luigi()
 {
 	maxVelocityX = 350;
 
-	textures[0].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(1, 1, 20, 30));
-	textures[1].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(22, 1, 20, 30));
-	textures[2].loadFromFile("./Resources/Character/Luigi/SmallLuigi/jump.png", sf::IntRect(1, 1, 20, 30));
-	textures[3].loadFromFile("./Resources/Character/Luigi/SmallLuigi/jump.png", sf::IntRect(22, 1, 20, 30));
-	textures[4].loadFromFile("./Resources/Character/Luigi/SmallLuigi/die.png", sf::IntRect(1, 1, 20, 30));
-	textures[5].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(1, 1, 20, 30));
-	textures[6].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(22, 1, 20, 30));
-	textures[7].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(43, 1, 20, 30));
-	textures[8].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(64, 1, 20, 30));
-	textures[9].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(85, 1, 20, 30));
-	textures[10].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(106, 1, 20, 30));
-	textures[11].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(1, 1, 20, 30));
-	textures[12].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(22, 1, 20, 30));
+	textures[0].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(3, 16, 16, 16));
+	textures[1].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(24, 16, 16, 16));
+	textures[2].loadFromFile("./Resources/Character/Luigi/SmallLuigi/jump.png", sf::IntRect(3, 16, 16, 16));
+	textures[3].loadFromFile("./Resources/Character/Luigi/SmallLuigi/jump.png", sf::IntRect(24, 16, 16, 16));
+	textures[4].loadFromFile("./Resources/Character/Luigi/SmallLuigi/die.png", sf::IntRect(3, 16, 16, 16));
+	textures[5].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(3, 16, 16, 16));
+	textures[6].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(24, 16, 16, 16));
+	textures[7].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(45, 16, 16, 16));
+	textures[8].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(66, 16, 16, 16));
+	textures[9].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(87, 16, 16, 16));
+	textures[10].loadFromFile("./Resources/Character/Luigi/SmallLuigi/walk.png", sf::IntRect(108, 16, 16, 16));
+	textures[11].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(3, 16, 16, 16));
+	textures[12].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(24, 16, 16, 16));
 
 	superTextures[0].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigStand.png", sf::IntRect(1, 1, 20, 30));
 	superTextures[1].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigStand.png", sf::IntRect(22, 1, 20, 30));
@@ -205,68 +333,4 @@ void Luigi::jump()
 		jumping = true;
 		velocity.y = -550;
 	}
-}
-
-void Luigi::setCrouch()
-{
-	return;
-}
-
-
-
-Decorator::Decorator() : character(nullptr) {}
-
-Decorator::Decorator(shared_ptr<Character> c) : character(c) {}
-
-void Decorator::updateTexture(int lastXVelocity)
-{
-	if (crouching) {
-		if (direction)
-			m_sprite.setTexture(currentTexture[2]);
-		else
-			m_sprite.setTexture(currentTexture[3]);
-		crouching = false;
-		return;
-	}
-	if (velocity.y != 0) {
-		if (direction)
-			m_sprite.setTexture(textures[2]);
-		else
-			m_sprite.setTexture(textures[3]);
-	}
-	else if ((velocity.x > 0 and velocity.x >= lastXVelocity) or (velocity.x < 0 and velocity.x <= lastXVelocity)) {
-		currentWalkTexture = (currentWalkTexture + 1) % 3;
-		if (velocity.x > 0)
-			m_sprite.setTexture(textures[currentWalkTexture + 5]);
-		else if (velocity.x < 0)
-			m_sprite.setTexture(textures[currentWalkTexture + 8]);
-	}
-	else {
-		if (velocity.x > 0)
-			m_sprite.setTexture(textures[11]);
-		else if (velocity.x < 0)
-			m_sprite.setTexture(textures[12]);
-	}
-}
-
-void Decorator::setCrouch()
-{
-	if (velocity.y == 0) {
-		crouching = true;
-	}
-}
-
-
-
-SuperDecorator::SuperDecorator(shared_ptr<Character> c) : Decorator(c)
-{
-	breakBrick = 1;
-	fire = 0;
-}
-
-
-
-FireDecorator::FireDecorator(shared_ptr<Character> c) : Decorator(c)
-{
-	fire = 1;
 }
