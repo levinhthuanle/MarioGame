@@ -137,7 +137,7 @@ void Mario::jump()
 {
 	if (!jumping) {
 		jumping = true;
-		velocity.y = -500;
+		velocity.y = -700;
 	}
 }
 
