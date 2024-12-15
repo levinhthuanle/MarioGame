@@ -33,8 +33,8 @@ int Level::selectCharacter()
 
 		if (marioBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Mario! \n";
-			character = make_shared<Mario>();
-			physicsManager.addObserver(character.get());
+			character = new Mario();
+			physicsManager.addObserver(character);
 			return 1;
 		}
 		if (marioBtn.isHover(chooseWindow)) {
@@ -46,8 +46,8 @@ int Level::selectCharacter()
 
 		if (luigiBtn.isClicked(chooseWindow, event)) {
 			std::cout << "Choose Luigi! \n";
-			character = make_shared<Luigi>();
-			physicsManager.addObserver(character.get());
+			character = new Luigi();
+			physicsManager.addObserver(character);
 			return 2;
 		}
 		if (luigiBtn.isHover(chooseWindow)) {
