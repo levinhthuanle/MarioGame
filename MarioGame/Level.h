@@ -11,6 +11,7 @@ using namespace std;
 class Level
 {
 protected:
+	int point = 0;
 	Map map;
 	PhysicsManager physicsManager;
 	vector<GameObject*> gameObjects;
