@@ -2,7 +2,7 @@
 #include "Items.h"
 #include "Global.h"
 
-void convertSketch(string lv, Map& new_map, vector<GameObject*>& enemies, vector<GameObject*>& items) {
+void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, vector<GameObject*>& enemies, vector<GameObject*>& items) {
     if (lv == "1-1") {
         map<int, CellProperties> cellProperties = {
         {0, {true, true}},    // Empty
@@ -20,7 +20,7 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& enemies, vector
         };
 
         map<Color, int, ColorComparator> colorToType = {
-            {Color(0, 0, 0), 0},       // Empty
+            {Color(0, 0, 0, 0), 0},    // Empty
             {Color(254, 138, 24), 1},  // Brick
             {Color(255, 255, 0), 2},   // Lucky Block
             {Color(161, 124, 49), 3},  // Grass
@@ -36,6 +36,8 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& enemies, vector
 
         // Create the map with specific properties
         new_map = Map(cellProperties, colorToType);
+
+        vector<Texture>& textures = new_map.getTextures();
 
         // Load textures for the level
         if (!new_map.loadTexture("Resources/Stages/1/brick.png", 1) ||
@@ -54,28 +56,54 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& enemies, vector
         }
         cout << "Textures loaded" << endl;
 
-        new_map.readSketch("Resources/Stages/1/sketch.png");
-
         cout << "Map loaded" << endl;
         
         sf::Image sketch;
-        if (!sketch.loadFromFile("Resources/Stages/1/sketch.png")) {
+        if (!sketch.loadFromFile("Resources/Stages/1/sketch_edited.png")) {
             cerr << "Error loading resources" << endl;
         }
 
         int width = sketch.getSize().x;
         int height = sketch.getSize().y;
 
-        vector<vector<Sprite>>& spriteGrid = new_map.getSpriteGrid();
+        vector<vector<Cell>>& cellGrid = new_map.getMap();
+        vector<vector<Sprite*>>& spriteGrid = new_map.getSpriteGrid();
+
+        cellGrid = vector<vector<Cell>>(width, vector<Cell>(height, Cell()));
+        spriteGrid = vector<vector<Sprite*>>(width, vector<Sprite*>(height, nullptr));  
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
                 sf::Color color = sketch.getPixel(x, y);
+                auto it = colorToType.find(color);
+                int type = (it != colorToType.end()) ? it->second : 0;
+                cellGrid[x][y] = Cell(x, y, type);
+                if (type == 1) {
+                    GameObject* brick = new GameObject("Resources/Stages/1/brick.png");
+                    brick->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                    brick->m_sprite.setScale(SCALE, SCALE);
+                    spriteGrid[x][y] = &brick->m_sprite;
+                    gameObjects.push_back(brick);
+                }
+                else if (type == 2) {
+                    GameObject* luckyblock = new GameObject("Resources/Stages/1/luckyblock.png");
+                    luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                    luckyblock->m_sprite.setScale(SCALE, SCALE);
+                    spriteGrid[x][y] = &luckyblock->m_sprite;
+                    gameObjects.push_back(luckyblock);
+                }
+                else {
+                    GameObject* concreteCell = new GameObject();
+                    concreteCell->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                    concreteCell->m_sprite.setScale(SCALE, SCALE);
+                    concreteCell->m_sprite.setTexture(textures[type]);
+                    spriteGrid[x][y] = &concreteCell->m_sprite;
+                }
                 if (color == Color(0, 0, 255)) {
-                    Items* item = new Items("./Resources/Item/coin.png", "./Resources/Item/coin1.png",  "false");
+                    Items* item = new Items("./Resources/Item/coin.png", "./Resources/Item/coin1.png", "false");
                     item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                     item->m_sprite.setScale(SCALE, SCALE);
-                    spriteGrid[x][y] = item->m_sprite;
+                    spriteGrid[x][y] = &item->m_sprite;
                     items.push_back(item);
                 }
             }

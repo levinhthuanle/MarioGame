@@ -40,7 +40,7 @@ public:
 class Map {
 private:
     vector<vector<Cell>> cellGrid;
-    vector<vector<Sprite>> spriteGrid;
+    vector<vector<Sprite*>> spriteGrid;
     vector<Texture> textures;
     map<int, CellProperties> cellProperties;
     map<Color, int, ColorComparator> colorToType;
@@ -54,7 +54,10 @@ public:
     bool isCollectable(const Cell& cell) const;
 
     vector<vector<Cell>>& getMap();
-    vector<vector<Sprite>>& getSpriteGrid();
+    vector<vector<Sprite*>>& getSpriteGrid();
+    vector<Texture>& getTextures() {
+        return textures;
+    }
     void setMap(vector<vector<Cell>> map);
 
     void addCell(Cell cell);

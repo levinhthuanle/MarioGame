@@ -61,7 +61,7 @@ vector<vector<Cell>>& Map::getMap() {
     return cellGrid;
 }
 
-vector<vector<Sprite>>& Map::getSpriteGrid() {
+vector<vector<Sprite*>>& Map::getSpriteGrid() {
 	return spriteGrid;
 }
 
@@ -90,35 +90,6 @@ void Map::clearMap() {
     }
 }
 
-bool Map::readSketch(string sketch_file_name) {
-    sf::Image sketch;
-    if (!sketch.loadFromFile(sketch_file_name)) {
-        cerr << "Error loading " << sketch_file_name << endl;
-        return false;
-    }
-
-    int width = sketch.getSize().x;
-    int height = sketch.getSize().y;
-
-    cellGrid = vector<vector<Cell>>(width, vector<Cell>(height, Cell()));
-    spriteGrid = vector<vector<Sprite>>(width, vector<Sprite>(height, Sprite()));
-
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            sf::Color color = sketch.getPixel(x, y);
-            auto it = colorToType.find(color);
-            int type = (it != colorToType.end()) ? it->second : 0;
-            cellGrid[x][y] = Cell(x, y, type);
-            Sprite cell;
-            cell.setTexture(textures[type]);
-            cell.setScale(SCALE, SCALE);
-            cell.setPosition((x * CELL_SIZE), (y * CELL_SIZE));
-            spriteGrid[x][y] = cell;
-        }
-    }
-    return true;
-}
-
 bool Map::loadTexture(string texture_file_name, int type) {
     if (type < 0 || type >= textures.size()) {
         cerr << "Invalid type: " << type << endl;
@@ -135,21 +106,26 @@ bool Map::loadTexture(string texture_file_name, int type) {
 }
 
 void Map::drawMap(int view, RenderWindow& window) {
+    if (view < CELL_SIZE) {
+        view = CELL_SIZE;
+    }
+    else if (view > (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x) {
+		view = (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x;
+	}
     View mapView(FloatRect(view, 0, window.getSize().x, window.getSize().y));
     window.setView(mapView);
-
     int cellWidth = CELL_SIZE;
-    int visibleStart = view / cellWidth;
-    int visibleEnd = (view + window.getSize().x) / cellWidth;
+    int visibleStart = view / cellWidth - 1;
+    int visibleEnd = (view + window.getSize().x) / cellWidth + 1;
 
-    visibleStart = std::max(0, visibleStart);
-    visibleEnd = std::min(static_cast<int>(spriteGrid.size()), visibleEnd);
+    visibleStart = std::max(1, visibleStart);
+    visibleEnd = std::min(static_cast<int>(spriteGrid.size() - 1), visibleEnd);
 
     cout << visibleStart;
 
     for (int i = visibleStart; i < visibleEnd; ++i) {
-        for (int j = 0; j < spriteGrid[i].size(); ++j) {
-            window.draw(spriteGrid[i][j]);
+        for (int j = 1; j < spriteGrid[i].size() - 1; ++j) {
+            window.draw(*spriteGrid[i][j]);
         }
     }
 }

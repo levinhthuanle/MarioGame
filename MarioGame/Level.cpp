@@ -73,7 +73,7 @@ int Level::run(string lv)
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 	
-	convertSketch(lv, map, enemies, items);
+	convertSketch(lv, map, gameObjects, enemies, items);
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
