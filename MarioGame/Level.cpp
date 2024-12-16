@@ -101,6 +101,10 @@ int Level::run(string lv) {
 	Button heart2Btn("./Resources/item/heart.png", 1550, 30);
 	Button heartWhiteBtn("./Resources/item/heartWhite.png", 1500, 30);
 	Button heartwhite2Btn("./Resources/item/heartWhite.png", 1550, 30);
+	sf::Texture bgTexture;
+	bgTexture.loadFromFile("./Resources/background/mariobackground.jpg");
+	bg_sprite.setTexture(bgTexture);
+	bg_sprite.setPosition(0.f, 0.f);
 
 
 	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
@@ -150,6 +154,7 @@ int Level::run(string lv) {
 
 		// Draw items
 		window.clear(sf::Color::Cyan);
+		window.draw(bg_sprite);
 		window.setView(mainView);
 		map.drawMap(charPos - WIDTH / 2, window);
 		window.draw(character->m_sprite);
