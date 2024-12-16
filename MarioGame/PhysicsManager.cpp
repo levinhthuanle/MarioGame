@@ -59,7 +59,7 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
     float futureMidX = (futureLeft + futureRight) / 2;
     float futureMidY = (futureTop + futureBottom) / 2;
 
-    cout << left << " " << right << " " << top << " " << bottom << endl;
+    // cout << left << " " << right << " " << top << " " << bottom << endl;
 
     // Check bounds to prevent out-of-range access
     if (left < 0 || right >= grids.size() || top < 0 || bottom >= grids[0].size()) {
@@ -93,6 +93,17 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
         or grids[int(right)][floor(futureTop)].getType() != 0
         or grids[int(midX)][floor(futureTop)].getType() != 0) {
         velocity.y = 0;
+
+        // 1 brick
+        // 2 lucky box
+        //if (grids[x][y].getType())
+        std::string type = "Brick";
+        if (grids[int(midX)][floor(futureTop)].getType() == 2)
+            type = "Lucky Box";
+        if (grids[int(midX)][floor(futureTop)].getType() == 0)
+            type = "Nothing";
+        std::cout << "Try to break " << type << std::endl;
+        return grids[int(midX)][floor(futureTop)].getType();
     }
     return ground;
 }

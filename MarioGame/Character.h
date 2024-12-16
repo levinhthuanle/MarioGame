@@ -103,11 +103,27 @@ public:
 
 	virtual void jump() = 0;
 
+	void checkAction() {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			this->jump();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			this->moveLeft();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			this->setCrouch();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			this->moveRight();
+
+	}
+
 	void moveLeft();
 
 	void moveRight();
 
 	void setCrouch();
+
 
 	virtual ~Character() = default;
 

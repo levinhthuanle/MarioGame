@@ -115,7 +115,7 @@ void Map::drawMap(int view, RenderWindow& window) {
     visibleStart = std::max(1, visibleStart);
     visibleEnd = std::min(static_cast<int>(spriteGrid.size() - 1), visibleEnd);
 
-    cout << visibleStart;
+    //cout << visibleStart;
 
     for (int i = visibleStart; i < visibleEnd; ++i) {
         for (int j = 1; j < spriteGrid[i].size() - 1; ++j) {
