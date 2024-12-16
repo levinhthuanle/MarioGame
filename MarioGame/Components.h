@@ -5,6 +5,8 @@ class Button {
 public:
 	sf::Texture texture;
 	sf::Sprite sprite;
+	int m_x = 0;
+	int m_y = 0;
 
 	Button() {}
 
@@ -15,6 +17,17 @@ public:
 		}
 
 		sprite.setTexture(texture);
+	}
+
+	Button(std::string path, int x, int y) {
+		if (!texture.loadFromFile(path)) {
+			std::cerr << "Can not load button Texture \n";
+			return;
+		}
+
+
+		sprite.setTexture(texture);
+		sprite.setPosition(x, y);
 	}
 
 	bool isClicked(const sf::RenderWindow& window, sf::Event event) {
@@ -53,6 +66,10 @@ public:
 
 	void draw(sf::RenderWindow& window, float x, float y) {
 		sprite.setPosition(x, y);
+		window.draw(sprite);
+	}
+
+	void draw(sf::RenderWindow& window) {
 		window.draw(sprite);
 	}
 };

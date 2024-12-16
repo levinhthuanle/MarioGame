@@ -14,6 +14,26 @@ Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects), 
 	}
 }
 
+int Level::pause()
+{
+	sf::RenderWindow pauseWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+
+	while (pauseWindow.isOpen()) {
+		sf::Event event;
+		while (pauseWindow.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				pauseWindow.close();
+				return 4;
+			}
+		}
+
+		pauseWindow.clear();
+		pauseWindow.display();
+	}
+	
+	return 0;
+}
+
 int Level::selectCharacter()
 {
 	std::cout << "Select Character! \n";
@@ -68,24 +88,33 @@ int Level::selectCharacter()
 	return 0;
 }
 
-int Level::run(string lv)
-{
+int Level::run(string lv) {
+	point = 0;
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
-	
+
 	convertSketch(lv, map, gameObjects, enemies, items);
 
+	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
-		
+
 	sf::Clock clock;
 	float deltaTime = 0.025f;
+
+	sf::View mainView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
+	sf::View uiView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 				return 4;
+			}
+
+			if (pauseBtn.isClicked(window, event)) {
+				std::cout << "Pause clicked!\n";
+				pause();
 			}
 		}
 
@@ -108,28 +137,19 @@ int Level::run(string lv)
 
 		physicsManager.updatePhysics(deltaTime, map);
 
-		std::cout << "Game object size: " <<  gameObjects.size() << std::endl;
-		std::cout << "Items size: " <<  items.size() << std::endl;
-		for (GameObject* o : items)
-			o->update(deltaTime);
 
-		sf::RectangleShape border(sf::Vector2f(character->m_sprite.getGlobalBounds().width, character->m_sprite.getGlobalBounds().height));
-		border.setPosition(character->m_sprite.getPosition());
-		border.setOutlineThickness(5);
-		border.setOutlineColor(sf::Color::Red);
-		border.setFillColor(sf::Color::Transparent);
-
+		int charPos = (character->m_sprite).getGlobalBounds().left;
+		mainView.setCenter(charPos, HEIGHT / 2); 
 
 		window.clear(sf::Color::Cyan);
-		int charPos = (character->m_sprite).getGlobalBounds().left;
+
+		window.setView(mainView);
 		map.drawMap(charPos - WIDTH / 2, window);
-		/*for (GameObject* o : items) {
-			o->draw(window);
-		}*/
 		window.draw(character->m_sprite);
-		//window.draw(border);
+
+		window.setView(uiView);
+		pauseBtn.draw(window, 100, 50); 
+
 		window.display();
 	}
-
-	return 0;
 }

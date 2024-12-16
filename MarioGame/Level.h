@@ -28,6 +28,8 @@ public:
 
 	Level(vector<GameObject*> objects, Character* c);
 
+	int pause();
+
 	int selectCharacter();
 
 	int run(string lv);
