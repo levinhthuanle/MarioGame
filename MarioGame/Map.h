@@ -68,6 +68,8 @@ public:
     bool loadTexture(string texture_file_name, int type);
 
     void drawMap(int view, RenderWindow& window);
+
+    void removeCell(int x, int y);
 };
 //Sample usage
 //#include "Map.h"

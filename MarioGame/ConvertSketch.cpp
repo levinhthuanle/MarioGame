@@ -100,11 +100,18 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
                     spriteGrid[x][y] = &concreteCell->m_sprite;
                 }
                 if (color == Color(0, 0, 255)) {
-                    Items* item = new Items("./Resources/Item/coin.png", "./Resources/Item/coin1.png", "false");
+                    Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");
                     item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                     item->m_sprite.setScale(SCALE, SCALE);
                     spriteGrid[x][y] = &item->m_sprite;
                     items.push_back(item);
+                }
+                if (color == Color(101, 19, 19)) {
+                    GameObject* enemy = new GameObject(); //Change to Enemy class if nesscessary
+                    enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                    enemy->m_sprite.setScale(SCALE, SCALE);
+                    spriteGrid[x][y] = &enemy->m_sprite;
+                    enemies.push_back(enemy);
                 }
             }
         }

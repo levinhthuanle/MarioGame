@@ -129,3 +129,10 @@ void Map::drawMap(int view, RenderWindow& window) {
         }
     }
 }
+
+void Map::removeCell(int x, int y) {
+    if (x >= 0 && x < cellGrid.size() && y >= 0 && y < cellGrid[0].size()) {
+		cellGrid[x][y] = Cell(x, y, 0);
+        spriteGrid[x][y] = nullptr;
+	}
+}
