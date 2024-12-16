@@ -96,6 +96,13 @@ int Level::run(string lv) {
 	convertSketch(lv, map, gameObjects, enemies, items);
 
 	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
+	Button heartBtn("./Resources/item/heart.png", 1450, 30);
+	Button heart1Btn("./Resources/item/heart.png", 1500, 30);
+	Button heart2Btn("./Resources/item/heart.png", 1550, 30);
+	Button heartWhiteBtn("./Resources/item/heartWhite.png", 1500, 30);
+	Button heartwhite2Btn("./Resources/item/heartWhite.png", 1550, 30);
+
+
 	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
@@ -151,6 +158,11 @@ int Level::run(string lv) {
 		pauseBtn.draw(window, 100, 50); 
 		pointText.draw(window);
 
+		heartBtn.draw(window);
+		if (lifeHealth >= 2) heart1Btn.draw(window);
+			else heartWhiteBtn.draw(window);
+		if (lifeHealth == 3) heart2Btn.draw(window);
+			else heartwhite2Btn.draw(window);
 
 		window.display();
 	}
