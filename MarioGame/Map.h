@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <map>
+#include "GameObject.h"
 
 using namespace std;
 using namespace sf;
@@ -61,7 +62,6 @@ public:
     void setMap(vector<vector<Cell>> map);
 
     void addCell(Cell cell);
-    void removeCell(int x, int y);
     void clearMap();
 
     bool readSketch(string sketch_file_name);
@@ -69,7 +69,7 @@ public:
 
     void drawMap(int view, RenderWindow& window);
 
-    void removeCell(int x, int y);
+    void removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne);
 };
 //Sample usage
 //#include "Map.h"

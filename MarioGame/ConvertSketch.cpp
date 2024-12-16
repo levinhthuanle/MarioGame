@@ -93,11 +93,9 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
                     gameObjects.push_back(luckyblock);
                 }
                 else {
-                    GameObject* concreteCell = new GameObject();
-                    concreteCell->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-                    concreteCell->m_sprite.setScale(SCALE, SCALE);
-                    concreteCell->m_sprite.setTexture(textures[type]);
-                    spriteGrid[x][y] = &concreteCell->m_sprite;
+                    spriteGrid[x][y] = new Sprite(textures[type]);
+                    spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                    spriteGrid[x][y]->setScale(SCALE, SCALE);
                 }
                 if (color == Color(0, 0, 255)) {
                     Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");

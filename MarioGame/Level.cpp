@@ -105,6 +105,10 @@ int Level::run(string lv) {
 	sf::View mainView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 	sf::View uiView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 
+	for (int i = 0; i < 20; i++) {
+		map.removeGameObj(gameObjects, gameObjects[i]);
+	}
+
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {

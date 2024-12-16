@@ -76,12 +76,6 @@ void Map::addCell(Cell cell) {
     }
 }
 
-void Map::removeCell(int x, int y) {
-    if (x >= 0 && x < cellGrid.size() && y >= 0 && y < cellGrid[0].size()) {
-        cellGrid[x][y] = Cell(x, y, 0);
-    }
-}
-
 void Map::clearMap() {
     for (int i = 0; i < cellGrid.size(); i++) {
         for (int j = 0; j < cellGrid[i].size(); j++) {
@@ -130,9 +124,16 @@ void Map::drawMap(int view, RenderWindow& window) {
     }
 }
 
-void Map::removeCell(int x, int y) {
-    if (x >= 0 && x < cellGrid.size() && y >= 0 && y < cellGrid[0].size()) {
-		cellGrid[x][y] = Cell(x, y, 0);
-        spriteGrid[x][y] = nullptr;
+void Map::removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne) {
+    int x_coord = static_cast<int>(removeOne->m_sprite.getPosition().x / CELL_SIZE);
+    int y_coord = static_cast<int>(removeOne->m_sprite.getPosition().y / CELL_SIZE);
+    if (x_coord >= 0 && x_coord < cellGrid.size() &&
+        y_coord >= 0 && y_coord < cellGrid[0].size()) {
+		cellGrid[x_coord][y_coord] = Cell(x_coord, y_coord, 0);
+        spriteGrid[x_coord][y_coord] = new Sprite(textures[0]);
+        spriteGrid[x_coord][y_coord]->setPosition(x_coord * CELL_SIZE, y_coord * CELL_SIZE);
+        spriteGrid[x_coord][y_coord]->setScale(SCALE, SCALE);
 	}
+	gameObj.erase(std::remove(gameObj.begin(), gameObj.end(), removeOne), gameObj.end());
+    cout << "Removed cell at " << x_coord << " " << y_coord << endl;
 }
