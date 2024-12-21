@@ -9,4 +9,4 @@
 using namespace std;
 using namespace sf;
 
-void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, vector<GameObject*>& enemies, vector<GameObject*>& items);
+void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character);

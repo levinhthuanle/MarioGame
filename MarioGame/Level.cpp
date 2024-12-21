@@ -93,7 +93,7 @@ int Level::run(string lv) {
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
-	convertSketch(lv, map, gameObjects, enemies, items);
+	convertSketch(lv, map, gameObjects, enemies, items, character->m_sprite);
 
 	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
@@ -105,9 +105,9 @@ int Level::run(string lv) {
 	sf::View mainView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 	sf::View uiView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 
-	for (int i = 0; i < 20; i++) {
+	/*for (int i = 0; i < 20; i++) {
 		map.removeGameObj(gameObjects, gameObjects[i]);
-	}
+	}*/
 
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
@@ -148,7 +148,7 @@ int Level::run(string lv) {
 		window.clear(sf::Color::Cyan);
 
 		window.setView(mainView);
-		map.drawMap(charPos - WIDTH / 2, window);
+		map.drawMap(character->m_sprite, window);
 		window.draw(character->m_sprite);
 
 		window.setView(uiView);

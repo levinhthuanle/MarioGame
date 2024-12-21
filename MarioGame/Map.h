@@ -67,7 +67,7 @@ public:
     bool readSketch(string sketch_file_name);
     bool loadTexture(string texture_file_name, int type);
 
-    void drawMap(int view, RenderWindow& window);
+    void drawMap(const Sprite& character, RenderWindow& window);
 
     void removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne);
 };

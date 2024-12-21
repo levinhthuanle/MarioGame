@@ -99,26 +99,42 @@ bool Map::loadTexture(string texture_file_name, int type) {
     return true;
 }
 
-void Map::drawMap(int view, RenderWindow& window) {
-    if (view < CELL_SIZE) {
-        view = CELL_SIZE;
+void Map::drawMap(const Sprite& character, RenderWindow& window) {
+    int view_x = character.getGlobalBounds().left - WIDTH/2;
+    if (view_x < CELL_SIZE) {
+        view_x = CELL_SIZE;
     }
-    else if (view > (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x) {
-		view = (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x;
+    else if (view_x > (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x) {
+		view_x = (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x;
 	}
-    View mapView(FloatRect(view, 0, window.getSize().x, window.getSize().y));
+
+    int veiw_y = character.getGlobalBounds().top - HEIGHT / 2;
+    if (veiw_y < CELL_SIZE) {
+		veiw_y = CELL_SIZE;
+	}
+    else if (veiw_y > (spriteGrid[0].size() - 1) * CELL_SIZE - window.getSize().y) {
+		veiw_y = (spriteGrid[0].size() - 1) * CELL_SIZE - window.getSize().y;
+	}
+
+    View mapView(FloatRect(view_x, veiw_y, window.getSize().x, window.getSize().y));
     window.setView(mapView);
+
     int cellWidth = CELL_SIZE;
-    int visibleStart = view / cellWidth - 1;
-    int visibleEnd = (view + window.getSize().x) / cellWidth + 1;
+    int visibleStart_x = view_x / cellWidth - 1;
+    int visibleEnd_x = (view_x + window.getSize().x) / cellWidth + 1;
 
-    visibleStart = std::max(1, visibleStart);
-    visibleEnd = std::min(static_cast<int>(spriteGrid.size() - 1), visibleEnd);
+    visibleStart_x = std::max(1, visibleStart_x);
+    visibleEnd_x = std::min(static_cast<int>(spriteGrid.size() - 1), visibleEnd_x);
 
-    cout << visibleStart;
+    int cellHeight = CELL_SIZE;
+    int visibleStart_y = veiw_y / cellHeight - 1;
+    int visibleEnd_y = (veiw_y + window.getSize().y) / cellHeight + 1;
 
-    for (int i = visibleStart; i < visibleEnd; ++i) {
-        for (int j = 1; j < spriteGrid[i].size() - 1; ++j) {
+    visibleStart_y = std::max(1, visibleStart_y);
+    visibleEnd_y = std::min(static_cast<int>(spriteGrid[0].size() - 1), visibleEnd_y);
+
+    for (int i = visibleStart_x; i < visibleEnd_x; ++i) {
+        for (int j = visibleStart_y - 1; j < visibleEnd_y; ++j) {
             window.draw(*spriteGrid[i][j]);
         }
     }
