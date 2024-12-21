@@ -11,6 +11,8 @@ using namespace std;
 class Level
 {
 protected:
+	int lifeHealth = 2;
+
 	int point = 0;
 	Map map;
 	PhysicsManager physicsManager;

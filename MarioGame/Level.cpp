@@ -96,6 +96,19 @@ int Level::run(string lv) {
 	convertSketch(lv, map, gameObjects, enemies, items, character->m_sprite);
 
 	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
+	Button heartBtn("./Resources/item/heart.png", 1450, 30);
+	Button heart1Btn("./Resources/item/heart.png", 1500, 30);
+	Button heart2Btn("./Resources/item/heart.png", 1550, 30);
+	Button heartWhiteBtn("./Resources/item/heartWhite.png", 1500, 30);
+	Button heartwhite2Btn("./Resources/item/heartWhite.png", 1550, 30);
+	sf::Texture bgTexture;
+	bgTexture.loadFromFile("./Resources/background/mariobackground.jpg");
+	bg_sprite.setTexture(bgTexture);
+	bg_sprite.setPosition(0.f, 0.f);
+
+
+	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
+
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
 
@@ -105,9 +118,9 @@ int Level::run(string lv) {
 	sf::View mainView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 	sf::View uiView(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 
-	/*for (int i = 0; i < 20; i++) {
-		map.removeGameObj(gameObjects, gameObjects[i]);
-	}*/
+	//for (int i = 0; i < 20; i++) {
+	//	map.removeGameObj(gameObjects, gameObjects[i]);
+	//}
 
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
@@ -122,37 +135,39 @@ int Level::run(string lv) {
 			}
 		}
 
+		//for (auto x: gameObjects)
+		//	if (character->checkObstacle(x))
+
+		int objectBreak = character->checkObstacle(deltaTime, map);
+
 		sf::Time elapsed = clock.restart();
 		if (elapsed.asSeconds() < deltaTime) {
 			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			character->jump();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			character->moveLeft();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			character->setCrouch();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			character->moveRight();
-
+		// Move and jump for character
+		character->checkAction();
 		physicsManager.updatePhysics(deltaTime, map);
 
-
 		int charPos = (character->m_sprite).getGlobalBounds().left;
-		mainView.setCenter(charPos, HEIGHT / 2); 
+		mainView.setCenter(charPos, HEIGHT / 2);
 
+		// Draw items
 		window.clear(sf::Color::Cyan);
-
+		window.draw(bg_sprite);
 		window.setView(mainView);
 		map.drawMap(character->m_sprite, window);
 		window.draw(character->m_sprite);
 
 		window.setView(uiView);
 		pauseBtn.draw(window, 100, 50); 
+		pointText.draw(window);
+
+		heartBtn.draw(window);
+		if (lifeHealth >= 2) heart1Btn.draw(window);
+			else heartWhiteBtn.draw(window);
+		if (lifeHealth == 3) heart2Btn.draw(window);
+			else heartwhite2Btn.draw(window);
 
 		window.display();
 	}
