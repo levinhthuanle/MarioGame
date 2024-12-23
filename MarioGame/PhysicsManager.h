@@ -38,7 +38,7 @@ protected:
 public:
 	virtual void update(float deltaTime, Map map) override;
 
-	int checkObstacle(float deltaTime, Map map);
+	int checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos);
 
 	bool isObjectCollision(GameObject* gameObject);
 };

@@ -157,7 +157,8 @@ void Character::update(float deltaTime, Map map)
 	velocity.y += gravity * deltaTime;
 	jumping = true;
 
-	if (checkObstacle(deltaTime, map) == 1)
+	std::pair<int, int> nothing = { 0, 0 };
+	if (checkObstacle(deltaTime, map, nothing) == 1)
 		jumping = false;
 
 	updateTexture();

@@ -95,7 +95,7 @@ int Level::run(string lv) {
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
-	map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);
+	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
 	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
 	Button heartBtn("./Resources/item/heart.png", 1450, 30);
@@ -139,8 +139,11 @@ int Level::run(string lv) {
 
 		//for (auto x: gameObjects)
 		//	if (character->checkObstacle(x))
-
-		int objectBreak = character->checkObstacle(deltaTime, map);
+		std::pair<int, int> objectBreakPos = { 0, 0 };
+		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos);
+		if (objectBreak != 0) {
+			map.removeGameObj(objMap, bricks, luckyblocks, items, objectBreakPos.first, objectBreakPos.second);
+		}
 
 		sf::Time elapsed = clock.restart();
 		if (elapsed.asSeconds() < deltaTime) {

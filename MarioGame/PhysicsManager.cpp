@@ -26,13 +26,14 @@ void PhysicsAppliedObject::update(float deltaTime, Map map)
 	// Apply gravity
 	velocity.y += gravity * deltaTime;
 
-	checkObstacle(deltaTime, map);
+    std::pair<int, int> temp = { 0, 0 };
+	checkObstacle(deltaTime, map, temp);
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 }
 
 // 0 - not collision below, 1 - collision below
-int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
+int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos)
 {
     const vector<vector<Cell>>& grids = map.getMap();
     //const vector<vector<Sprite>>& sprites = map.getSpriteGrid();
@@ -103,6 +104,8 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map)
         if (grids[int(midX)][floor(futureTop)].getType() == 0)
             type = "Nothing";
         std::cout << "Try to break " << type << std::endl;
+        pos.first = int(midX);
+        pos.second = floor(futureTop);
         return grids[int(midX)][floor(futureTop)].getType();
     }
     return ground;
