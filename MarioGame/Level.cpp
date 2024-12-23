@@ -139,10 +139,20 @@ int Level::run(string lv) {
 
 		//for (auto x: gameObjects)
 		//	if (character->checkObstacle(x))
+		//std::pair<int, int> objectBreakPos = { 0, 0 };
+		//int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos);
+		//if (objectBreak != 0) {
+		//	map.removeGameObj(objMap, bricks, luckyblocks, items, objectBreakPos.first, objectBreakPos.second);
+		//}
+
 		std::pair<int, int> objectBreakPos = { 0, 0 };
-		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos);
-		if (objectBreak != 0) {
-			map.removeGameObj(objMap, bricks, luckyblocks, items, objectBreakPos.first, objectBreakPos.second);
+		vector<GameObject*> objTouch;
+		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos, objMap, objTouch);
+		if (!objTouch.empty() && objTouch[0] != nullptr) {
+			if (objTouch[0]->m_name == "Lucky Block") {
+				cout << "Touch " << objTouch[0]->m_name << endl;
+				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
+			}
 		}
 
 		sf::Time elapsed = clock.restart();

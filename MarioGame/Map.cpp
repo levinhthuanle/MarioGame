@@ -180,3 +180,8 @@ void Map::removeGameObj(vector<vector<GameObject*>>& objMap,vector<GameObject*>&
 	}
 }
 
+void Map::removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>& brick, vector<GameObject*>& luckyBlock, vector<GameObject*>& coin, GameObject* obj) {
+	int x = round((obj->m_sprite.getGlobalBounds().left / CELL_SIZE));
+	int y = round((obj->m_sprite.getGlobalBounds().top / CELL_SIZE));
+	removeGameObj(objMap, brick, luckyBlock, coin, x, y);
+}

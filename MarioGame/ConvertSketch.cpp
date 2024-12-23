@@ -95,6 +95,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             cellGrid[x][y] = Cell(x, y, type);
             if (type == 1) {
                 GameObject* brick = new GameObject("Resources/Tile/brick.png");
+                brick->m_name = "Brick";
                 brick->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 brick->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &brick->m_sprite;
@@ -104,6 +105,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             }
             else if (type == 2) {
                 GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png");
+                luckyblock->m_name = "Lucky Block";
                 luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 luckyblock->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &luckyblock->m_sprite;
@@ -118,7 +120,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = nullptr;
             }
             if (color == Color(0, 0, 255)) {
-                Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");
+                Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");\
+                item->m_name = "Coin";
                 item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 item->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &item->m_sprite;
@@ -127,6 +130,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             }
             if (color == Color(101, 19, 19)) {
                 GameObject* enemy = new GameObject(); //Change to Enemy class if nesscessary
+                enemy->m_name = "Enemy";
                 enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 enemy->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &enemy->m_sprite;

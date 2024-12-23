@@ -3,9 +3,12 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
 class GameObject
 {
 public:
+	string m_name;
 	float m_elapsedTime = 0.f;
 	sf::Texture m_texture;
 	sf::Texture m_textureAfter;
@@ -21,6 +24,15 @@ public:
 			return;
 		}
 		m_sprite.setTexture(m_texture);
+	}
+
+	GameObject(std::string path, std::string name) {
+		if (!m_texture.loadFromFile(path)) {
+			std::cerr << "Can not load Resources \n";
+			return;
+		}
+		m_sprite.setTexture(m_texture);
+		m_name = name;
 	}
 
 	virtual void update(float deltaTime) {
