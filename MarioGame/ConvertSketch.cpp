@@ -2,7 +2,7 @@
 #include "Items.h"
 #include "Global.h"
 
-void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character) {
+void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character) {
     map<int, CellProperties> cellProperties = {
         {0, {true, true}},    // Empty
         {1, {true, false}},   // Brick
@@ -77,6 +77,7 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
     int width = sketch.getSize().x;
     int height = sketch.getSize().y;
 
+    objMap = vector<vector<GameObject*>>(width, vector<GameObject*>(height, nullptr));
     vector<vector<Cell>>& cellGrid = new_map.getMap();
     vector<vector<Sprite*>>& spriteGrid = new_map.getSpriteGrid();
 
@@ -98,6 +99,8 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
                 brick->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &brick->m_sprite;
                 gameObjects.push_back(brick);
+                bricks.push_back(brick);
+                objMap[x][y] = brick;
             }
             else if (type == 2) {
                 GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png");
@@ -105,11 +108,14 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
                 luckyblock->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &luckyblock->m_sprite;
                 gameObjects.push_back(luckyblock);
+                luckyblocks.push_back(luckyblock);
+                objMap[x][y] = luckyblock;
             }
             else {
                 spriteGrid[x][y] = new Sprite(textures[type]);
                 spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 spriteGrid[x][y]->setScale(SCALE, SCALE);
+                objMap[x][y] = nullptr;
             }
             if (color == Color(0, 0, 255)) {
                 Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");
@@ -117,6 +123,7 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
                 item->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &item->m_sprite;
                 items.push_back(item);
+                objMap[x][y] = item;
             }
             if (color == Color(101, 19, 19)) {
                 GameObject* enemy = new GameObject(); //Change to Enemy class if nesscessary
@@ -124,9 +131,11 @@ void convertSketch(string lv, Map& new_map, vector<GameObject*>& gameObjects, ve
                 enemy->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &enemy->m_sprite;
                 enemies.push_back(enemy);
+                objMap[x][y] = enemy;
             }
             if (color == Color(85, 42, 83)) {
 				character.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                objMap[x][y] = nullptr;
 			}
         }
     }

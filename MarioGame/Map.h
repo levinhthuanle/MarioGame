@@ -45,6 +45,7 @@ private:
     vector<Texture> textures;
     map<int, CellProperties> cellProperties;
     map<Color, int, ColorComparator> colorToType;
+    vector<vector<GameObject*>> gameObjects;
 
 public:
     Map();
@@ -70,6 +71,7 @@ public:
     void drawMap(const Sprite& character, RenderWindow& window);
 
     void removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne);
+    void removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>& brick, vector<GameObject*>& luckyBlock, vector<GameObject*>& coin, int x, int y);
 };
 //Sample usage
 //#include "Map.h"

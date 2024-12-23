@@ -93,7 +93,9 @@ int Level::run(string lv) {
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
-	convertSketch(lv, map, gameObjects, enemies, items, character->m_sprite);
+	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
+
+	map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);
 
 	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
 	Button heartBtn("./Resources/item/heart.png", 1450, 30);

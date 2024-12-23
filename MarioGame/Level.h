@@ -16,7 +16,10 @@ protected:
 	int point = 0;
 	Map map;
 	PhysicsManager physicsManager;
+	vector<vector<GameObject*>> objMap;
 	vector<GameObject*> gameObjects;
+	vector<GameObject*> bricks;
+	vector<GameObject*> luckyblocks;
 
 	vector<GameObject*> enemies;
 	vector<GameObject*> items;

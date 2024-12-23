@@ -141,6 +141,11 @@ void Map::drawMap(const Sprite& character, RenderWindow& window) {
 }
 
 void Map::removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne) {
+    if (std::find(gameObj.begin(), gameObj.end(), removeOne) == gameObj.end()) {
+        cout << "Object not found" << endl;
+        return;
+    }
+
     int x_coord = static_cast<int>(removeOne->m_sprite.getPosition().x / CELL_SIZE);
     int y_coord = static_cast<int>(removeOne->m_sprite.getPosition().y / CELL_SIZE);
     if (x_coord >= 0 && x_coord < cellGrid.size() &&
@@ -153,3 +158,25 @@ void Map::removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne) {
 	gameObj.erase(std::remove(gameObj.begin(), gameObj.end(), removeOne), gameObj.end());
     cout << "Removed cell at " << x_coord << " " << y_coord << endl;
 }
+
+void Map::removeGameObj(vector<vector<GameObject*>>& objMap,vector<GameObject*>& brick, vector<GameObject*>& luckyBlock, vector<GameObject*>& coin, int x, int y) {
+    if (x >= 0 && x < cellGrid.size() &&
+        y >= 0 && y < cellGrid[0].size() && objMap[x][y] != nullptr) {
+        if (cellGrid[x][y].getType() == 1) {
+            brick.erase(std::remove(brick.begin(), brick.end(), objMap[x][y]), brick.end());
+        }
+        else if (cellGrid[x][y].getType() == 2) {
+            luckyBlock.erase(std::remove(luckyBlock.begin(), luckyBlock.end(), objMap[x][y]), luckyBlock.end());
+        }
+        else if (cellGrid[x][y].getType() == 3) {
+            coin.erase(std::remove(coin.begin(), coin.end(), objMap[x][y]), coin.end());
+        }
+        cellGrid[x][y] = Cell(x, y, 0);
+        spriteGrid[x][y] = new Sprite(textures[0]);
+        spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
+        spriteGrid[x][y]->setScale(SCALE, SCALE);
+        objMap[x][y] = nullptr;
+        cout << "Removed cell at " << x << " " << y << endl;
+	}
+}
+
