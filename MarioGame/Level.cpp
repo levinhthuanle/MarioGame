@@ -139,13 +139,6 @@ int Level::run(string lv) {
 			}
 		}
 
-		//for (auto x: gameObjects)
-		//	if (character->checkObstacle(x))
-		//std::pair<int, int> objectBreakPos = { 0, 0 };
-		//int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos);
-		//if (objectBreak != 0) {
-		//	map.removeGameObj(objMap, bricks, luckyblocks, items, objectBreakPos.first, objectBreakPos.second);
-		//}
 
 		std::pair<int, int> objectBreakPos = { 0, 0 };
 		vector<GameObject*> objTouch;
@@ -161,11 +154,17 @@ int Level::run(string lv) {
 
 		}
 
-		if (objTouch[3] != nullptr && objTouch[3]->m_name == "Coin") {
-			std::cout << "Touch " << objTouch[3]->m_name << std::endl;
-			point += 5;
-			map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[3]);
+		// 0 1 2 3 
+		for (auto x : objTouch) {
+			if (x != nullptr)
+				if (x->m_name == "Coin") {
+				std::cout << "Touch " << x->m_name << std::endl;
+				point += 5;
+				map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+				break;
+			}
 		}
+		
 
 		sf::Time elapsed = clock.restart();
 		if (elapsed.asSeconds() < deltaTime) {
@@ -174,6 +173,14 @@ int Level::run(string lv) {
 
 		// Move and jump for character
 		character->checkAction();
+		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
+		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
+		std::cout << "Item size: " << items.size() << std::endl;*/
+
+
+		for (auto x : items)
+			x->m_sprite.setColor(sf::Color::Green);
+
 		physicsManager.updatePhysics(deltaTime, map);
 
 		int charPos = (character->m_sprite).getGlobalBounds().left;

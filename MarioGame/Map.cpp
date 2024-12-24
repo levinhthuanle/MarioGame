@@ -162,6 +162,8 @@ void Map::removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne) {
 void Map::removeGameObj(vector<vector<GameObject*>>& objMap,vector<GameObject*>& brick, vector<GameObject*>& luckyBlock, vector<GameObject*>& coin, int x, int y) {
     if (x >= 0 && x < cellGrid.size() &&
         y >= 0 && y < cellGrid[0].size() && objMap[x][y] != nullptr) {
+
+        
         if (cellGrid[x][y].getType() == 1) {
             brick.erase(std::remove(brick.begin(), brick.end(), objMap[x][y]), brick.end());
         }
@@ -176,6 +178,9 @@ void Map::removeGameObj(vector<vector<GameObject*>>& objMap,vector<GameObject*>&
         spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
         spriteGrid[x][y]->setScale(SCALE, SCALE);
         objMap[x][y] = nullptr;
+        std::cout << "Type: " << cellGrid[x][y].getType() << std::endl;
+        std::cout << "Brick size: " << brick.size() << std::endl;
+        std::cout << "Coin size: " << coin.size() << std::endl;
         cout << "Removed cell at " << x << " " << y << endl;
 	}
 }
