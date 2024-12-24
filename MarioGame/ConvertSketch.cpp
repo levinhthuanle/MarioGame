@@ -55,16 +55,16 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         cerr << "Failed to load textures!" << endl;
         return;
     }
-    cout << "Textures loaded" << endl;
+    std::cout << "Textures loaded" << endl;
 
-    cout << "Map loaded" << endl;
+    std::cout << "Map loaded" << endl;
     sf::Image sketch;
     if (lv == "1-1") {
         if (!sketch.loadFromFile("Resources/Stages/1/sketch_edited.png")) {
             cerr << "Error loading resources" << endl;
         }
         else {
-            cout << "Sketch 1 loaded" << endl;
+            std::cout << "Sketch 1 loaded" << endl;
         }
     }
     else if (lv == "1-2") {
@@ -72,7 +72,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
 			cerr << "Error loading resources" << endl;
 		}
         else {
-            cout << "Sketch 2 loaded" << endl;
+            std::cout << "Sketch 2 loaded" << endl;
         }
     }
 
@@ -90,7 +90,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             count++;
-            cout << count << endl;
+            std::cout << count << endl;
             sf::Color color = sketch.getPixel(x, y);
             auto it = colorToType.find(color);
             int type = (it != colorToType.end()) ? it->second : 0;
@@ -106,8 +106,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = brick;
             }
             else if (type == 2) {
-                GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png");
-                luckyblock->m_name = "Lucky Block";
+                GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png", "Resources/Tile/steel.png", "Lucky Block");
                 luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 luckyblock->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &luckyblock->m_sprite;
@@ -145,5 +144,5 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
 			}
         }
     }
-    cout<< "Sketch converted" << endl;
+    std::cout<< "Sketch converted" << endl;
 }
