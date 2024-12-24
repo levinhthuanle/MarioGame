@@ -34,6 +34,7 @@ class Enemy : public PhysicsAppliedObject
 protected:
 	TextureManager* textureManager = TextureManager::getInstance();
 
+	int currentTexture = 0;
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
 	const chrono::milliseconds updateInterval{ 100 };
 
@@ -45,9 +46,6 @@ public:
 
 class Goomba : public Enemy
 {
-private:
-	int currentWalkTexture = 0;
-
 public:
 	Goomba();
 
@@ -56,8 +54,14 @@ public:
 
 class Koopa : public Enemy
 {
+private:
+	bool rolling = 0;
+	chrono::high_resolution_clock::time_point rollPoint;
+
 public:
 	void update(float deltaTime, Map map) override;
+
+	void startRolling();
 };
 
 class Bowser : public Enemy

@@ -60,9 +60,9 @@ void Goomba::update(float deltaTime, Map map)
 	if (now - lastUpdate >= updateInterval) {
 		lastUpdate = now;
 
-		currentWalkTexture = (currentWalkTexture + 1) % 2;
+		currentTexture = (currentTexture + 1) % 2;
 
-		m_sprite.setTexture(textureManager->getGoombaTexture(currentWalkTexture));
+		m_sprite.setTexture(textureManager->getGoombaTexture(currentTexture));
 	}
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
@@ -70,7 +70,51 @@ void Goomba::update(float deltaTime, Map map)
 
 void Koopa::update(float deltaTime, Map map)
 {
+	velocity.y += gravity * deltaTime;
 
+	std::pair<int, int> nothing = { 0, 0 };
+	int collision = checkObstacle(deltaTime, map, nothing);
+
+	if (rolling) {
+		chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
+		if (now - rollPoint >= chrono::milliseconds(5000))
+			rolling = false;
+	}
+
+	if (!rolling) {
+		if (collision == 1 or collision == 11)
+			velocity.x = -280;
+		else if (collision == 2 or collision == 12)
+			velocity.x = 280;
+	}
+	else {
+		if (collision == 1 or collision == 11)
+			velocity.x = -400;
+		else if (collision == 2 or collision == 12)
+			velocity.x = 400;
+	}
+
+	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
+	if (now - lastUpdate >= updateInterval) {
+		lastUpdate = now;
+
+		if (!rolling) {
+			currentTexture = (currentTexture + 1) % 2;
+			m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture));
+		}
+		else {
+			currentTexture = (currentTexture + 1) % 4;
+			m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture + 4));
+		}
+	}
+
+	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
+}
+
+void Koopa::startRolling()
+{
+	rolling = true;
+	rollPoint = chrono::high_resolution_clock::now();
 }
 
 void Bowser::update(float deltaTime, Map map)
