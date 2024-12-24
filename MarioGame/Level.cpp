@@ -149,7 +149,8 @@ int Level::run(string lv) {
 		vector<GameObject*> objTouch;
 		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos, objMap, objTouch);
 		if (!objTouch.empty() && objTouch[0] != nullptr) {
-			if (objTouch[0]->m_name == "Lucky Block") {
+			cout << "Touch " << objTouch[0]->m_name << endl;
+			if ((objTouch[0])->m_name == "Lucky Block") {
 				cout << "Touch " << objTouch[0]->m_name << endl;
 				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
 			}

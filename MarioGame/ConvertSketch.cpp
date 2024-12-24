@@ -15,7 +15,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {8, {false, false}},  // Pipe Body Right
         {9, {false, false}},  // Steel
         {10, {false, false}}, // Flag Body
-        {11, {false, false}}  // Flag Top
+        {11, {false, false}},  // Flag Top
+        {12, {false, true}}
     };
 
     map<Color, int, ColorComparator> colorToType = {
@@ -30,7 +31,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {Color(17, 116, 17), 8},   // Pipe Body Right
         {Color(114, 114, 114), 9}, // Steel
         {Color(255, 255, 255), 10},// Flag Body
-        {Color(0, 0, 0), 11}       // Flag Top
+        {Color(0, 0, 0), 11},       // Flag Top
+        {Color(208, 148, 56), 12} // Mushroom
     };
 
     // Create the map with specific properties
