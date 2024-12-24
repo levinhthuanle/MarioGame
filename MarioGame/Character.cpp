@@ -158,7 +158,7 @@ void Character::update(float deltaTime, Map map)
 	jumping = true;
 
 	std::pair<int, int> nothing = { 0, 0 };
-	if (checkObstacle(deltaTime, map, nothing) == 1)
+	if (checkObstacle(deltaTime, map, nothing) >= 10)
 		jumping = false;
 
 	updateTexture();

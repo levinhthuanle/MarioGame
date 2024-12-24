@@ -140,6 +140,7 @@
     <ClCompile Include="Coins.cpp" />
     <ClCompile Include="Components.cpp" />
     <ClCompile Include="ConvertSketch.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FireFlower.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInformationPage.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Coins.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="ConvertSketch.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="FireFlower.h" />
     <ClInclude Include="GameInformationPage.h" />
     <ClInclude Include="GameObject.h" />
