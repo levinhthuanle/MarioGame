@@ -121,7 +121,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = nullptr;
             }
             if (color == Color(0, 0, 255)) {
-                Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");\
+                Items* item = new Items("./Resources/Item/coin1.png", "./Resources/Item/coin2.png", "false");\
                 item->m_name = "Coin";
                 item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 item->m_sprite.setScale(SCALE, SCALE);

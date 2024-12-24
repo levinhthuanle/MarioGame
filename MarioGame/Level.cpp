@@ -110,6 +110,7 @@ int Level::run(string lv) {
 
 
 	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
+	pointText.setFillColor(sf::Color::White);
 
 	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	sf::Event event;
@@ -125,6 +126,7 @@ int Level::run(string lv) {
 	//}
 
 	while (window.isOpen()) {
+		pointText.setText("Point: " + std::to_string(point));
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
@@ -153,11 +155,16 @@ int Level::run(string lv) {
 
 			if (objTouch[0]->m_name == "Lucky Block") {
 				objTouch[0]->tryBreak();
-				objTouch[0]->m_name = "Steel";
 			}
 			else
-			map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
+				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
 
+		}
+
+		if (objTouch[3] != nullptr && objTouch[3]->m_name == "Coin") {
+			std::cout << "Touch " << objTouch[3]->m_name << std::endl;
+			point += 5;
+			map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[3]);
 		}
 
 		sf::Time elapsed = clock.restart();
