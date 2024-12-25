@@ -4,6 +4,9 @@
 #include "ConvertSketch.h"
 using namespace std;
 
+// Enemies' textures
+TextureManager* TextureManager::instance = nullptr;
+
 Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects), character(c)
 {
 	physicsManager.addObserver(c);

@@ -11,7 +11,7 @@ private:
 	vector<sf::Texture> koopaTextures = vector<sf::Texture>(8);
 	vector<sf::Texture> bowserTextures = vector<sf::Texture>(10);
 
-	TextureManager();
+	TextureManager() = default;
 
 	TextureManager(const TextureManager&) = delete;
 
@@ -19,6 +19,8 @@ private:
 
 public:
 	static TextureManager* getInstance();
+
+	void loadTextures();
 
 	sf::Texture& getGoombaTexture(int i);
 

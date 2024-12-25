@@ -1,6 +1,13 @@
 #include "Enemy.h"
 
-TextureManager::TextureManager()
+TextureManager* TextureManager::getInstance()
+{
+	if (!instance)
+		instance = new TextureManager();
+	return instance;
+}
+
+void TextureManager::loadTextures()
 {
 	goombaTextures[0].loadFromFile("./Resources/Enemy/Goombas/Normal/walk.png", sf::IntRect(2, 2, 16, 16));
 	goombaTextures[1].loadFromFile("./Resources/Enemy/Goombas/Normal/walk.png", sf::IntRect(21, 2, 16, 16));
@@ -14,13 +21,6 @@ TextureManager::TextureManager()
 	koopaTextures[5].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(21, 12, 16, 14));
 	koopaTextures[6].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(40, 12, 16, 14));
 	koopaTextures[7].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(59, 12, 16, 14));
-}
-
-TextureManager* TextureManager::getInstance()
-{
-	if (!instance)
-		instance = new TextureManager();
-	return instance;
 }
 
 sf::Texture& TextureManager::getGoombaTexture(int i)
@@ -128,6 +128,7 @@ Enemy* GoombaFactory::create()
 	sf::Texture	texture;
 	texture.loadFromFile("./Resources/Enemy/Goombas/Normal/walk	.png", sf::IntRect(2, 2, 16, 16));
 	object->m_sprite.setTexture(texture);
+	return object;
 }
 
 Enemy* KoopaFactory::create()
