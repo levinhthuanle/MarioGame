@@ -154,7 +154,13 @@ int Level::run(string lv) {
 
 		}
 
-		// 0 1 2 3 
+		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
+		//	std::cout << "Teleport \n";
+		//	Pipe* pipe = dynamic_cast<Pipe*>(objTouch[1]);
+		//	pipe->teleport(character);
+		//	objTouch[1] = nullptr;
+		//}
+
 		for (auto x : objTouch) {
 			if (x != nullptr)
 				if (x->m_name == "Coin") {

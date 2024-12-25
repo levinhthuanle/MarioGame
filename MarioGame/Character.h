@@ -128,6 +128,9 @@ public:
 
 	void setCrouch();
 
+    void setPosition(sf::Vector2f pos) {
+		this->m_sprite.setPosition(pos);
+    }
 
 	virtual ~Character() = default;
 

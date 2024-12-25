@@ -106,6 +106,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = brick;
             }
             else if (type == 2) {
+                // LuckyBlock
                 GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png", "Resources/Tile/steel.png", "Lucky Block");
                 luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 luckyblock->m_sprite.setScale(SCALE, SCALE);
@@ -113,6 +114,15 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 gameObjects.push_back(luckyblock);
                 luckyblocks.push_back(luckyblock);
                 objMap[x][y] = luckyblock;
+            }
+            else if (type == 5) {
+                // Pipe top left
+                GameObject* pipe = new Pipe(true, {50, 50});
+                pipe->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                pipe->m_sprite.setScale(SCALE, SCALE);
+                spriteGrid[x][y] = &pipe->m_sprite;
+                gameObjects.push_back(pipe);
+                objMap[x][y] = pipe;
             }
             else {
                 spriteGrid[x][y] = new Sprite(textures[type]);
