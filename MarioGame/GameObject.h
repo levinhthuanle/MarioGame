@@ -15,6 +15,7 @@ public:
 	sf::Sprite m_sprite;
 	std::string m_isBreakable;
 	std::string m_path;
+	sf::Vector2f position;
 public:
 	GameObject() {};
 
