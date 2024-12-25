@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Items.h"
 #include <string>
+#include "Pipe.h"
 
 using namespace std;
 using namespace sf;

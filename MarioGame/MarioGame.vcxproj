@@ -157,6 +157,7 @@
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PageManager.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
     <ClCompile Include="SelectDiffPage.cpp" />
     <ClCompile Include="SoundManager.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="PageManager.h" />
     <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="Pipe.h" />
     <ClInclude Include="ResourcesManager.h" />
     <ClInclude Include="SelectDiffPage.h" />
     <ClInclude Include="SoundManager.h" />
