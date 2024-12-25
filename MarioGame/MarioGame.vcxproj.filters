@@ -1,201 +1,187 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Source Files\Pages">
-      <UniqueIdentifier>{f75b3c8e-453c-40e0-8a79-6ce2c0da7ef5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Pages">
-      <UniqueIdentifier>{60aeffde-4221-41b1-910f-8a27074d6d5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Objects">
-      <UniqueIdentifier>{56f692a1-d905-4b9c-b0da-7680cae79bdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Managers">
-      <UniqueIdentifier>{a523a92a-9f98-4b6a-9e83-06187beaec4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Managers">
-      <UniqueIdentifier>{ad6cdae2-5aed-405c-b85e-c869cfd204aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{e120747d-54a1-404d-8eaf-8ba49f78f543}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="BasePage.cpp">
-      <Filter>Source Files\Pages</Filter>
-    </ClCompile>
-    <ClCompile Include="HomePage.cpp">
-      <Filter>Source Files\Pages</Filter>
-    </ClCompile>
-    <ClCompile Include="GameInformationPage.cpp">
-      <Filter>Source Files\Pages</Filter>
+      <Filter>Pages</Filter>
     </ClCompile>
     <ClCompile Include="GameSettingPage.cpp">
-      <Filter>Source Files\Pages</Filter>
+      <Filter>Pages</Filter>
     </ClCompile>
-    <ClCompile Include="Global.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourcesManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="MovementManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Components.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectDiffPage.cpp">
-      <Filter>Source Files\Pages</Filter>
-    </ClCompile>
-    <ClCompile Include="PageManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePlayState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Items.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Coins.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Mushroom.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="MapManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="FireFlower.cpp">
-      <Filter>Source Files\Objects</Filter>
+    <ClCompile Include="HomePage.cpp">
+      <Filter>Pages</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInformationPage.cpp">
+      <Filter>Pages</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="PageManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectDiffPage.cpp">
+      <Filter>Pages</Filter>
+    </ClCompile>
+    <ClCompile Include="MapManager.cpp">
+      <Filter>Managers\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Managers\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Components.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="ConvertSketch.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayState.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Coins.cpp">
+      <Filter>GameObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Items.cpp">
+      <Filter>GameObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>GameObjects\Items</Filter>
     </ClCompile>
     <ClCompile Include="Pipe.cpp">
-      <Filter>Source Files</Filter>
-
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files\Objects</Filter>
-
+      <Filter>GameObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="FireFlower.cpp">
+      <Filter>GameObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementManager.cpp">
+      <Filter>Managers\Physics And Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>Managers\Physics And Movement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BasePage.h">
-      <Filter>Header Files\Pages</Filter>
-    </ClInclude>
-    <ClInclude Include="GameInformationPage.h">
-      <Filter>Header Files\Pages</Filter>
+      <Filter>Pages</Filter>
     </ClInclude>
     <ClInclude Include="GameSettingPage.h">
-      <Filter>Header Files\Pages</Filter>
+      <Filter>Pages</Filter>
     </ClInclude>
     <ClInclude Include="HomePage.h">
-      <Filter>Header Files\Pages</Filter>
-    </ClInclude>
-    <ClInclude Include="MovementManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="PageManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourcesManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectDiffPage.h">
-      <Filter>Header Files\Pages</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files</Filter>
+      <Filter>Pages</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>Header Files</Filter>
+      <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Enemy.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="GamePlayState.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameInformationPage.h">
+      <Filter>Pages</Filter>
     </ClInclude>
-    <ClInclude Include="Items.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Coins.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="PageManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Mushroom.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="ResourcesManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectDiffPage.h">
+      <Filter>Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Managers\Map</Filter>
     </ClInclude>
     <ClInclude Include="MapManager.h">
-      <Filter>Header Files\Managers</Filter>
+      <Filter>Managers\Map</Filter>
     </ClInclude>
-    <ClInclude Include="FireFlower.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="Components.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="ConvertSketch.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utilities</Filter>
     </ClInclude>
-
+    <ClInclude Include="Game.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayState.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Coins.h">
+      <Filter>GameObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Items.h">
+      <Filter>GameObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>GameObjects\Items</Filter>
+    </ClInclude>
     <ClInclude Include="Pipe.h">
-      <Filter>Header Files\Objects</Filter>
-
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
-
+      <Filter>GameObjects\Items</Filter>
     </ClInclude>
+    <ClInclude Include="FireFlower.h">
+      <Filter>GameObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementManager.h">
+      <Filter>Managers\Physics And Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>Managers\Physics And Movement</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Pages">
+      <UniqueIdentifier>{cd08a91d-428b-4bb5-86b0-5e732007ba09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{7aaa581d-14dd-423b-b165-56bd46ab2eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{2c243c36-abae-4cec-96b3-f63fd0bba0f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Map">
+      <UniqueIdentifier>{8ef79848-4609-4dd4-b950-06d1f2d0ac75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{7088ca40-17fd-4367-ab58-62dbbc598524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects\Items">
+      <UniqueIdentifier>{6519cb9b-9c59-46fb-83fe-d651d856afa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Physics And Movement">
+      <UniqueIdentifier>{ea9cfec8-35eb-45bb-bd00-693aa14f8e67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
