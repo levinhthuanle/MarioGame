@@ -237,13 +237,14 @@ int Level::run(string lv) {
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					lifeHealth++;
-					/*character->setBigMode();*/
+					if (dynamic_cast<NormalState*>(character->getState()))
+						character->setSuperState();
 					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
 				}
 				if (x->m_name == "Fire Flower") {
 					std::cout << "Touch " << x->m_name << std::endl;
-					/*character->setFireMode();*/
+					character->setFireState();
 					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
 				}

@@ -117,26 +117,12 @@ void Koopa::startRolling()
 	rollPoint = chrono::high_resolution_clock::now();
 }
 
-void Bowser::update(float deltaTime, Map map)
-{
-
-}
-
 Enemy* GoombaFactory::create()
 {
-	Enemy* object = new Goomba();
-	sf::Texture	texture;
-	texture.loadFromFile("./Resources/Enemy/Goombas/Normal/walk	.png", sf::IntRect(2, 2, 16, 16));
-	object->m_sprite.setTexture(texture);
-	return object;
+	return new Goomba();
 }
 
 Enemy* KoopaFactory::create()
 {
 	return new Koopa();
-}
-
-Enemy* BowserFactory::create()
-{
-	return new Bowser();
 }

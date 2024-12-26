@@ -53,7 +53,6 @@ public:
 class Character : public PhysicsAppliedObject
 {
 protected:
-	int jumpForce = 700;
 	CharacterState* currentState;
 
 	// 0-1: stand
@@ -85,6 +84,7 @@ protected:
 
 	// Constant attributes
 	float maxVelocityX = -1;
+	int jumpForce = 700;
 	int inertia = 15;
 	bool breakBrick = 0;
 	bool fireable = 0;
@@ -97,6 +97,14 @@ protected:
 
 public:
 	Character();
+
+	CharacterState* getState();
+
+	void setState(CharacterState* newState);
+
+	void setSuperState();
+
+	void setFireState();
 
 	void setVelocity(float x, float y);
 
@@ -114,24 +122,7 @@ public:
 
 	virtual void jump() = 0;
 
-	void checkAction() {
-		SoundManager* soundManager = SoundManager::getInstance();
-
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			this->jump();
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			this->moveLeft();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			this->setCrouch();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			this->moveRight();
-
-	}
+	void checkAction();
 
 	void moveLeft();
 
