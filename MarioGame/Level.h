@@ -39,4 +39,8 @@ public:
 	int selectCharacter();
 
 	int run(string lv);
+
+	int win();
+
+	int lose();
 };
