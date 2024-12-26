@@ -6,11 +6,9 @@ void PhysicsManager::addObserver(PhysicsObserver* observer)
 		observers.push_back(observer);
 }
 
-void PhysicsManager::rermoveObserver(PhysicsObserver* observer)
+void PhysicsManager::removeObserver(PhysicsObserver* observer)
 {
-	for (int i = 0; i < observers.size(); ++i)
-		if (observers[i] == observer)
-			observers.erase(observers.begin() + i);
+	observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
 }
 
 void PhysicsManager::updatePhysics(float deltaTime, Map map)
