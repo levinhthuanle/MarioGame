@@ -4,6 +4,7 @@
 #include "Coins.h"
 #include "Mushroom.h"
 #include "LuckyBlock.h"
+#include "Enemy.h"
 
 void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character) {
     map<int, CellProperties> cellProperties = {
@@ -20,7 +21,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {10, {false, false}}, // Flag Body
         {11, {false, false}},  // Flag Top
         {12, {false, true}},  // Mushroom
-        {13, {false, false}}   // Dead}
+        {13, {false, false}}   // Dead
     };
 
     map<Color, int, ColorComparator> colorToType = {
@@ -39,6 +40,9 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {Color(208, 148, 56), 12}, // Mushroom
         {Color(255, 0, 255), 13} //Dead
     };
+
+    GoombaFactory goombaFactory;
+    KoopaFactory koopaFactory;
 
     // Create the map with specific properties
     new_map = Map(cellProperties, colorToType);
@@ -88,6 +92,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             std::cout << "Sketch 3 loaded" << endl;
         }
     }
+    srand(time(0));
 
     int width = sketch.getSize().x;
     int height = sketch.getSize().y;
@@ -99,11 +104,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
     cellGrid = vector<vector<Cell>>(width, vector<Cell>(height, Cell()));
     spriteGrid = vector<vector<Sprite*>>(width, vector<Sprite*>(height, nullptr));
 
-    int count = 0;
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            count++;
-            std::cout << count << endl;
             sf::Color color = sketch.getPixel(x, y);
             auto it = colorToType.find(color);
             int type = (it != colorToType.end()) ? it->second : 0;
@@ -119,10 +121,9 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = brick;
             }
             else if (type == 2) {
-                // LuckyBlock
-                int randomNum = rand() % 3 + 1; // Generates a random number between 1 and 3
+                int randomNum = rand() % 3 + 1; // Generates a random number between 1 and 2
 
-                bool isLucky = (randomNum == 3) ? 0 : 1;
+                bool isLucky = (randomNum == 3) ? 1 : 0;
 
                 GameObject* luckyblock = new LuckyBlock("Resources/Tile/luckyblock.png", "Resources/Tile/steel.png", "Lucky Block", isLucky);
                 luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
@@ -166,15 +167,24 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 items.push_back(item);
                 objMap[x][y] = item;
             }
-            if (color == Color(101, 19, 19)) {
-                GameObject* enemy = new GameObject(); //Change to Enemy class if nesscessary
-                enemy->m_name = "Enemy";
-                enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-                enemy->m_sprite.setScale(SCALE, SCALE);
-                spriteGrid[x][y] = &enemy->m_sprite;
-                enemies.push_back(enemy);
-                objMap[x][y] = enemy;
+            if (color == Color(101, 19, 19)) { 
+                GameObject* enemy = goombaFactory.create();
+                enemy->m_name = "Goomba";
+				enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+				enemy->m_sprite.setScale(SCALE, SCALE);
+				spriteGrid[x][y] = &enemy->m_sprite;
+				enemies.push_back(enemy);
+				objMap[x][y] = enemy;
             }
+            if (color == Color(255, 0, 0)) {
+				GameObject* enemy = koopaFactory.create();
+                enemy->m_name = "Koopa";
+                enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+				enemy->m_sprite.setScale(SCALE, SCALE);
+                spriteGrid[x][y] = &enemy->m_sprite;
+				enemies.push_back(enemy);
+                objMap[x][y] = enemy;
+			}
             if (color == Color(85, 42, 83)) {
 				character.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 objMap[x][y] = nullptr;

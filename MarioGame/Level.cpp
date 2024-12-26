@@ -132,12 +132,22 @@ int Level::lose()
 }
 
 int Level::run(string lv) {
+	TextureManager* texturemanager = TextureManager::getInstance();
+	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
+	texturemanager->loadTextures();
 	point = 0;
 	lifeHealth = 3;
+	Map& map = ResourcesManager::getInstance().getMap();
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
+
+	for (auto x : enemies) {
+		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+		if (obj)
+			physicsManager.addObserver(obj);
+	}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
@@ -192,8 +202,7 @@ int Level::run(string lv) {
 		vector<GameObject*> objTouch;
 		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos, objMap, objTouch);
 		if (!objTouch.empty() && objTouch[0] != nullptr) {
-			cout << "Touch " << objTouch[0]->m_name << std::endl;
-
+			cout<< objTouch[0]->m_name << endl;
 			if (objTouch[0]->m_name == "Lucky Block") {
 				objTouch[0]->tryBreak();
 				map.spawnMushroom(objMap, gameObjects, objTouch[0]);
