@@ -19,22 +19,47 @@ Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects), 
 
 int Level::pause()
 {
-	sf::RenderWindow pauseWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow pauseWindow(sf::VideoMode(740, 450), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
-	while (pauseWindow.isOpen()) {
-		sf::Event event;
-		while (pauseWindow.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				pauseWindow.close();
+	Button pauseTxt("./Resources/Background/PagesBackground/GamePauseText.png", 20, 50);
+	Button resumeBtn("./Resources/Background/PagesBackground/ContinueText.png", 50, 50);
+	Button exitBtn("./Resources/Background/PagesBackground/exitText.png", 50, 150);
+    pauseWindow.clear(sf::Color(5, 113, 211)); // Set background color to #0571d3
+
+    while (pauseWindow.isOpen()) {
+        sf::Event event;
+        while (pauseWindow.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                pauseWindow.close();
+                return 4;
+            }
+			if (resumeBtn.isClicked(pauseWindow, event)) {
+				std::cout << "Start Button clicked\n";
+				return 1;
+			}
+			if (resumeBtn.isHover(pauseWindow)) 
+				resumeBtn.setOpacity(255);
+			else 
+				resumeBtn.setOpacity(127);
+
+			if (exitBtn.isClicked(pauseWindow, event)) {
+				std::cout << "Start Button clicked\n";
 				return 4;
 			}
-		}
+			if (exitBtn.isHover(pauseWindow))
+				exitBtn.setOpacity(255);
+			else
+				exitBtn.setOpacity(127);
 
-		pauseWindow.clear();
-		pauseWindow.display();
-	}
-	
-	return 0;
+        }
+		pauseWindow.clear(sf::Color(5, 113, 211));
+		pauseTxt.draw(pauseWindow, 130, 5);
+		resumeBtn.draw(pauseWindow, 220, 220);
+		exitBtn.draw(pauseWindow, 300, 400);	
+        pauseWindow.display();
+    }
+
+    return 1;
 }
 
 int Level::selectCharacter()
@@ -158,11 +183,11 @@ int Level::run(string lv) {
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
-	for (auto x : enemies) {
-		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
-		if (obj)
-			physicsManager.addObserver(obj);
-	}
+	//for (auto x : enemies) {
+	//	PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+	//	if (obj)
+	//		physicsManager.addObserver(obj);
+	//}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
@@ -209,7 +234,10 @@ int Level::run(string lv) {
 			if (pauseBtn.isClicked(window, event)) {
 				SoundManager::getInstance()->playSoundPause();
 				std::cout << "Pause clicked!\n";
-				pause();
+				int cmd = pause();
+				if (cmd == 4) {
+					return 3;
+				}
 			}
 		}
 
