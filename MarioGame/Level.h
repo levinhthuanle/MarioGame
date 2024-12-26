@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "GameObject.h"
 #include "Character.h"
+#include "Enemy.h"
 
 using namespace std;
 

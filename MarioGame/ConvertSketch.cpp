@@ -15,7 +15,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {8, {false, false}},  // Pipe Body Right
         {9, {false, false}},  // Steel
         {10, {false, false}}, // Flag Body
-        {11, {false, false}}  // Flag Top
+        {11, {false, false}},  // Flag Top
+        {12, {false, true}}
     };
 
     map<Color, int, ColorComparator> colorToType = {
@@ -30,7 +31,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {Color(17, 116, 17), 8},   // Pipe Body Right
         {Color(114, 114, 114), 9}, // Steel
         {Color(255, 255, 255), 10},// Flag Body
-        {Color(0, 0, 0), 11}       // Flag Top
+        {Color(0, 0, 0), 11},       // Flag Top
+        {Color(208, 148, 56), 12} // Mushroom
     };
 
     // Create the map with specific properties
@@ -53,16 +55,16 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         cerr << "Failed to load textures!" << endl;
         return;
     }
-    cout << "Textures loaded" << endl;
+    std::cout << "Textures loaded" << endl;
 
-    cout << "Map loaded" << endl;
+    std::cout << "Map loaded" << endl;
     sf::Image sketch;
     if (lv == "1-1") {
         if (!sketch.loadFromFile("Resources/Stages/1/sketch_edited.png")) {
             cerr << "Error loading resources" << endl;
         }
         else {
-            cout << "Sketch 1 loaded" << endl;
+            std::cout << "Sketch 1 loaded" << endl;
         }
     }
     else if (lv == "1-2") {
@@ -70,7 +72,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
 			cerr << "Error loading resources" << endl;
 		}
         else {
-            cout << "Sketch 2 loaded" << endl;
+            std::cout << "Sketch 2 loaded" << endl;
         }
     }
 
@@ -88,7 +90,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             count++;
-            cout << count << endl;
+            std::cout << count << endl;
             sf::Color color = sketch.getPixel(x, y);
             auto it = colorToType.find(color);
             int type = (it != colorToType.end()) ? it->second : 0;
@@ -104,14 +106,23 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = brick;
             }
             else if (type == 2) {
-                GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png");
-                luckyblock->m_name = "Lucky Block";
+                // LuckyBlock
+                GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png", "Resources/Tile/steel.png", "Lucky Block");
                 luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 luckyblock->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &luckyblock->m_sprite;
                 gameObjects.push_back(luckyblock);
                 luckyblocks.push_back(luckyblock);
                 objMap[x][y] = luckyblock;
+            }
+            else if (type == 5) {
+                // Pipe top left
+                GameObject* pipe = new Pipe(true, {50, 50});
+                pipe->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                pipe->m_sprite.setScale(SCALE, SCALE);
+                spriteGrid[x][y] = &pipe->m_sprite;
+                gameObjects.push_back(pipe);
+                objMap[x][y] = pipe;
             }
             else {
                 spriteGrid[x][y] = new Sprite(textures[type]);
@@ -120,7 +131,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = nullptr;
             }
             if (color == Color(0, 0, 255)) {
-                Items* item = new Items("./Resources/Item/coin0.png", "./Resources/Item/coin1.png", "false");\
+                Items* item = new Items("./Resources/Item/coin1.png", "./Resources/Item/coin2.png", "false");\
                 item->m_name = "Coin";
                 item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 item->m_sprite.setScale(SCALE, SCALE);
@@ -143,5 +154,5 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
 			}
         }
     }
-    cout<< "Sketch converted" << endl;
+    std::cout<< "Sketch converted" << endl;
 }

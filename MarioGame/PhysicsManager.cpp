@@ -32,7 +32,7 @@ void PhysicsAppliedObject::update(float deltaTime, Map map)
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
 }
 
-// 0 - not collision below, 1 - collision below
+// 1 - right, 2 - left, 10 - below
 int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos)
 {
     const vector<vector<Cell>>& grids = map.getMap();
@@ -68,26 +68,28 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
         return 0;
     }
 
-    bool ground = false;
+    int ans = 0;
 
     // right
     if (grids[floor(futureRight)][int(top)].getType() != 0
         or grids[floor(futureRight)][int(bottom)].getType() != 0
         or grids[floor(futureRight)][int(midY)].getType() != 0) {
         velocity.x = 0;
+        ans += 1;
     }
     // left
     if (grids[floor(futureLeft)][int(top)].getType() != 0
         or grids[floor(futureLeft)][int(bottom)].getType() != 0
         or grids[floor(futureLeft)][int(midY)].getType() != 0) {
         velocity.x = 0;
+        ans += 2;
     }
     // down
     if (grids[int(left)][floor(futureBottom)].getType() != 0
         or grids[int(right)][floor(futureBottom)].getType() != 0
         or grids[int(midX)][floor(futureBottom)].getType() != 0) {
         velocity.y = 0;
-        ground = true;
+        ans += 10;
     }
     // up
     if (grids[int(left)][floor(futureTop)].getType() != 0
@@ -108,7 +110,7 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
         pos.second = floor(futureTop);
         return grids[int(midX)][floor(futureTop)].getType();
     }
-    return ground;
+    return ans;
 }
 
 // 0 - not collision below, 1 - collision below, whatUJustTouch - objects that are touched on top, bottom, left, right sequentially

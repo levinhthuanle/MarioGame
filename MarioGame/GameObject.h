@@ -15,6 +15,7 @@ public:
 	sf::Sprite m_sprite;
 	std::string m_isBreakable;
 	std::string m_path;
+	sf::Vector2f position;
 public:
 	GameObject() {};
 
@@ -24,6 +25,20 @@ public:
 			return;
 		}
 		m_sprite.setTexture(m_texture);
+	}
+
+	GameObject(std::string path, std::string pathAfter, std::string name) {
+		if (!m_textureAfter.loadFromFile(pathAfter)) {
+			std::cerr << "Can not load Resources \n";
+			return;
+		}
+
+		if (!m_texture.loadFromFile(path)) {
+			std::cerr << "Can not load Resources \n";
+			return;
+		}
+		m_sprite.setTexture(m_texture);
+		m_name = name;
 	}
 
 	GameObject(std::string path, std::string name) {
@@ -54,6 +69,10 @@ public:
 
 	void draw(sf::RenderWindow& window) {
 		window.draw(m_sprite);
+	}
+
+	virtual void tryBreak() {
+		m_sprite.setTexture(m_textureAfter);
 	}
 
 	sf::FloatRect getBounds() {
