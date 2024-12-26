@@ -142,6 +142,7 @@
     <ClCompile Include="ConvertSketch.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FireFlower.cpp" />
+    <ClCompile Include="Flag.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInformationPage.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="HomePage.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Items.cpp" />
+    <ClCompile Include="LuckyBlock.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapManager.cpp" />
@@ -171,6 +173,7 @@
     <ClInclude Include="ConvertSketch.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FireFlower.h" />
+    <ClInclude Include="Flag.h" />
     <ClInclude Include="GameInformationPage.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GamePlayState.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="HomePage.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LuckyBlock.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapManager.h" />
     <ClInclude Include="MovementManager.h" />
