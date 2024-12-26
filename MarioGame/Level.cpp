@@ -224,7 +224,7 @@ int Level::run(string lv) {
 				objTouch[0]->m_name = "Steel";
 			}
 			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
-				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
+				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[0]);
 			}
 		}
 
@@ -241,6 +241,11 @@ int Level::run(string lv) {
 					character->setVelocity(0, -800);
 				}
 			}
+			else if (objTouch[1]->m_name == "Goomba") {
+				physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(objTouch[1]));
+				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[1]);
+				character->setVelocity(0, -400);
+			}
 		}
 
 		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
@@ -255,20 +260,20 @@ int Level::run(string lv) {
 				if (x->m_name == "Coin") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					point += 5;
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					lifeHealth++;
 					/*character->setBigMode();*/
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
 				if (x->m_name == "Fire Flower") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					/*character->setFireMode();*/
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
 			}
@@ -286,7 +291,6 @@ int Level::run(string lv) {
 		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
 		std::cout << "Item size: " << items.size() << std::endl;*/
 
-
 		for (auto x : items)
 			x->m_sprite.setColor(sf::Color::Green);
 
@@ -301,11 +305,9 @@ int Level::run(string lv) {
 		window.setView(mainView);
 		map.drawMap(character->m_sprite, window);
 		window.draw(character->m_sprite);
-
 		window.setView(uiView);
 		pauseBtn.draw(window, 100, 50); 
 		pointText.draw(window);
-
 		heartBtn.draw(window);
 		if (lifeHealth >= 2) heart1Btn.draw(window);
 			else heartWhiteBtn.draw(window);
