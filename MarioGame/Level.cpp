@@ -113,22 +113,37 @@ int Level::win()
 
 int Level::lose()
 {
-	sf::RenderWindow loseWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow loseWindow(sf::VideoMode(700, 400), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
-	while (loseWindow.isOpen()) {
-		sf::Event event;
-		while (loseWindow.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				loseWindow.close();
-				return 4;
-			}
-		}
+    sf::Texture bgTexture;
+	sf::Texture textLoseTexture;
+	textLoseTexture.loadFromFile("Resources/Background/loseText.png");
+    bgTexture.loadFromFile("Resources/Background/LoseBackground.jpg");
+    sf::Sprite bgSprite(bgTexture);
+	sf::Sprite textLoseSprite(textLoseTexture);
 
-		loseWindow.clear();
-		loseWindow.display();
-	}
+    // Scale the image to fit the loseWindow
+    bgSprite.setScale(static_cast<float>(loseWindow.getSize().x) / bgSprite.getTexture()->getSize().x,
+                      static_cast<float>(loseWindow.getSize().y) / bgSprite.getTexture()->getSize().y);
+	textLoseSprite.setPosition(90, 10);
+	textLoseSprite.setScale(0.5, 0.5);
 
-	return 0;
+    while (loseWindow.isOpen()) {
+        sf::Event event;
+        while (loseWindow.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                loseWindow.close();
+                return 4;
+            }
+        }
+
+        loseWindow.clear();
+        loseWindow.draw(bgSprite);
+		loseWindow.draw(textLoseSprite);
+        loseWindow.display();
+    }
+
+    return 0;
 }
 
 int Level::run(string lv) {
