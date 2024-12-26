@@ -50,6 +50,30 @@ public:
 
 
 
+// Flyweight Factory
+class Fireball : public PhysicsAppliedObject {
+protected:
+
+public:
+	Fireball(const shared_ptr<sf::Texture>& texture, float x, float y, int vel);
+
+	void update(float deltaTime, Map map);
+};
+
+class FireballFactory {
+private:
+	shared_ptr<sf::Texture> fireballTexture;
+
+public:
+	FireballFactory();
+
+	Fireball* createFireball(float x, float y, int vel);
+};
+
+
+
+
+
 class Character : public PhysicsAppliedObject
 {
 protected:
@@ -71,16 +95,18 @@ protected:
 	vector<sf::Texture> superTextures = vector<sf::Texture>(14);
 	vector<sf::Texture> fireTextures = vector<sf::Texture>(16);
 
-	vector<sf::Texture> currentTexture = textures;
-
 	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
 	vector<sf::Texture> toFire = vector<sf::Texture>(10);
 	vector<sf::Texture> Super2Small = vector<sf::Texture>(10);
 	vector<sf::Texture> Fire2Small = vector<sf::Texture>(10);
 
+	FireballFactory* fireballFactory = new FireballFactory();
+
 	// Texture's time control attributes
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
 	const chrono::milliseconds updateInterval{100};
+
+	chrono::high_resolution_clock::time_point lastFire = chrono::high_resolution_clock::now();
 
 	// Constant attributes
 	float maxVelocityX = -1;
@@ -122,13 +148,15 @@ public:
 
 	virtual void jump() = 0;
 
-	void checkAction();
+	Fireball* checkAction();
 
 	void moveLeft();
 
 	void moveRight();
 
 	void setCrouch();
+
+	Fireball* fire();
 
     void setPosition(sf::Vector2f pos) {
 		this->m_sprite.setPosition(pos);
@@ -151,7 +179,6 @@ public:
 	Mario();
 
 	void jump();
-	//void setCrouch();
 
 	~Mario() = default;
 };
@@ -162,8 +189,6 @@ public:
 	Luigi();
 
 	void jump();
-
-	//void setCrouch();
 
 	~Luigi() = default;
 };

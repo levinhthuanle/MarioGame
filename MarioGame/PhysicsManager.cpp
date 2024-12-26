@@ -8,9 +8,9 @@ void PhysicsManager::addObserver(PhysicsObserver* observer)
 
 void PhysicsManager::rermoveObserver(PhysicsObserver* observer)
 {
-	for (vector<PhysicsObserver*>::iterator i = observers.begin(); i != observers.end(); ++i)
-		if (*i == observer)
-			observers.erase(i);
+	for (int i = 0; i < observers.size(); ++i)
+		if (observers[i] == observer)
+			observers.erase(observers.begin() + i);
 }
 
 void PhysicsManager::updatePhysics(float deltaTime, Map map)
