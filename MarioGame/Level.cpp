@@ -344,8 +344,12 @@ int Level::run(string lv) {
 		window.setView(mainView);
 		map.drawMap(character->m_sprite, window);
 		window.draw(character->m_sprite);
-		for (Fireball* f : fireballs)
-			window.draw(f->m_sprite);
+		for (int i = 0; i < fireballs.size(); ++i) {
+			if (!fireballs[i])
+				fireballs.erase(fireballs.begin() + i);
+			else
+				window.draw(fireballs[i]->m_sprite);
+		}
 
 		window.setView(uiView);
 		pauseBtn.draw(window, 100, 50); 

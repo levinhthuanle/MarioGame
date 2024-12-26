@@ -15,8 +15,13 @@ void PhysicsManager::rermoveObserver(PhysicsObserver* observer)
 
 void PhysicsManager::updatePhysics(float deltaTime, Map map)
 {
-	for (PhysicsObserver* o : observers)
-		o->update(deltaTime, map);
+    for (PhysicsObserver* o : observers) {
+        if (!o) {
+            rermoveObserver(o);
+        }
+        else
+            o->update(deltaTime, map);
+    }
 }
 
 

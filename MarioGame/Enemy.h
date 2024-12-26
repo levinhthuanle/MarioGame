@@ -61,6 +61,8 @@ private:
 	chrono::high_resolution_clock::time_point rollPoint;
 
 public:
+	Koopa();
+
 	void update(float deltaTime, Map map) override;
 
 	void startRolling();

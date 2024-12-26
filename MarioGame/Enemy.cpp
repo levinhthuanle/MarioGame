@@ -133,6 +133,13 @@ void Koopa::startRolling()
 	rollPoint = chrono::high_resolution_clock::now();
 }
 
+Koopa::Koopa()
+{
+	velocity.x = 250;
+	velocity.y = 0;
+	m_sprite.setTexture(textureManager->getKoopaTexture(0));
+}
+
 Enemy* GoombaFactory::create()
 {
 	return new Goomba();

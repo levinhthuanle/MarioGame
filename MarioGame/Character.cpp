@@ -441,6 +441,9 @@ Fireball::Fireball(const shared_ptr<sf::Texture>& texture, float x, float y, int
 void Fireball::update(float deltaTime, Map map)
 {
 	m_sprite.move(velocity.x * deltaTime, 0);
+	pair<int, int> nothing = { 0, 0 };
+	if (checkObstacle(deltaTime, map, nothing))
+		delete this;
 }
 
 FireballFactory::FireballFactory()
