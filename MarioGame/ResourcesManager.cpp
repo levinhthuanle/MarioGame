@@ -18,6 +18,11 @@ sf::RenderWindow& ResourcesManager::getWindow()
     return window;
 }
 
+Map& ResourcesManager::getMap()
+{
+    return map;
+}
+
 sf::Font& ResourcesManager::getFont(const std::string& name)
 {
     return default_font;

@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 #include <string>
+#include "Map.h"
 
 class ResourcesManager {
 public:
@@ -18,12 +19,19 @@ public:
 
 
 public:
+    vector<vector<GameObject*>> objMap;
     sf::Font default_font;
     sf::RenderWindow window;
+    Map map;
 
     bool loadFont();
     
     sf::RenderWindow& getWindow();
+    
+    Map &getMap();
+    vector<vector<GameObject*>>& getObjMap() {
+        return objMap;
+    }
     sf::Font& getFont(const std::string& name);
 
 private:

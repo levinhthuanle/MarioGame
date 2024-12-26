@@ -53,7 +53,6 @@ public:
 class Character : public PhysicsAppliedObject
 {
 protected:
-	int jumpForce = 700;
 	CharacterState* currentState;
 
 	// 0-1: stand
@@ -85,6 +84,7 @@ protected:
 
 	// Constant attributes
 	float maxVelocityX = -1;
+	int jumpForce = 700;
 	int inertia = 15;
 	bool breakBrick = 0;
 	bool fireable = 0;
@@ -97,6 +97,14 @@ protected:
 
 public:
 	Character();
+
+	CharacterState* getState();
+
+	void setState(CharacterState* newState);
+
+	void setSuperState();
+
+	void setFireState();
 
 	void setVelocity(float x, float y);
 
