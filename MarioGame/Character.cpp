@@ -269,6 +269,7 @@ void Mario::jump()
 {
 	if (!jumping) {
 		jumping = true;
+		SoundManager::getInstance()->playSoundJumpSmall();
 		velocity.y = -jumpForce; //map 3 need higher jump
 	}
 }

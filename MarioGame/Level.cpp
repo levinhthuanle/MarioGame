@@ -197,6 +197,7 @@ int Level::run(string lv) {
 			}
 
 			if (pauseBtn.isClicked(window, event)) {
+				SoundManager::getInstance()->playSoundPause();
 				std::cout << "Pause clicked!\n";
 				pause();
 			}
@@ -213,6 +214,7 @@ int Level::run(string lv) {
 				objTouch[0]->tryBreak();
 				map.spawnMushroom(objMap, gameObjects, objTouch[0]);
 				objTouch[0]->m_name = "Steel";
+				SoundManager::getInstance()->playSoundBreakBlock();
 			}
 			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
 				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
@@ -223,8 +225,10 @@ int Level::run(string lv) {
 			if (objTouch[1]->m_name == "Dead") {
 				std::cout << "Dead \n";
 				lifeHealth--;
+				SoundManager::getInstance()->playSoundKick();
 				if (lifeHealth == 0) {
 					std::cout << "Game Over \n";
+					SoundManager::getInstance()->playSoundGameOver();
 					lose();
 					return 3;
 				}
@@ -246,18 +250,21 @@ int Level::run(string lv) {
 				if (x->m_name == "Coin") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					point += 5;
+					SoundManager::getInstance()->playSoundCoin();
 					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
 				}
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
-					lifeHealth++;
+					if (lifeHealth < 3) lifeHealth++;
+					SoundManager::getInstance()->playSoundFireworks();
 					/*character->setBigMode();*/
 					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
 				}
 				if (x->m_name == "Fire Flower") {
 					std::cout << "Touch " << x->m_name << std::endl;
+					SoundManager::getInstance()->playSoundFireworks();
 					/*character->setFireMode();*/
 					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
@@ -276,10 +283,6 @@ int Level::run(string lv) {
 		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
 		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
 		std::cout << "Item size: " << items.size() << std::endl;*/
-
-
-		for (auto x : items)
-			x->m_sprite.setColor(sf::Color::Green);
 
 		physicsManager.updatePhysics(deltaTime, map);
 
