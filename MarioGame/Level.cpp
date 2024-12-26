@@ -175,11 +175,16 @@ int Level::run(string lv) {
 	TextureManager* texturemanager = TextureManager::getInstance();
 	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
 	texturemanager->loadTextures();
+
+	vector<Fireball*> fireballs;
+
 	point = 0;
 	lifeHealth = 3;
 	Map& map = ResourcesManager::getInstance().getMap();
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
+
+	FireballFactory* fireballFactory;
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
@@ -254,7 +259,7 @@ int Level::run(string lv) {
 				SoundManager::getInstance()->playSoundBreakBlock();
 			}
 			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
-				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
+				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[0]);
 			}
 		}
 
@@ -273,6 +278,11 @@ int Level::run(string lv) {
 					character->setVelocity(0, -800);
 				}
 			}
+			else if (objTouch[1]->m_name == "Goomba") {
+				physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(objTouch[1]));
+				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[1]);
+				character->setVelocity(0, -400);
+			}
 		}
 
 		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
@@ -288,25 +298,20 @@ int Level::run(string lv) {
 					std::cout << "Touch " << x->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
+					lifeHealth++;
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
-					
+
 					if (dynamic_cast<NormalState*>(character->getState()))
 						character->setSuperState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
-					break;
-				}
-				if (x->m_name == "Fire Flower") {
-					std::cout << "Touch " << x->m_name << std::endl;
-					SoundManager::getInstance()->playSoundFireworks();
-					
-					character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					else if (dynamic_cast<SuperState*>(character->getState()))
+						character->setFireState();
 					break;
 				}
 			}
@@ -319,7 +324,11 @@ int Level::run(string lv) {
 		}
 
 		// Move and jump for character
-		character->checkAction();
+		Fireball* f = character->checkAction();
+		if (f) {
+			fireballs.push_back(f);
+			physicsManager.addObserver(f);
+		}
 		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
 		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
 		std::cout << "Item size: " << items.size() << std::endl;*/
@@ -335,11 +344,16 @@ int Level::run(string lv) {
 		window.setView(mainView);
 		map.drawMap(character->m_sprite, window);
 		window.draw(character->m_sprite);
+		for (int i = 0; i < fireballs.size(); ++i) {
+			if (!fireballs[i])
+				fireballs.erase(fireballs.begin() + i);
+			else
+				window.draw(fireballs[i]->m_sprite);
+		}
 
 		window.setView(uiView);
 		pauseBtn.draw(window, 100, 50); 
 		pointText.draw(window);
-
 		heartBtn.draw(window);
 		if (lifeHealth >= 2) heart1Btn.draw(window);
 			else heartWhiteBtn.draw(window);

@@ -104,6 +104,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
     cellGrid = vector<vector<Cell>>(width, vector<Cell>(height, Cell()));
     spriteGrid = vector<vector<Sprite*>>(width, vector<Sprite*>(height, nullptr));
 
+
+    int cnt = 0;
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             sf::Color color = sketch.getPixel(x, y);
@@ -135,7 +137,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             }
             else if (type == 5) {
                 // Pipe top left
-                GameObject* pipe = new Pipe(true, {50, 50});
+                GameObject* pipe = new Pipe(true, { 50, 50 });
                 pipe->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 pipe->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &pipe->m_sprite;
@@ -143,19 +145,23 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = pipe;
             }
             else if (type == 13) {
-				// Dead
-				GameObject* dead = new GameObject("Resources/Tile/brick.png");
-				dead->m_name = "Dead";
-				dead->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-				dead->m_sprite.setScale(SCALE, SCALE);
-				spriteGrid[x][y] = &dead->m_sprite;
-				gameObjects.push_back(dead);
-				objMap[x][y] = dead;
+                // Dead
+                GameObject* dead = new GameObject("Resources/Tile/brick.png");
+                dead->m_name = "Dead";
+                dead->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                dead->m_sprite.setScale(SCALE, SCALE);
+                spriteGrid[x][y] = &dead->m_sprite;
+                gameObjects.push_back(dead);
+                objMap[x][y] = dead;
             }
-            else {
+            else if (type != 0) {
                 spriteGrid[x][y] = new Sprite(textures[type]);
                 spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 spriteGrid[x][y]->setScale(SCALE, SCALE);
+                objMap[x][y] = nullptr;
+            }
+            else {
+                spriteGrid[x][y] = nullptr;
                 objMap[x][y] = nullptr;
             }
             if (color == Color(0, 0, 255)) {
@@ -170,6 +176,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             if (color == Color(101, 19, 19)) { 
                 GameObject* enemy = goombaFactory.create();
                 enemy->m_name = "Goomba";
+                cnt++;
 				enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
 				enemy->m_sprite.setScale(SCALE, SCALE);
 				spriteGrid[x][y] = &enemy->m_sprite;

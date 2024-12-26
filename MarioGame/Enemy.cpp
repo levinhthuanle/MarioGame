@@ -50,9 +50,13 @@ void Goomba::update(float deltaTime, Map map)
 	velocity.y += gravity * deltaTime;
 
 	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
-	int x = static_cast<int>(m_sprite.getPosition().x / 54.4);
-	int y = static_cast<int>(m_sprite.getPosition().y / 54.4);
-	objMap[x][y] = nullptr;
+	Map& mapData = ResourcesManager::getInstance().getMap();
+
+	vector<vector<Sprite*>>& mapSprites = mapData.getSpriteGrid();
+
+	int x1 = round(m_sprite.getPosition().x / 54.4);
+	int y1 = round(m_sprite.getPosition().y / 54.4);
+	objMap[x1][y1] = nullptr;
 
 	std::pair<int, int> nothing = { 0, 0 };
 	int collision = checkObstacle(deltaTime, map, nothing);
@@ -71,9 +75,10 @@ void Goomba::update(float deltaTime, Map map)
 	}
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
-	x = static_cast<int>(m_sprite.getPosition().x / 54.4);
-	y = static_cast<int>(m_sprite.getPosition().y / 54.4);
-	objMap[x][y] = this;
+	int x2 = round(m_sprite.getPosition().x / 54.4);
+	int y2 = round(m_sprite.getPosition().y / 54.4);
+	objMap[x2][y2] = this;
+	swap(mapSprites[x1][y1], mapSprites[x2][y2]);
 }
 
 void Koopa::update(float deltaTime, Map map)
@@ -81,9 +86,13 @@ void Koopa::update(float deltaTime, Map map)
 	velocity.y += gravity * deltaTime;
 
 	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
-	int x = static_cast<int>(m_sprite.getPosition().x / 54.4);
-	int y = static_cast<int>(m_sprite.getPosition().y / 54.4);
-	objMap[x][y] = nullptr;
+	Map& mapData = ResourcesManager::getInstance().getMap();
+
+	vector<vector<Sprite*>>& mapSprites = mapData.getSpriteGrid();
+
+	int x1 = round(m_sprite.getPosition().x / 54.4);
+	int y1 = round(m_sprite.getPosition().y / 54.4);
+	objMap[x1][y1] = nullptr;
 
 	std::pair<int, int> nothing = { 0, 0 };
 	int collision = checkObstacle(deltaTime, map, nothing);
@@ -122,15 +131,24 @@ void Koopa::update(float deltaTime, Map map)
 	}
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
-	x = static_cast<int>(m_sprite.getPosition().x / 54.4);
-	y = static_cast<int>(m_sprite.getPosition().y / 54.4);
-	objMap[x][y] = this;
+	int x2 = round(m_sprite.getPosition().x / 54.4);
+	int y2 = round(m_sprite.getPosition().y / 54.4);
+	objMap[x2][y2] = this;
+	mapSprites[x2][y2] = mapSprites[x1][y1];
+	mapSprites[x1][y1] = nullptr;
 }
 
 void Koopa::startRolling()
 {
 	rolling = true;
 	rollPoint = chrono::high_resolution_clock::now();
+}
+
+Koopa::Koopa()
+{
+	velocity.x = 250;
+	velocity.y = 0;
+	m_sprite.setTexture(textureManager->getKoopaTexture(0));
 }
 
 Enemy* GoombaFactory::create()

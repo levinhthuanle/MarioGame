@@ -24,7 +24,7 @@ protected:
 public:
 	void addObserver(PhysicsObserver* observer);
 
-	void rermoveObserver(PhysicsObserver* observer);
+	void removeObserver(PhysicsObserver* observer);
 
 	void updatePhysics(float deltaTime, Map map);
 };

@@ -6,17 +6,20 @@ void PhysicsManager::addObserver(PhysicsObserver* observer)
 		observers.push_back(observer);
 }
 
-void PhysicsManager::rermoveObserver(PhysicsObserver* observer)
+void PhysicsManager::removeObserver(PhysicsObserver* observer)
 {
-	for (vector<PhysicsObserver*>::iterator i = observers.begin(); i != observers.end(); ++i)
-		if (*i == observer)
-			observers.erase(i);
+	observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
 }
 
 void PhysicsManager::updatePhysics(float deltaTime, Map map)
 {
-	for (PhysicsObserver* o : observers)
-		o->update(deltaTime, map);
+    for (PhysicsObserver* o : observers) {
+        if (!o) {
+            removeObserver(o);
+        }
+        else
+            o->update(deltaTime, map);
+    }
 }
 
 
