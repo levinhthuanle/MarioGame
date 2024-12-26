@@ -19,22 +19,47 @@ Level::Level(vector<GameObject*> objects, Character* c) : gameObjects(objects), 
 
 int Level::pause()
 {
-	sf::RenderWindow pauseWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow pauseWindow(sf::VideoMode(740, 450), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
-	while (pauseWindow.isOpen()) {
-		sf::Event event;
-		while (pauseWindow.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				pauseWindow.close();
+	Button pauseTxt("./Resources/Background/PagesBackground/GamePauseText.png", 20, 50);
+	Button resumeBtn("./Resources/Background/PagesBackground/ContinueText.png", 50, 50);
+	Button exitBtn("./Resources/Background/PagesBackground/exitText.png", 50, 150);
+    pauseWindow.clear(sf::Color(5, 113, 211)); // Set background color to #0571d3
+
+    while (pauseWindow.isOpen()) {
+        sf::Event event;
+        while (pauseWindow.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                pauseWindow.close();
+                return 4;
+            }
+			if (resumeBtn.isClicked(pauseWindow, event)) {
+				std::cout << "Start Button clicked\n";
+				return 1;
+			}
+			if (resumeBtn.isHover(pauseWindow)) 
+				resumeBtn.setOpacity(255);
+			else 
+				resumeBtn.setOpacity(127);
+
+			if (exitBtn.isClicked(pauseWindow, event)) {
+				std::cout << "Start Button clicked\n";
 				return 4;
 			}
-		}
+			if (exitBtn.isHover(pauseWindow))
+				exitBtn.setOpacity(255);
+			else
+				exitBtn.setOpacity(127);
 
-		pauseWindow.clear();
-		pauseWindow.display();
-	}
-	
-	return 0;
+        }
+		pauseWindow.clear(sf::Color(5, 113, 211));
+		pauseTxt.draw(pauseWindow, 130, 5);
+		resumeBtn.draw(pauseWindow, 220, 220);
+		exitBtn.draw(pauseWindow, 300, 400);	
+        pauseWindow.display();
+    }
+
+    return 1;
 }
 
 int Level::selectCharacter()
@@ -163,11 +188,11 @@ int Level::run(string lv) {
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
-	for (auto x : enemies) {
-		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
-		if (obj)
-			physicsManager.addObserver(obj);
-	}
+	//for (auto x : enemies) {
+	//	PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+	//	if (obj)
+	//		physicsManager.addObserver(obj);
+	//}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
@@ -212,8 +237,12 @@ int Level::run(string lv) {
 			}
 
 			if (pauseBtn.isClicked(window, event)) {
+				SoundManager::getInstance()->playSoundPause();
 				std::cout << "Pause clicked!\n";
-				pause();
+				int cmd = pause();
+				if (cmd == 4) {
+					return 3;
+				}
 			}
 		}
 
@@ -227,6 +256,7 @@ int Level::run(string lv) {
 				objTouch[0]->tryBreak();
 				map.spawnMushroom(objMap, gameObjects, objTouch[0]);
 				objTouch[0]->m_name = "Steel";
+				SoundManager::getInstance()->playSoundBreakBlock();
 			}
 			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
 				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
@@ -237,8 +267,10 @@ int Level::run(string lv) {
 			if (objTouch[1]->m_name == "Dead") {
 				std::cout << "Dead \n";
 				lifeHealth--;
+				SoundManager::getInstance()->playSoundKick();
 				if (lifeHealth == 0) {
 					std::cout << "Game Over \n";
+					SoundManager::getInstance()->playSoundGameOver();
 					lose();
 					return 3;
 				}
@@ -260,12 +292,15 @@ int Level::run(string lv) {
 				if (x->m_name == "Coin") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					point += 5;
+					SoundManager::getInstance()->playSoundCoin();
 					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
 				}
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
-					lifeHealth++;
+					if (lifeHealth < 3) lifeHealth++;
+					SoundManager::getInstance()->playSoundFireworks();
+					
 					if (dynamic_cast<NormalState*>(character->getState()))
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
@@ -297,10 +332,6 @@ int Level::run(string lv) {
 		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
 		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
 		std::cout << "Item size: " << items.size() << std::endl;*/
-
-
-		for (auto x : items)
-			x->m_sprite.setColor(sf::Color::Green);
 
 		physicsManager.updatePhysics(deltaTime, map);
 

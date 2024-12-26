@@ -10,7 +10,7 @@ Game::Game()
 void Game::run()
 {
 	std::cout << "Run game\n";
-
+	SoundManager::getInstance()->loadSounds();
 	//SoundManager* soundManager = SoundManager::getInstance();
 	//soundManager->playBackground();
 	while (m_IsRunning) {
