@@ -304,30 +304,16 @@ int Level::run(string lv) {
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
 					lifeHealth++;
-					/*character->setBigMode();*/
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
-					break;
-				}
-				if (x->m_name == "Fire Flower") {
-					std::cout << "Touch " << x->m_name << std::endl;
-					/*character->setFireMode();*/
 					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
-					
+
 					if (dynamic_cast<NormalState*>(character->getState()))
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
 						character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
 					break;
 				}
-				//if (x->m_name == "Fire Flower") {
-				//	std::cout << "Touch " << x->m_name << std::endl;
-				//	character->setFireState();
-				//	map.removeGameObj(objMap, bricks, luckyblocks, items, x);
-				//	break;
-				//}
 			}
 		}
 		

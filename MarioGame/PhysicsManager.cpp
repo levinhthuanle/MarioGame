@@ -15,7 +15,7 @@ void PhysicsManager::updatePhysics(float deltaTime, Map map)
 {
     for (PhysicsObserver* o : observers) {
         if (!o) {
-            rermoveObserver(o);
+            removeObserver(o);
         }
         else
             o->update(deltaTime, map);
