@@ -75,6 +75,14 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             std::cout << "Sketch 2 loaded" << endl;
         }
     }
+    else if (lv == "1-3") {
+        if (!sketch.loadFromFile("Resources/Stages/3/sketch_edited.png")) {
+            cerr << "Error loading resources" << endl;
+        }
+        else {
+            std::cout << "Sketch 3 loaded" << endl;
+        }
+    }
 
     int width = sketch.getSize().x;
     int height = sketch.getSize().y;
