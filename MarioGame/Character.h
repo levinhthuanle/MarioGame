@@ -50,10 +50,33 @@ public:
 
 
 
+// Flyweight Factory
+class Fireball : public PhysicsAppliedObject {
+protected:
+
+public:
+	Fireball(const shared_ptr<sf::Texture>& texture, float x, float y, int vel);
+
+	void update(float deltaTime, Map map);
+};
+
+class FireballFactory {
+private:
+	shared_ptr<sf::Texture> fireballTexture;
+
+public:
+	FireballFactory();
+
+	Fireball* createFireball(float x, float y, int vel);
+};
+
+
+
+
+
 class Character : public PhysicsAppliedObject
 {
 protected:
-	int jumpForce = 700;
 	CharacterState* currentState;
 
 	// 0-1: stand
@@ -72,19 +95,22 @@ protected:
 	vector<sf::Texture> superTextures = vector<sf::Texture>(14);
 	vector<sf::Texture> fireTextures = vector<sf::Texture>(16);
 
-	vector<sf::Texture> currentTexture = textures;
-
 	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
 	vector<sf::Texture> toFire = vector<sf::Texture>(10);
 	vector<sf::Texture> Super2Small = vector<sf::Texture>(10);
 	vector<sf::Texture> Fire2Small = vector<sf::Texture>(10);
 
+	FireballFactory* fireballFactory = new FireballFactory();
+
 	// Texture's time control attributes
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
 	const chrono::milliseconds updateInterval{100};
 
+	chrono::high_resolution_clock::time_point lastFire = chrono::high_resolution_clock::now();
+
 	// Constant attributes
 	float maxVelocityX = -1;
+	int jumpForce = 700;
 	int inertia = 15;
 	bool breakBrick = 0;
 	bool fireable = 0;
@@ -97,6 +123,14 @@ protected:
 
 public:
 	Character();
+
+	CharacterState* getState();
+
+	void setState(CharacterState* newState);
+
+	void setSuperState();
+
+	void setFireState();
 
 	void setVelocity(float x, float y);
 
@@ -114,30 +148,15 @@ public:
 
 	virtual void jump() = 0;
 
-	void checkAction() {
-		SoundManager* soundManager = SoundManager::getInstance();
-
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			this->jump();
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			this->moveLeft();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			this->setCrouch();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			this->moveRight();
-
-	}
+	Fireball* checkAction();
 
 	void moveLeft();
 
 	void moveRight();
 
 	void setCrouch();
+
+	Fireball* fire();
 
     void setPosition(sf::Vector2f pos) {
 		this->m_sprite.setPosition(pos);
@@ -160,7 +179,6 @@ public:
 	Mario();
 
 	void jump();
-	//void setCrouch();
 
 	~Mario() = default;
 };
@@ -171,8 +189,6 @@ public:
 	Luigi();
 
 	void jump();
-
-	//void setCrouch();
 
 	~Luigi() = default;
 };

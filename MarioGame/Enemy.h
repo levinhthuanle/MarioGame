@@ -66,11 +66,7 @@ public:
 	void startRolling();
 };
 
-class Bowser : public Enemy
-{
-public:
-	void update(float deltaTime, Map map) override;
-};
+
 
 class EnemyFactory
 {
@@ -87,12 +83,6 @@ public:
 };
 
 class KoopaFactory : public EnemyFactory
-{
-public:
-	Enemy* create() override;
-};
-
-class BowserFactory : public EnemyFactory
 {
 public:
 	Enemy* create() override;

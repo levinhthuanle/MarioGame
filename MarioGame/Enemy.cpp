@@ -144,11 +144,6 @@ void Koopa::startRolling()
 	rollPoint = chrono::high_resolution_clock::now();
 }
 
-void Bowser::update(float deltaTime, Map map)
-{
-
-}
-
 Enemy* GoombaFactory::create()
 {
 	return new Goomba();
@@ -157,9 +152,4 @@ Enemy* GoombaFactory::create()
 Enemy* KoopaFactory::create()
 {
 	return new Koopa();
-}
-
-Enemy* BowserFactory::create()
-{
-	return new Bowser();
 }
