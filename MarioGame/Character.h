@@ -53,6 +53,7 @@ public:
 class Character : public PhysicsAppliedObject
 {
 protected:
+	int jumpForce = 700;
 	CharacterState* currentState;
 
 	// 0-1: stand
@@ -96,6 +97,16 @@ protected:
 
 public:
 	Character();
+
+	void setVelocity(float x, float y);
+
+	void setJumpForce(int force) {
+		this->jumpForce = force;
+	}
+
+	bool canUBreakBrick() {
+		return this->breakBrick;
+	}
 
 	void update(float deltaTime, Map map) override;
 
@@ -149,7 +160,6 @@ public:
 	Mario();
 
 	void jump();
-
 	//void setCrouch();
 
 	~Mario() = default;
