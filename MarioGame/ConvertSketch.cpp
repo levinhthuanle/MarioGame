@@ -1,6 +1,9 @@
 #include "ConvertSketch.h"
 #include "Items.h"
 #include "Global.h"
+#include "Coins.h"
+#include "Mushroom.h"
+#include "LuckyBlock.h"
 
 void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character) {
     map<int, CellProperties> cellProperties = {
@@ -16,7 +19,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {9, {false, false}},  // Steel
         {10, {false, false}}, // Flag Body
         {11, {false, false}},  // Flag Top
-        {12, {false, true}}
+        {12, {false, true}},  // Mushroom
+        {13, {false, false}}   // Dead}
     };
 
     map<Color, int, ColorComparator> colorToType = {
@@ -32,7 +36,8 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
         {Color(114, 114, 114), 9}, // Steel
         {Color(255, 255, 255), 10},// Flag Body
         {Color(0, 0, 0), 11},       // Flag Top
-        {Color(208, 148, 56), 12} // Mushroom
+        {Color(208, 148, 56), 12}, // Mushroom
+        {Color(255, 0, 255), 13} //Dead
     };
 
     // Create the map with specific properties
@@ -115,7 +120,11 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             }
             else if (type == 2) {
                 // LuckyBlock
-                GameObject* luckyblock = new GameObject("Resources/Tile/luckyblock.png", "Resources/Tile/steel.png", "Lucky Block");
+                int randomNum = rand() % 3 + 1; // Generates a random number between 1 and 3
+
+                bool isLucky = (randomNum == 3) ? 0 : 1;
+
+                GameObject* luckyblock = new LuckyBlock("Resources/Tile/luckyblock.png", "Resources/Tile/steel.png", "Lucky Block", isLucky);
                 luckyblock->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 luckyblock->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &luckyblock->m_sprite;
@@ -132,6 +141,16 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 gameObjects.push_back(pipe);
                 objMap[x][y] = pipe;
             }
+            else if (type == 13) {
+				// Dead
+				GameObject* dead = new GameObject("Resources/Tile/brick.png");
+				dead->m_name = "Dead";
+				dead->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+				dead->m_sprite.setScale(SCALE, SCALE);
+				spriteGrid[x][y] = &dead->m_sprite;
+				gameObjects.push_back(dead);
+				objMap[x][y] = dead;
+            }
             else {
                 spriteGrid[x][y] = new Sprite(textures[type]);
                 spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
@@ -139,7 +158,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = nullptr;
             }
             if (color == Color(0, 0, 255)) {
-                Items* item = new Items("./Resources/Item/coin1.png", "./Resources/Item/coin2.png", "false");\
+                Items* item = new Coins("./Resources/Item/coin1.png", "./Resources/Item/coin2.png", "false");\
                 item->m_name = "Coin";
                 item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 item->m_sprite.setScale(SCALE, SCALE);
