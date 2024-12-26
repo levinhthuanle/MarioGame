@@ -91,14 +91,59 @@ int Level::selectCharacter()
 	return 0;
 }
 
+int Level::win()
+{
+	sf::RenderWindow winWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+
+	while (winWindow.isOpen()) {
+		sf::Event event;
+		while (winWindow.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				winWindow.close();
+				return 4;
+			}
+		}
+
+		winWindow.clear();
+		winWindow.display();
+	}
+
+	return 0;
+}
+
+int Level::lose()
+{
+	sf::RenderWindow loseWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+
+	while (loseWindow.isOpen()) {
+		sf::Event event;
+		while (loseWindow.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				loseWindow.close();
+				return 4;
+			}
+		}
+
+		loseWindow.clear();
+		loseWindow.display();
+	}
+
+	return 0;
+}
+
 int Level::run(string lv) {
 	point = 0;
+	lifeHealth = 3;
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
+
+	if (lv == "1-3") {
+		character->setJumpForce(1400);
+	}
 
 	Button pauseBtn("./Resources/Background/PagesBackground/pauseButton.png", 50, 50);
 	Button heartBtn("./Resources/item/heart.png", 1450, 30);
@@ -151,10 +196,27 @@ int Level::run(string lv) {
 
 			if (objTouch[0]->m_name == "Lucky Block") {
 				objTouch[0]->tryBreak();
+				map.spawnMushroom(objMap, gameObjects, objTouch[0]);
+				objTouch[0]->m_name = "Steel";
 			}
-			else
+			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
 				map.removeGameObj(objMap, bricks, luckyblocks, items, objTouch[0]);
+			}
+		}
 
+		if (!objTouch.empty() && objTouch[1] != nullptr) {
+			if (objTouch[1]->m_name == "Dead") {
+				std::cout << "Dead \n";
+				lifeHealth--;
+				if (lifeHealth == 0) {
+					std::cout << "Game Over \n";
+					lose();
+					return 3;
+				}
+				else {
+					character->setVelocity(0, -800);
+				}
+			}
 		}
 
 		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
@@ -165,12 +227,26 @@ int Level::run(string lv) {
 		//}
 
 		for (auto x : objTouch) {
-			if (x != nullptr)
+			if (x != nullptr) {
 				if (x->m_name == "Coin") {
-				std::cout << "Touch " << x->m_name << std::endl;
-				point += 5;
-				map.removeGameObj(objMap, bricks, luckyblocks, items, x);
-				break;
+					std::cout << "Touch " << x->m_name << std::endl;
+					point += 5;
+					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					break;
+				}
+				if (x->m_name == "Mushroom") {
+					std::cout << "Touch " << x->m_name << std::endl;
+					lifeHealth++;
+					/*character->setBigMode();*/
+					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					break;
+				}
+				if (x->m_name == "Fire Flower") {
+					std::cout << "Touch " << x->m_name << std::endl;
+					/*character->setFireMode();*/
+					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					break;
+				}
 			}
 		}
 		

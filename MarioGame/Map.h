@@ -70,6 +70,8 @@ public:
 
     void drawMap(const Sprite& character, RenderWindow& window);
 
+    void spawnMushroom(vector<vector<GameObject*>>& objMap, vector<GameObject*> items, GameObject* luckyblock);
+
     void removeGameObj(vector<GameObject*>& gameObj, GameObject* removeOne);
     void removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>& brick, vector<GameObject*>& luckyBlock, vector<GameObject*>& coin, int x, int y);
     void removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>& brick, vector<GameObject*>& luckyBlock, vector<GameObject*>& coin, GameObject* obj);

@@ -269,10 +269,15 @@ void Mario::jump()
 {
 	if (!jumping) {
 		jumping = true;
-		velocity.y = -700;
+		velocity.y = -jumpForce; //map 3 need higher jump
 	}
 }
 
+void Character::setVelocity(float x, float y)
+{
+	velocity.x = x;
+	velocity.y = y;
+}
 
 
 

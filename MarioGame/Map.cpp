@@ -190,3 +190,23 @@ void Map::removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>
 	int y = round((obj->m_sprite.getGlobalBounds().top / CELL_SIZE));
 	removeGameObj(objMap, brick, luckyBlock, coin, x, y);
 }
+
+#include "Items.h"
+#include "Mushroom.h"
+#include "LuckyBlock.h"
+
+void Map::spawnMushroom(vector<vector<GameObject*>>& objMap,vector<GameObject*> items, GameObject* luckyblock) {
+    if (!static_cast<LuckyBlock*>(luckyblock)->doesItContainMushroom()) {
+        cout << "Unlucky block" << endl;
+        return;
+    }
+    int x = round((luckyblock->m_sprite.getGlobalBounds().left / CELL_SIZE));
+    int y = round((luckyblock->m_sprite.getGlobalBounds().top / CELL_SIZE)) - 1;
+    Items* item = new Mushroom("./Resources/Item/mushroom.png", "false");
+    item->m_name = "Mushroom";
+    item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+    item->m_sprite.setScale(SCALE, SCALE);
+    spriteGrid[x][y] = &item->m_sprite;
+    items.push_back(item);
+    objMap[x][y] = item;
+}
