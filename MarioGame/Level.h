@@ -15,9 +15,8 @@ protected:
 	int lifeHealth = 2;
 
 	int point = 0;
-	Map map;
+	// Map map;
 	PhysicsManager physicsManager;
-	vector<vector<GameObject*>> objMap;
 	vector<GameObject*> gameObjects;
 	vector<GameObject*> bricks;
 	vector<GameObject*> luckyblocks;

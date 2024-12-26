@@ -1,5 +1,5 @@
 #include "Enemy.h"
-
+#include "ResourcesManager.h"
 TextureManager* TextureManager::getInstance()
 {
 	if (!instance)
@@ -49,6 +49,11 @@ void Goomba::update(float deltaTime, Map map)
 {
 	velocity.y += gravity * deltaTime;
 
+	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
+	int x = static_cast<int>(m_sprite.getPosition().x / 54.4);
+	int y = static_cast<int>(m_sprite.getPosition().y / 54.4);
+	objMap[x][y] = nullptr;
+
 	std::pair<int, int> nothing = { 0, 0 };
 	int collision = checkObstacle(deltaTime, map, nothing);
 	if (collision == 1 or collision == 11)
@@ -66,11 +71,19 @@ void Goomba::update(float deltaTime, Map map)
 	}
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
+	x = static_cast<int>(m_sprite.getPosition().x / 54.4);
+	y = static_cast<int>(m_sprite.getPosition().y / 54.4);
+	objMap[x][y] = this;
 }
 
 void Koopa::update(float deltaTime, Map map)
 {
 	velocity.y += gravity * deltaTime;
+
+	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
+	int x = static_cast<int>(m_sprite.getPosition().x / 54.4);
+	int y = static_cast<int>(m_sprite.getPosition().y / 54.4);
+	objMap[x][y] = nullptr;
 
 	std::pair<int, int> nothing = { 0, 0 };
 	int collision = checkObstacle(deltaTime, map, nothing);
@@ -109,6 +122,9 @@ void Koopa::update(float deltaTime, Map map)
 	}
 
 	m_sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
+	x = static_cast<int>(m_sprite.getPosition().x / 54.4);
+	y = static_cast<int>(m_sprite.getPosition().y / 54.4);
+	objMap[x][y] = this;
 }
 
 void Koopa::startRolling()
