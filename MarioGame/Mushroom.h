@@ -3,7 +3,9 @@
 class Mushroom : public Items
 {
 public:
-	const std::string path = "";
+	std::string path = "";
+
+	Mushroom(std::string path, std::string isBreakable) : Items(path, isBreakable) {}
 
 };
 
