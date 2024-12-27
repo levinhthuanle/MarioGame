@@ -55,19 +55,22 @@ class Fireball : public PhysicsAppliedObject {
 protected:
 
 public:
-	Fireball(const shared_ptr<sf::Texture>& texture, float x, float y, int vel);
+	Fireball(sf::Texture texture, float x, float y, int vel);
 
 	void update(float deltaTime, Map map);
 };
 
 class FireballFactory {
 private:
-	shared_ptr<sf::Texture> fireballTexture;
+	vector<Fireball*> fireballs;
+	sf::Texture fireballTexture;
 
 public:
 	FireballFactory();
 
-	Fireball* createFireball(float x, float y, int vel);
+	Fireball* createFireball(PhysicsManager* physicsManager, float x, float y, int vel);
+
+	vector<Fireball*>& getFireballs();
 };
 
 
@@ -99,8 +102,6 @@ protected:
 	vector<sf::Texture> toFire = vector<sf::Texture>(10);
 	vector<sf::Texture> Super2Small = vector<sf::Texture>(10);
 	vector<sf::Texture> Fire2Small = vector<sf::Texture>(10);
-
-	FireballFactory* fireballFactory = new FireballFactory();
 
 	// Texture's time control attributes
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
@@ -148,7 +149,7 @@ public:
 
 	virtual void jump() = 0;
 
-	Fireball* checkAction();
+	void checkAction(PhysicsManager* physicsManager, FireballFactory& fireballFactory);
 
 	void moveLeft();
 
@@ -156,11 +157,9 @@ public:
 
 	void setCrouch();
 
-	Fireball* fire();
+	void fire(PhysicsManager* physicsManager, FireballFactory& fireballFactory);
 
-    void setPosition(sf::Vector2f pos) {
-		this->m_sprite.setPosition(pos);
-    }
+	void setPosition(sf::Vector2f pos);
 
 	virtual ~Character() = default;
 

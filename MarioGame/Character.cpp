@@ -176,6 +176,47 @@ void FireState::crouch(Character& character)
 
 
 
+Fireball::Fireball(sf::Texture texture, float x, float y, int vel)
+{
+	m_sprite.setTexture(texture);
+	m_sprite.setScale(4, 4);
+	m_sprite.setPosition(x, y);
+
+	velocity.x = vel;
+}
+
+void Fireball::update(float deltaTime, Map map)
+{
+	m_sprite.move(velocity.x * deltaTime, 0);
+	pair<int, int> nothing = { 0, 0 };
+	if (checkObstacle(deltaTime, map, nothing))
+	{
+		deleteMark = true;
+	}
+}
+
+FireballFactory::FireballFactory()
+{		
+	fireballTexture.loadFromFile("./Resources/Item/Items_Blocks.png", sf::IntRect(6, 83, 8, 8));
+}
+
+Fireball* FireballFactory::createFireball(PhysicsManager* physicsManager, float x, float y, int vel)
+{
+	Fireball* fireball = new Fireball(fireballTexture, x, y, vel);
+	fireballs.push_back(fireball);
+	physicsManager->addObserver(fireball);
+	return fireball;
+}
+
+vector<Fireball*>& FireballFactory::getFireballs()
+{
+	return fireballs;
+}
+
+
+
+
+
 Character::Character() : currentState(new NormalState(*this))
 {
 	m_sprite.setPosition(300, 300);
@@ -240,9 +281,8 @@ void Character::updateTexture()
 	}
 }
 
-Fireball* Character::checkAction() {
+void Character::checkAction(PhysicsManager* physicsManager, FireballFactory& fireballFactory) {
 	SoundManager* soundManager = SoundManager::getInstance();
-
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		jump();
@@ -257,7 +297,7 @@ Fireball* Character::checkAction() {
 		moveRight();
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		return fire();
+		fire(physicsManager, fireballFactory);
 }
 
 void Character::moveLeft()
@@ -277,7 +317,7 @@ void Character::setCrouch()
 	currentState->crouch(*this);
 }
 
-Fireball* Character::fire()
+void Character::fire(PhysicsManager* physicsManager, FireballFactory& fireballFactory)
 {
 	if (dynamic_cast<FireState*>(currentState)) {
 		chrono::high_resolution_clock::time_point now = chrono::high_resolution_clock::now();
@@ -286,11 +326,15 @@ Fireball* Character::fire()
 
 			sf::FloatRect b = m_sprite.getGlobalBounds();
 			if (!direction)
-				return fireballFactory->createFireball(b.left + 125, b.top + 32, 500);
+				fireballFactory.createFireball(physicsManager, b.left + 125, b.top + 32, 500);
 			else
-				return fireballFactory->createFireball(b.left - 33, b.top + 32, -500);
+				fireballFactory.createFireball(physicsManager, b.left - 33, b.top + 32, -500);
 		}
 	}
+}
+
+void Character::setPosition(sf::Vector2f pos) {
+	this->m_sprite.setPosition(pos);
 }
 
 
@@ -423,36 +467,4 @@ void Luigi::jump()
 		jumping = true;
 		velocity.y = -550;
 	}
-}
-
-
-
-
-
-Fireball::Fireball(const shared_ptr<sf::Texture>& texture, float x, float y, int vel)
-{
-	m_sprite.setTexture(*texture.get());
-	m_sprite.setScale(4, 4);
-	m_sprite.setPosition(x, y);
-
-	velocity.x = vel;
-}
-
-void Fireball::update(float deltaTime, Map map)
-{
-	m_sprite.move(velocity.x * deltaTime, 0);
-	pair<int, int> nothing = { 0, 0 };
-	if (checkObstacle(deltaTime, map, nothing))
-		delete this;
-}
-
-FireballFactory::FireballFactory()
-{
-	fireballTexture = make_shared<sf::Texture>();
-	fireballTexture->loadFromFile("./Resources/Item/Items_Blocks.png", sf::IntRect(6, 83, 8, 8));
-}
-
-Fireball* FireballFactory::createFireball(float x, float y, int vel)
-{
-	return new Fireball(fireballTexture, x, y, vel);
 }
