@@ -149,10 +149,6 @@ void Map::removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>
 
         cellGrid[x][y] = Cell(x, y, 0);
 
-        spriteGrid[x][y] = nullptr;
-        delete objMap[x][y];
-        objMap[x][y] = nullptr;
-
 
         if (cellGrid[x][y].getType() == 1) {
             brick.erase(std::remove(brick.begin(), brick.end(), objMap[x][y]), brick.end());
@@ -166,6 +162,10 @@ void Map::removeGameObj(vector<vector<GameObject*>>& objMap, vector<GameObject*>
         else {
             enemy.erase(std::remove(enemy.begin(), enemy.end(), objMap[x][y]), enemy.end());
         }
+
+        spriteGrid[x][y] = nullptr;
+        delete objMap[x][y];
+        objMap[x][y] = nullptr;
 
         std::cout << "Type: " << cellGrid[x][y].getType() << std::endl;
         std::cout << "Brick size: " << brick.size() << std::endl;
