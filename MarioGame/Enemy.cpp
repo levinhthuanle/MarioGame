@@ -54,13 +54,12 @@ void Goomba::update(float deltaTime, Map map)
 	objMap[x1][y1] = nullptr;
 
 	std::pair<int, int> nothing = { 0, 0 };
-	vector<GameObject*> objTouch;
-	int collision = checkObstacleE(deltaTime, map, nothing, objMap, objTouch);
-	if (collision == 11 or (velocity.x == 250 and !collision and lastCollision >= 10) or objTouch[3] != nullptr) {
+	int collision = checkObstacle(deltaTime, map, nothing);
+	if (collision == 11 or (velocity.x == 250 and !collision and lastCollision >= 10)) {
 		velocity.y = 0;
 		velocity.x = -250;
 	}
-	else if (collision == 12 or (velocity.x == -250 and !collision and lastCollision >= 10) or objTouch[2] != nullptr) {
+	else if (collision == 12 or (velocity.x == -250 and !collision and lastCollision >= 10)) {
 		velocity.y = 0;
 		velocity.x = 250;
 	}
@@ -104,8 +103,7 @@ void Koopa::update(float deltaTime, Map map)
 	objMap[x1][y1] = nullptr;
 
 	std::pair<int, int> nothing = { 0, 0 };
-	vector<GameObject*> objTouch;
-	int collision = checkObstacleE(deltaTime, map, nothing, objMap, objTouch);
+	int collision = checkObstacle(deltaTime, map, nothing);
 
 	if (rolling) {
 		chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
