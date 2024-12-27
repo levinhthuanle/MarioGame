@@ -55,7 +55,7 @@ class Fireball : public PhysicsAppliedObject {
 protected:
 
 public:
-	Fireball(sf::Texture texture, float x, float y, int vel);
+	Fireball(const shared_ptr<sf::Texture> texture, float x, float y, int vel);
 
 	void update(float deltaTime, Map map);
 };
@@ -63,7 +63,7 @@ public:
 class FireballFactory {
 private:
 	vector<Fireball*> fireballs;
-	sf::Texture fireballTexture;
+	shared_ptr<sf::Texture> texture;
 
 public:
 	FireballFactory();
