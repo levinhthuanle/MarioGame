@@ -174,6 +174,7 @@ int Level::lose()
 int Level::run(string lv) {
 	TextureManager* texturemanager = TextureManager::getInstance();
 	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
+	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
 	texturemanager->loadTextures();
 
 	point = 0;
@@ -183,12 +184,6 @@ int Level::run(string lv) {
 	selectCharacter();
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
-
-	for (auto x : enemies) {
-		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
-		if (obj)
-			physicsManager.addObserver(obj);
-	}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
@@ -211,7 +206,7 @@ int Level::run(string lv) {
 	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
 	pointText.setFillColor(sf::Color::White);
 
-	sf::RenderWindow& window = ResourcesManager::getInstance().getWindow();
+	
 	sf::Event event;
 
 	sf::Clock clock;
@@ -242,6 +237,37 @@ int Level::run(string lv) {
 			}
 		}
 
+		int view_x = character->m_sprite.getGlobalBounds().left - WIDTH / 2;
+		if (view_x < CELL_SIZE) {
+			view_x = CELL_SIZE;
+		}
+		else if (view_x > (objMap.size() - 1) * CELL_SIZE - window.getSize().x) {
+			view_x = (objMap.size() - 1) * CELL_SIZE - window.getSize().x;
+		}
+
+		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT / 2;
+		if (veiw_y < CELL_SIZE) {
+			veiw_y = CELL_SIZE;
+		}
+		else if (veiw_y > (objMap[0].size() - 1) * CELL_SIZE - window.getSize().y) {
+			veiw_y = (objMap[0].size() - 1) * CELL_SIZE - window.getSize().y;
+		}
+
+		for (auto x : enemies) {
+			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + WIDTH
+				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + WIDTH) {
+				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
+					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+					physicsManager.addObserver(obj);
+				}
+			}
+			else {	
+				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
+					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+					physicsManager.removeObserver(obj);
+				}
+			}
+		}
 
 		std::pair<int, int> objectBreakPos = { 0, 0 };
 		vector<GameObject*> objTouch;
@@ -278,6 +304,7 @@ int Level::run(string lv) {
 				physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(objTouch[1]));
 				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[1]);
 				character->setVelocity(0, -400);
+				cout<<enemies.size()<<endl;
 			}
 		}
 

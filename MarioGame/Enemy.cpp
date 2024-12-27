@@ -142,8 +142,7 @@ void Koopa::update(float deltaTime, Map map)
 	int x2 = round(m_sprite.getPosition().x / 54.4);
 	int y2 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x2][y2] = this;
-	mapSprites[x2][y2] = mapSprites[x1][y1];
-	mapSprites[x1][y1] = nullptr;
+	swap(mapSprites[x1][y1], mapSprites[x2][y2]);
 }
 
 void Koopa::startRolling()
