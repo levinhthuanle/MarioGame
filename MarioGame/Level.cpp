@@ -188,11 +188,11 @@ int Level::run(string lv) {
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
-	//for (auto x : enemies) {
-	//	PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
-	//	if (obj)
-	//		physicsManager.addObserver(obj);
-	//}
+	for (auto x : enemies) {
+		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+		if (obj)
+			physicsManager.addObserver(obj);
+	}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
@@ -303,8 +303,10 @@ int Level::run(string lv) {
 				}
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
-					lifeHealth++;
+					if (lifeHealth < 3)
+						lifeHealth++;
 					/*character->setBigMode();*/
+					character->setFireState();
 					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
@@ -319,7 +321,7 @@ int Level::run(string lv) {
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
 						character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
 				//if (x->m_name == "Fire Flower") {
