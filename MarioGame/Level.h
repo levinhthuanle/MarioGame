@@ -18,7 +18,7 @@ protected:
 	// Map map;
 	PhysicsManager physicsManager;
 	vector<GameObject*> gameObjects;
-	vector<GameObject*> bricks;	
+	vector<GameObject*> bricks;
 	vector<GameObject*> luckyblocks;
 
 	vector<GameObject*> enemies;
