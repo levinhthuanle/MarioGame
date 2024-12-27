@@ -118,14 +118,10 @@ FireState::FireState(Character& character)
 	character.m_sprite.setTextureRect(sf::IntRect(0, 0, 16, 31));
 	character.m_sprite.setScale(4, 4);
 
-	sf::FloatRect b = character.m_sprite.getGlobalBounds();
-
 	if (!character.direction)
 		character.m_sprite.setTexture(character.fireTextures[0]);
 	else
 		character.m_sprite.setTexture(character.fireTextures[1]);
-
-	character.m_sprite.setPosition(b.left, b.top - 15 * 4);
 }
 
 void FireState::updateTexture(Character& character)
@@ -176,9 +172,9 @@ void FireState::crouch(Character& character)
 
 
 
-Fireball::Fireball(sf::Texture texture, float x, float y, int vel)
+Fireball::Fireball(const shared_ptr<sf::Texture> texture, float x, float y, int vel)
 {
-	m_sprite.setTexture(texture);
+	m_sprite.setTexture(*texture.get());
 	m_sprite.setScale(4, 4);
 	m_sprite.setPosition(x, y);
 
@@ -196,13 +192,14 @@ void Fireball::update(float deltaTime, Map map)
 }
 
 FireballFactory::FireballFactory()
-{		
-	fireballTexture.loadFromFile("./Resources/Item/Items_Blocks.png", sf::IntRect(6, 83, 8, 8));
+{
+	texture = make_shared<sf::Texture>();
+	texture->loadFromFile("./Resources/Item/Items_Blocks.png", sf::IntRect(6, 83, 8, 8));
 }
 
 Fireball* FireballFactory::createFireball(PhysicsManager* physicsManager, float x, float y, int vel)
 {
-	Fireball* fireball = new Fireball(fireballTexture, x, y, vel);
+	Fireball* fireball = new Fireball(texture, x, y, vel);
 	fireballs.push_back(fireball);
 	physicsManager->addObserver(fireball);
 	return fireball;
@@ -326,9 +323,9 @@ void Character::fire(PhysicsManager* physicsManager, FireballFactory& fireballFa
 
 			sf::FloatRect b = m_sprite.getGlobalBounds();
 			if (!direction)
-				fireballFactory.createFireball(physicsManager, b.left + 125, b.top + 32, 500);
+				fireballFactory.createFireball(physicsManager, b.left + 125, b.top + 50, 500);
 			else
-				fireballFactory.createFireball(physicsManager, b.left - 33, b.top + 32, -500);
+				fireballFactory.createFireball(physicsManager, b.left - 33, b.top + 50, -500);
 		}
 	}
 }
