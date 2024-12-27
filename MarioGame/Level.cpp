@@ -200,6 +200,12 @@ int Level::run(string lv) {
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
+	for (auto x : enemies) {
+		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+		if (obj)
+			physicsManager.addObserver(obj);
+	}
+
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
 	if (lv == "1-3") {
@@ -301,36 +307,43 @@ int Level::run(string lv) {
 			}
 		}
 
-		if (!objTouch.empty() && objTouch[1] != nullptr) {
-			if (objTouch[1]->m_name == "Dead") {
-				std::cout << "Dead \n";
-				lifeHealth--;
-				SoundManager::getInstance()->playSoundKick();
-				if (lifeHealth == 0) {
-					std::cout << "Game Over \n";
-					SoundManager::getInstance()->playSoundGameOver();
-					lose();
-					return 3;
+				if (x.first == 1) {
+					if (x.second->m_name == "Dead") {
+						std::cout << "Dead \n";
+						lifeHealth--;
+						SoundManager::getInstance()->playSoundKick();
+						if (lifeHealth == 0) {
+							std::cout << "Game Over \n";
+							SoundManager::getInstance()->playSoundGameOver();
+							lose();
+							return 3;
+						}
+						else {
+							character->setVelocity(0, -800);
+						}
+					}
+					else if (x.second->m_name == "Goomba") {
+						physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+						character->setVelocity(0, -400);
+					}
 				}
-				else {
-					character->setVelocity(0, -800);
-				}
-			}
-			else if (objTouch[1]->m_name == "Goomba") {
-				physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(objTouch[1]));
-				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[1]);
-				character->setVelocity(0, -400);
-				cout<<enemies.size()<<endl;
-			}
-		}
 
-		if (!objTouch.empty() && objTouch[2] != nullptr) {
-			if (objTouch[2]->m_name == "Goomba") {
-				lifeHealth--;
-				character->setVelocity(0, -400);
-				cout << enemies.size() << endl;
-			}
-		}
+				if (x.first != 1) {
+					if (x.second->m_name == "Goomba") {
+						--lifeHealth;
+						SoundManager::getInstance()->playSoundKick();
+						if (lifeHealth == 0) {
+							std::cout << "Game Over \n";
+							SoundManager::getInstance()->playSoundGameOver();
+							lose();
+							return 3;
+						}
+						else {
+							character->setVelocity(0, -800);
+						}
+					}
+				}
 
 		for (auto x : objTouch) {
 			if (x != nullptr) {
@@ -343,13 +356,13 @@ int Level::run(string lv) {
 					std::cout << "Touch " << x->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					break;
 				}
-				if (x->m_name == "Mushroom") {
-					std::cout << "Touch " << x->m_name << std::endl;
+				if (x.second->m_name == "Mushroom") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					lifeHealth++;
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
 
