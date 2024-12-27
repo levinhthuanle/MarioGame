@@ -154,7 +154,7 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
 
     // Check bounds to prevent out-of-range access
     if (left < 0 || right >= grids.size() || top < 0 || bottom >= grids[0].size()) {
-        cout << "Out of bounds access detected!" << endl;
+        //cout << "Out of bounds access detected!" << endl;
         return 0;
     }
 
