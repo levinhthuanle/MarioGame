@@ -13,8 +13,18 @@ void PhysicsManager::removeObserver(PhysicsObserver* observer)
 
 void PhysicsManager::updatePhysics(float deltaTime, Map map)
 {
-	for (PhysicsObserver* o : observers)
-		o->update(deltaTime, map);
+    for (PhysicsObserver* observer : observers)
+        observer->update(deltaTime, map);
+
+    vector<PhysicsObserver*>::iterator it = observers.begin();
+    while (it != observers.end()) {
+        if ((*it)->isDeleted()) {
+            delete (*it);
+            it = observers.erase(it);
+        }
+        else
+            ++it;
+    }
 }
 
 
@@ -202,4 +212,9 @@ bool PhysicsAppliedObject::isObjectCollision(GameObject* gameObject)
 	if (m_sprite.getGlobalBounds().intersects(gameObject->m_sprite.getGlobalBounds()))
 		return true;
 	return false;
+}
+
+bool PhysicsObserver::isDeleted()
+{
+    return deleteMark;
 }

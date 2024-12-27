@@ -12,8 +12,14 @@ using namespace std;
 
 class PhysicsObserver
 {
+protected:
+	bool deleteMark = false;
 public:
 	virtual void update(float deltaTime, Map map) = 0;
+
+	bool isDeleted();
+
+	virtual ~PhysicsObserver() = default;
 };
 
 class PhysicsManager

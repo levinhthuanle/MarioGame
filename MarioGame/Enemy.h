@@ -9,7 +9,6 @@ private:
 	static TextureManager* instance;
 	vector<sf::Texture> goombaTextures = vector<sf::Texture>(3);
 	vector<sf::Texture> koopaTextures = vector<sf::Texture>(8);
-	vector<sf::Texture> bowserTextures = vector<sf::Texture>(10);
 
 	TextureManager() = default;
 
@@ -25,8 +24,6 @@ public:
 	sf::Texture& getGoombaTexture(int i);
 
 	sf::Texture& getKoopaTexture(int i);
-
-	sf::Texture& getBowserTexture(int i);
 };
 
 
@@ -48,6 +45,9 @@ public:
 
 class Goomba : public Enemy
 {
+private:
+	int lastCollision = 0;
+
 public:
 	Goomba();
 
@@ -61,6 +61,8 @@ private:
 	chrono::high_resolution_clock::time_point rollPoint;
 
 public:
+	Koopa();
+
 	void update(float deltaTime, Map map) override;
 
 	void startRolling();

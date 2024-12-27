@@ -176,15 +176,11 @@ int Level::run(string lv) {
 	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
 	texturemanager->loadTextures();
 
-	vector<Fireball*> fireballs;
-
 	point = 0;
 	lifeHealth = 3;
 	Map& map = ResourcesManager::getInstance().getMap();
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
-
-	FireballFactory* fireballFactory;
 
 	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
 
@@ -303,20 +299,11 @@ int Level::run(string lv) {
 				}
 				if (x->m_name == "Mushroom") {
 					std::cout << "Touch " << x->m_name << std::endl;
-					if (lifeHealth < 3)
-						lifeHealth++;
-					/*character->setBigMode();*/
-					character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
-					break;
-				}
-				if (x->m_name == "Fire Flower") {
-					std::cout << "Touch " << x->m_name << std::endl;
-					/*character->setFireMode();*/
+					lifeHealth++;
 					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
-					
+
 					if (dynamic_cast<NormalState*>(character->getState()))
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
@@ -324,12 +311,6 @@ int Level::run(string lv) {
 					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
 					break;
 				}
-				//if (x->m_name == "Fire Flower") {
-				//	std::cout << "Touch " << x->m_name << std::endl;
-				//	character->setFireState();
-				//	map.removeGameObj(objMap, bricks, luckyblocks, items, x);
-				//	break;
-				//}
 			}
 		}
 		
@@ -340,11 +321,8 @@ int Level::run(string lv) {
 		}
 
 		// Move and jump for character
-		Fireball* f = character->checkAction();
-		if (f) {
-			fireballs.push_back(f);
-			physicsManager.addObserver(f);
-		}
+		character->checkAction(&physicsManager, fireballFactory);
+
 		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
 		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
 		std::cout << "Item size: " << items.size() << std::endl;*/
@@ -360,6 +338,25 @@ int Level::run(string lv) {
 		window.setView(mainView);
 		map.drawMap(character->m_sprite, window);
 		window.draw(character->m_sprite);
+		vector<Fireball*>& fireballs = fireballFactory.getFireballs();
+
+		vector<Fireball*>::iterator it = fireballs.begin();
+		while (it != fireballs.end()) {
+			if ((*it)->isDeleted()) {
+				it = fireballs.erase(it);
+			}
+			else {
+				window.draw((*it)->m_sprite);
+				++it;
+			}
+		}
+
+		//for (Fireball* fireball : fireballs) {
+		//	if (fireball->isDeleted())
+		//		fireballs.erase(remove(fireballs.begin(), fireballs.end(), fireball), fireballs.end());
+		//	else
+		//		window.draw(fireball->m_sprite);
+		//}
 
 		window.setView(uiView);
 		pauseBtn.draw(window, 100, 50); 

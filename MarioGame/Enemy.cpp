@@ -33,11 +33,6 @@ sf::Texture& TextureManager::getKoopaTexture(int i)
 	return koopaTextures[i];
 }
 
-sf::Texture& TextureManager::getBowserTexture(int i)
-{
-	return bowserTextures[i];
-}
-
 Goomba::Goomba()
 {
 	velocity.x = 250;
@@ -60,10 +55,16 @@ void Goomba::update(float deltaTime, Map map)
 
 	std::pair<int, int> nothing = { 0, 0 };
 	int collision = checkObstacle(deltaTime, map, nothing);
-	if (collision == 1 or collision == 11)
+	if (collision == 11 or (velocity.x == 250 and !collision and lastCollision >= 10)) {
+		velocity.y = 0;
 		velocity.x = -250;
-	else if (collision == 2 or collision == 12)
+	}
+	else if (collision == 12 or (velocity.x == -250 and !collision and lastCollision >= 10)) {
+		velocity.y = 0;
 		velocity.x = 250;
+	}
+
+	lastCollision = collision;
 
 	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
 	if (now - lastUpdate >= updateInterval) {
@@ -79,6 +80,13 @@ void Goomba::update(float deltaTime, Map map)
 	int y2 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x2][y2] = this;
 	swap(mapSprites[x1][y1], mapSprites[x2][y2]);
+}
+
+Koopa::Koopa()
+{
+	velocity.x = 250;
+	velocity.y = 0;
+	m_sprite.setTexture(textureManager->getKoopaTexture(0));
 }
 
 void Koopa::update(float deltaTime, Map map)

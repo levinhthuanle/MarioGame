@@ -24,6 +24,8 @@ protected:
 	vector<GameObject*> enemies;
 	vector<GameObject*> items;
 
+	FireballFactory fireballFactory;
+
 	Character* character = nullptr;
 
 	sf::Sprite bg_sprite;
