@@ -46,6 +46,8 @@ public:
 
 	int checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos);
 
+	int checkObstacleE(float deltaTime, Map map, std::pair<int, int>& pos, vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch);
+
 	int checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos,vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch);
 
 	bool isObjectCollision(GameObject* gameObject);
