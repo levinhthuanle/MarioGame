@@ -243,43 +243,14 @@ int Level::run(string lv) {
 		}
 
 
-		std::pair<int, int> objectBreakPos = { 0, 0 };
-		vector<GameObject*> objTouch;
-		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos, objMap, objTouch);
-		if (!objTouch.empty() && objTouch[0] != nullptr) {
-			cout<< objTouch[0]->m_name << endl;
-			if (objTouch[0]->m_name == "Lucky Block") {
-				objTouch[0]->tryBreak();
-				map.spawnMushroom(objMap, gameObjects, objTouch[0]);
-				objTouch[0]->m_name = "Steel";
-				SoundManager::getInstance()->playSoundBreakBlock();
-			}
-			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
-				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[0]);
-			}
-		}
+		//std::pair<int, int> objectBreakPos = { 0, 0 };
+		vector<pair<int, GameObject*>> objTouch;
+		int objectBreak = character->checkObstacle(deltaTime, map, /*objectBreakPos, */objMap, objTouch);
+		//if (!objTouch.empty() && objTouch[0].second != nullptr) {
+		//}
 
-		if (!objTouch.empty() && objTouch[1] != nullptr) {
-			if (objTouch[1]->m_name == "Dead") {
-				std::cout << "Dead \n";
-				lifeHealth--;
-				SoundManager::getInstance()->playSoundKick();
-				if (lifeHealth == 0) {
-					std::cout << "Game Over \n";
-					SoundManager::getInstance()->playSoundGameOver();
-					lose();
-					return 3;
-				}
-				else {
-					character->setVelocity(0, -800);
-				}
-			}
-			else if (objTouch[1]->m_name == "Goomba") {
-				physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(objTouch[1]));
-				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[1]);
-				character->setVelocity(0, -400);
-			}
-		}
+		//if (!objTouch.empty() && objTouch[1].second != nullptr) {
+		//}
 
 		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
 		//	std::cout << "Teleport \n";
@@ -288,19 +259,70 @@ int Level::run(string lv) {
 		//	objTouch[1] = nullptr;
 		//}
 
-		for (auto x : objTouch) {
-			if (x != nullptr) {
-				if (x->m_name == "Coin") {
-					std::cout << "Touch " << x->m_name << std::endl;
+		for (pair<int, GameObject*> x : objTouch) {
+			if (x.second) {	
+				if (x.first == 0) {
+					cout << x.second->m_name << endl;
+					if (x.second->m_name == "Lucky Block") {
+						x.second->tryBreak();
+						map.spawnMushroom(objMap, gameObjects, x.second);
+						x.second->m_name = "Steel";
+						SoundManager::getInstance()->playSoundBreakBlock();
+					}
+					else if (x.second->m_name == "Brick" && character->canUBreakBrick()) {
+						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+					}
+				}
+
+				if (x.first == 1) {
+					if (x.second->m_name == "Dead") {
+						std::cout << "Dead \n";
+						lifeHealth--;
+						SoundManager::getInstance()->playSoundKick();
+						if (lifeHealth == 0) {
+							std::cout << "Game Over \n";
+							SoundManager::getInstance()->playSoundGameOver();
+							lose();
+							return 3;
+						}
+						else {
+							character->setVelocity(0, -800);
+						}
+					}
+					else if (x.second->m_name == "Goomba") {
+						physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+						character->setVelocity(0, -400);
+					}
+				}
+
+				if (x.first != 1) {
+					if (x.second->m_name == "Goomba") {
+						--lifeHealth;
+						SoundManager::getInstance()->playSoundKick();
+						if (lifeHealth == 0) {
+							std::cout << "Game Over \n";
+							SoundManager::getInstance()->playSoundGameOver();
+							lose();
+							return 3;
+						}
+						else {
+							character->setVelocity(0, -800);
+						}
+					}
+				}
+
+				if (x.second->m_name == "Coin") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					break;
 				}
-				if (x->m_name == "Mushroom") {
-					std::cout << "Touch " << x->m_name << std::endl;
+				if (x.second->m_name == "Mushroom") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					lifeHealth++;
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
 

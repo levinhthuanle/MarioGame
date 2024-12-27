@@ -122,7 +122,7 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
 }
 
 // 0 - not collision below, 1 - collision below, whatUJustTouch - objects that are touched on top, bottom, left, right sequentially
-int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos,vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch)
+int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, /*std::pair<int, int>& pos, */vector<vector<GameObject*>>& objMap, vector<pair<int, GameObject*>>& whatUJustTouch)
 {
     whatUJustTouch.clear();
     const vector<vector<Cell>>& grids = map.getMap();
@@ -158,10 +158,25 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
         return 0;
     }
 
-    whatUJustTouch.push_back(objMap[int(midX)][floor(futureTop)]); //top
-    whatUJustTouch.push_back(objMap[int(midX)][floor(futureBottom)]); //bottom
-    whatUJustTouch.push_back(objMap[floor(futureLeft)][int(midY)]); //left
-    whatUJustTouch.push_back(objMap[floor(futureRight)][int(midY)]); //right
+    //top
+    whatUJustTouch.push_back(make_pair(0, objMap[int(left)][floor(futureTop)]));
+    whatUJustTouch.push_back(make_pair(0, objMap[int(midX)][floor(futureTop)]));
+    whatUJustTouch.push_back(make_pair(0, objMap[int(right)][floor(futureTop)]));
+
+    //bottom
+    whatUJustTouch.push_back(make_pair(1, objMap[int(left)][floor(futureBottom)]));
+    whatUJustTouch.push_back(make_pair(1, objMap[int(midX)][floor(futureBottom)]));
+    whatUJustTouch.push_back(make_pair(1, objMap[int(right)][floor(futureBottom)]));
+
+    //left
+    whatUJustTouch.push_back(make_pair(2, objMap[floor(futureLeft)][int(top)]));
+    whatUJustTouch.push_back(make_pair(2, objMap[floor(futureLeft)][int(midY)]));
+    whatUJustTouch.push_back(make_pair(2, objMap[floor(futureLeft)][int(bottom)]));
+
+    //right
+    whatUJustTouch.push_back(make_pair(3, objMap[floor(futureRight)][int(top)]));
+    whatUJustTouch.push_back(make_pair(3, objMap[floor(futureRight)][int(midY)]));
+    whatUJustTouch.push_back(make_pair(3, objMap[floor(futureRight)][int(bottom)]));
 
     bool ground = false;
 
@@ -200,8 +215,8 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
         if (grids[int(midX)][floor(futureTop)].getType() == 0)
             type = "Nothing";
         std::cout << "Try to break " << type << std::endl;
-        pos.first = int(midX);
-        pos.second = floor(futureTop);
+        //pos.first = int(midX);
+        //pos.second = floor(futureTop);
         return grids[int(midX)][floor(futureTop)].getType();
     }
     return ground;
