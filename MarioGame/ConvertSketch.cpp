@@ -178,7 +178,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 enemy->m_name = "Goomba";
                 cnt++;
 				enemy->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-				enemy->m_sprite.setScale(SCALE, SCALE);
+				enemy->m_sprite.setScale(SCALE - 0.1, SCALE - 0.1);
 				spriteGrid[x][y] = &enemy->m_sprite;
 				enemies.push_back(enemy);
 				objMap[x][y] = enemy;
