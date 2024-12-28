@@ -487,7 +487,7 @@ void Character::setVelocity(float x, float y)
 
 Luigi::Luigi()
 {
-	maxVelocityX = 350;
+	maxVelocityX = 200;
 
 	textures[0].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(3, 16, 14, 16));
 	textures[1].loadFromFile("./Resources/Character/Luigi/SmallLuigi/stand.png", sf::IntRect(24, 16, 14, 16));
@@ -538,6 +538,6 @@ void Luigi::jump()
 {
 	if (!jumping) {
 		jumping = true;
-		velocity.y = -550;
+		velocity.y = -jumpForce-200 ;
 	}
 }

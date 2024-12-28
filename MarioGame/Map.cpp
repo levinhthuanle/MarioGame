@@ -104,31 +104,31 @@ void Map::drawMap(const Sprite& character, RenderWindow& window) {
     if (view_x < CELL_SIZE) {
         view_x = CELL_SIZE;
     }
-    else if (view_x > (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x) {
-		view_x = (spriteGrid.size() - 1) * CELL_SIZE - window.getSize().x;
+    else if (view_x > (spriteGrid.size() - 1) * CELL_SIZE - WIDTH) {
+		view_x = (spriteGrid.size() - 1) * CELL_SIZE - WIDTH;
 	}
 
     int veiw_y = character.getGlobalBounds().top - HEIGHT / 2;
     if (veiw_y < CELL_SIZE) {
 		veiw_y = CELL_SIZE;
 	}
-    else if (veiw_y > (spriteGrid[0].size() - 1) * CELL_SIZE - window.getSize().y) {
-		veiw_y = (spriteGrid[0].size() - 1) * CELL_SIZE - window.getSize().y;
+    else if (veiw_y > (spriteGrid[0].size() - 1) * CELL_SIZE - HEIGHT) {
+		veiw_y = (spriteGrid[0].size() - 1) * CELL_SIZE - HEIGHT;
 	}
 
-    View mapView(FloatRect(view_x, veiw_y, window.getSize().x, window.getSize().y));
+    View mapView(FloatRect(view_x, veiw_y, WIDTH, HEIGHT));
     window.setView(mapView);
 
     int cellWidth = CELL_SIZE;
     int visibleStart_x = view_x / cellWidth - 1;
-    int visibleEnd_x = (view_x + window.getSize().x) / cellWidth + 1;
+    int visibleEnd_x = (view_x + WIDTH) / cellWidth + 1;
 
     visibleStart_x = std::max(1, visibleStart_x);
     visibleEnd_x = std::min(static_cast<int>(spriteGrid.size() - 1), visibleEnd_x);
 
     int cellHeight = CELL_SIZE;
     int visibleStart_y = veiw_y / cellHeight - 1;
-    int visibleEnd_y = (veiw_y + window.getSize().y) / cellHeight + 1;
+    int visibleEnd_y = (veiw_y + HEIGHT) / cellHeight + 1;
 
     visibleStart_y = std::max(1, visibleStart_y);
     visibleEnd_y = std::min(static_cast<int>(spriteGrid[0].size() - 1), visibleEnd_y);
