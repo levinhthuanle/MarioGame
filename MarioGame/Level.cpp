@@ -124,22 +124,37 @@ bool Level::continueScreen() {
 
 int Level::win()
 {
-	sf::RenderWindow winWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow winWindow(sf::VideoMode(700, 400), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
-	while (winWindow.isOpen()) {
-		sf::Event event;
-		while (winWindow.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				winWindow.close();
-				return 4;
-			}
-		}
+    sf::Texture bgTexture;
+    sf::Texture textWinTexture;
+    textWinTexture.loadFromFile("Resources/Background/youwinText.png");
+    bgTexture.loadFromFile("Resources/Background/youWinBackground.jpg");
+    sf::Sprite bgSprite(bgTexture);
+    sf::Sprite textWinSprite(textWinTexture);
 
-		winWindow.clear();
-		winWindow.display();
-	}
+    // Scale the image to fit the winWindow
+    bgSprite.setScale(static_cast<float>(winWindow.getSize().x) / bgSprite.getTexture()->getSize().x,
+                      static_cast<float>(winWindow.getSize().y) / bgSprite.getTexture()->getSize().y);
+    textWinSprite.setPosition(90, 10);
+    textWinSprite.setScale(0.5, 0.5);
 
-	return 0;
+    while (winWindow.isOpen()) {
+        sf::Event event;
+        while (winWindow.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                winWindow.close();
+                return 4;
+            }
+        }
+
+        winWindow.clear();
+        winWindow.draw(bgSprite);
+        winWindow.draw(textWinSprite);
+        winWindow.display();
+    }
+
+    return 0;
 }
 
 int Level::lose()

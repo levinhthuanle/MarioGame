@@ -137,6 +137,16 @@ void convertSketch(string fileName, Map& new_map, vector<vector<GameObject*>>& o
                 gameObjects.push_back(dead);
                 objMap[x][y] = dead;
             }
+            else if (type == 10) {
+				// Flag Body
+				GameObject* flag = new GameObject("Resources/Tile/flagbody.png");
+				flag->m_name = "Flag";
+				flag->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+				flag->m_sprite.setScale(SCALE, SCALE);
+				spriteGrid[x][y] = &flag->m_sprite;
+				gameObjects.push_back(flag);
+				objMap[x][y] = flag;
+			}
             else if (type == 12) {
 				// Mushroom
 				Items* item = new Mushroom("./Resources/Item/mushroom.png", "false");
