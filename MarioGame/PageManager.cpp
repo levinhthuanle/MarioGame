@@ -19,7 +19,7 @@ int PageManager::loadPage()
 
 	// Easy 1.1 
 	if (m_currentPage == 5)
-		level.run("1-1");
+		level.run("1");
 
 	// For the m_currentPage >= 10. It's for the play game page
 	// 10 for 1-1; 11 for 1-2 and so on.
@@ -28,13 +28,13 @@ int PageManager::loadPage()
 	switch (m_currentPage)
 	{
 	case 11:
-		m_currentPage = level.run("1-1");
+		m_currentPage = level.run("1");
 		break;
 	case 12:
-		m_currentPage = level.run("1-2");
+		m_currentPage = level.run("2");
 		break;
 	case 13:
-		m_currentPage = level.run("1-3");
+		m_currentPage = level.run("3");
 		break;
 	case 14:
 		m_currentPage = level.run("2-1");

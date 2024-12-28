@@ -39,6 +39,8 @@ public:
 
 	int selectCharacter();
 
+	bool continueScreen();
+
 	int run(string lv);
 
 	int win();

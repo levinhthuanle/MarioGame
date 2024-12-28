@@ -6,7 +6,7 @@
 #include "LuckyBlock.h"
 #include "Enemy.h"
 
-void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character) {
+void convertSketch(string fileName, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Character* character) {
     map<int, CellProperties> cellProperties = {
         {0, {true, true}},    // Empty
         {1, {true, false}},   // Brick
@@ -68,29 +68,11 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
 
     std::cout << "Map loaded" << endl;
     sf::Image sketch;
-    if (lv == "1-1") {
-        if (!sketch.loadFromFile("Resources/Stages/1/sketch_edited.png")) {
-            cerr << "Error loading resources" << endl;
-        }
-        else {
-            std::cout << "Sketch 1 loaded" << endl;
-        }
+    if (!sketch.loadFromFile(fileName)) {
+        cerr << "Error loading resources" << endl;
     }
-    else if (lv == "1-2") {
-        if (!sketch.loadFromFile("Resources/Stages/2/sketch_edited.png")) {
-			cerr << "Error loading resources" << endl;
-		}
-        else {
-            std::cout << "Sketch 2 loaded" << endl;
-        }
-    }
-    else if (lv == "1-3") {
-        if (!sketch.loadFromFile("Resources/Stages/3/sketch_edited.png")) {
-            cerr << "Error loading resources" << endl;
-        }
-        else {
-            std::cout << "Sketch 3 loaded" << endl;
-        }
+    else {
+        std::cout << fileName << " loaded" << endl;
     }
     srand(time(0));
 
@@ -138,6 +120,7 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
             else if (type == 5) {
                 // Pipe top left
                 GameObject* pipe = new Pipe(true, { 50, 50 });
+                pipe->m_name = "Pipe";
                 pipe->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 pipe->m_sprite.setScale(SCALE, SCALE);
                 spriteGrid[x][y] = &pipe->m_sprite;
@@ -154,6 +137,16 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 gameObjects.push_back(dead);
                 objMap[x][y] = dead;
             }
+            else if (type == 12) {
+				// Mushroom
+				Items* item = new Mushroom("./Resources/Item/mushroom.png", "false");
+				item->m_name = "Mushroom";
+				item->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+				item->m_sprite.setScale(SCALE, SCALE);
+				spriteGrid[x][y] = &item->m_sprite;
+				items.push_back(item);
+				objMap[x][y] = item;
+			}
             else if (type != 0) {
                 spriteGrid[x][y] = new Sprite(textures[type]);
                 spriteGrid[x][y]->setPosition(x * CELL_SIZE, y * CELL_SIZE);
@@ -193,10 +186,126 @@ void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap,
                 objMap[x][y] = enemy;
 			}
             if (color == Color(85, 42, 83)) {
-				character.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+				character->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
                 objMap[x][y] = nullptr;
 			}
+            if (color == Color(83, 83, 83)) {
+                character->m_sprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                character->setSuperState();
+                objMap[x][y] = nullptr;
+            }
+            if (color == Color(160, 160, 160)) {
+                character->m_sprite.setPosition(x* CELL_SIZE, y* CELL_SIZE);
+                character->setSuperState();
+                objMap[x][y] = nullptr;
+            }
         }
     }
     std::cout<< "Sketch converted" << endl;
+}
+
+//Q: lnk2019 unresolved external symbol
+//A: The error is due to the fact that the function is declared in the header file but not defined in the cpp file.
+//   The function is defined in the cpp file but the cpp file is not included in the project.
+
+void convertToSketch(const vector<vector<GameObject*>>& objMap, const vector<vector<Cell>>& cellGrid, const string& outputFilePath, Character* character) {
+    int charPosX = round((character->m_sprite.getGlobalBounds().left / CELL_SIZE));
+    int charPosY = round((character->m_sprite.getGlobalBounds().top / CELL_SIZE));
+    int width = cellGrid.size();
+    int height = cellGrid[0].size();
+
+    // Create an image with the same dimensions as the map
+    sf::Image sketch;
+    sketch.create(width, height, sf::Color::Transparent);
+
+    // Define type-to-color mappings (inverse of colorToType in convertSketch)
+    map<int, sf::Color> typeToColor = {
+        {0, sf::Color(0, 0, 0, 0)},       // Empty
+        {1, sf::Color(254, 138, 24)},    // Brick
+        {2, sf::Color(255, 255, 0)},     // Lucky Block
+        {3, sf::Color(161, 124, 49)},    // Grass
+        {4, sf::Color(101, 49, 19)},     // Dirt
+        {5, sf::Color(17, 221, 17)},     // Pipe Top Left
+        {6, sf::Color(17, 58, 17)},      // Pipe Top Right
+        {7, sf::Color(17, 177, 17)},     // Pipe Body Left
+        {8, sf::Color(17, 116, 17)},     // Pipe Body Right
+        {9, sf::Color(114, 114, 114)},   // Steel
+        {10, sf::Color(255, 255, 255)},  // Flag Body
+        {11, sf::Color(0, 0, 0)},        // Flag Top
+        {12, sf::Color(208, 148, 56)},   // Mushroom
+        {13, sf::Color(255, 0, 255)}     // Dead
+    };
+
+    // Iterate through the cell grid and objMap to set pixel colors in the sketch
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            if (x == charPosX && y == charPosY) {
+                if (dynamic_cast<SuperState*>(character->getState())) {
+					sketch.setPixel(x, y, sf::Color(160, 160, 160));
+				}
+                else if (dynamic_cast<FireState*>(character->getState())) {
+					sketch.setPixel(x, y, sf::Color(83, 83, 83));
+				}
+                else {
+                    sketch.setPixel(x, y, sf::Color(85, 42, 83));
+                }
+				continue;
+			}
+
+            GameObject* obj = objMap[x][y];
+            const Cell& cell = cellGrid[x][y];
+
+            // Determine color based on the cell type or GameObject
+            sf::Color pixelColor;
+
+            if (obj) {
+                if (obj->m_name == "Brick") {
+                    pixelColor = sf::Color(254, 138, 24); // Brick color
+                }
+                else if (obj->m_name == "Lucky Block") {
+                    pixelColor = sf::Color(255, 255, 0); // Lucky Block color
+                }
+                else if (obj->m_name == "Coin") {
+                    pixelColor = sf::Color(0, 0, 255); // Coin color
+                }
+                else if (obj->m_name == "Goomba") {
+                    pixelColor = sf::Color(101, 19, 19); // Goomba color
+                }
+                else if (obj->m_name == "Koopa") {
+                    pixelColor = sf::Color(255, 0, 0); // Koopa color
+                }
+                else if (obj->m_name == "Dead") {
+                    pixelColor = sf::Color(255, 0, 255); // Dead color
+                }
+                else if (obj->m_name == "Pipe") {
+					pixelColor = sf::Color(17, 221, 17); // Pipe color
+				}
+                else if (obj->m_name == "Steel") {
+                    pixelColor = sf::Color(114, 114, 114); // Steel color
+                }
+                else if (obj->m_name == "Mushroom") {
+                    pixelColor = sf::Color(208, 148, 56); // Mushroom color
+                }
+                else {
+                    pixelColor = sf::Color(0, 0, 0, 0); // Default empty color
+                }
+            }
+            else {
+                // Use the type from the cell grid
+                auto it = typeToColor.find(cell.getType());
+                pixelColor = (it != typeToColor.end()) ? it->second : sf::Color(0, 0, 0, 0);
+            }
+
+            // Set the pixel color in the sketch
+            sketch.setPixel(x, y, pixelColor);
+        }
+    }
+
+    // Save the sketch image to a file
+    if (!sketch.saveToFile(outputFilePath)) {
+        std::cerr << "Error: Failed to save the sketch to " << outputFilePath << std::endl;
+    }
+    else {
+        std::cout << "Sketch successfully saved to " << outputFilePath << std::endl;
+    }
 }

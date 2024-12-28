@@ -116,6 +116,10 @@ int Level::selectCharacter()
 	return 0;
 }
 
+bool Level::continueScreen() {
+	return 1;
+}
+
 int Level::win()
 {
 	sf::RenderWindow winWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
@@ -183,11 +187,18 @@ int Level::run(string lv) {
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
-	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
+	sf::Image sketch;
+
+	if (!sketch.loadFromFile("Resources/Continue/" + lv + ".png") or !continueScreen()) {
+		convertSketch("Resources/Stages/" + lv + "/sketch_edited.png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+	}
+	else {
+		convertSketch("Resources/Continue/" + lv + ".png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+	}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
-	if (lv == "1-3") {
+	if (lv == "3") {
 		character->setJumpForce(1400);
 	}
 
@@ -223,6 +234,9 @@ int Level::run(string lv) {
 		pointText.setText("Point: " + std::to_string(point));
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
+				int charX = round(character->m_sprite.getGlobalBounds().left / CELL_SIZE);
+				int charY = round(character->m_sprite.getGlobalBounds().top / CELL_SIZE) - 1;
+				convertToSketch(objMap, map.getMap(), "Resources/Continue/" + lv + ".png", character);
 				window.close();
 				return 4;
 			}
