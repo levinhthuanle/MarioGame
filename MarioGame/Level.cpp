@@ -293,9 +293,9 @@ int Level::run(string lv) {
 		}
 
 		sf::Time elapsed = clock.restart();
-		//if (elapsed.asSeconds() < deltaTime) {
-		//	sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
-		//}
+		if (elapsed.asSeconds() < deltaTime) {
+			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
+		}
 
 		// Move and jump for character
 		character->checkAction(&physicsManager, fireballFactory);
@@ -375,15 +375,13 @@ int Level::run(string lv) {
 					}
 				}
 
-		for (auto x : objTouch) {
-			if (x != nullptr) {
-				if (x->m_name == "Flag") {
-					std::cout << "Touch " << x->m_name << std::endl;
+				if (x.second->m_name == "Flag") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					win();
 					return 3;
 				}
-				if (x->m_name == "Coin") {
-					std::cout << "Touch " << x->m_name << std::endl;
+				if (x.second->m_name == "Coin") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
 					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
