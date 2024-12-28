@@ -12,8 +12,10 @@ SoundManager* SoundManager::getInstance()
 
 void SoundManager::playBackground()
 {
-	if (background.openFromFile("Resources/Sounds/Music/background.mp3"))
+	if (background.openFromFile("Resources/Sounds/Music/background.mp3")) {
+		background.setLoop(true);
 		background.play();
+	}
 }
 
 void SoundManager::stopBackground() {

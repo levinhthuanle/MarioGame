@@ -119,11 +119,10 @@ int Level::selectCharacter()
 }
 
 bool Level::continueScreen() {
-	sf::RenderWindow continueWindow(sf::VideoMode(740, 450), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+	sf::RenderWindow continueWindow(sf::VideoMode(740, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
-	Button pauseTxt("./Resources/Background/PagesBackground/GamePauseText.png", 20, 50);
 	Button resumeBtn("./Resources/Background/PagesBackground/ContinueText.png", 50, 50);
-	Button exitBtn("./Resources/Background/PagesBackground/newGame.png", 50, 150);
+	Button exitBtn("./Resources/Background/PagesBackground/newGame.png", 50, 50);
 	continueWindow.clear(sf::Color(5, 113, 211)); // Set background color to #0571d3
 
 	while (continueWindow.isOpen()) {
@@ -153,9 +152,8 @@ bool Level::continueScreen() {
 
 		}
 		continueWindow.clear(sf::Color(5, 113, 211));
-		pauseTxt.draw(continueWindow, 130, 5);
-		resumeBtn.draw(continueWindow, 220, 220);
-		exitBtn.draw(continueWindow, 300, 400);
+		resumeBtn.draw(continueWindow, 230, 100);
+		exitBtn.draw(continueWindow, 220, 200);
 		continueWindow.display();
 	}
 	return 0;
@@ -366,6 +364,7 @@ int Level::run(string lv) {
 					}
 					else if (x.second->m_name == "Brick" && character->canUBreakBrick()) {
 						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+						SoundManager::getInstance()->playSoundBreakBlock();
 					}
 				}
 

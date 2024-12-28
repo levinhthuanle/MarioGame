@@ -37,22 +37,22 @@ int PageManager::loadPage()
 		m_currentPage = level.run("3");
 		break;
 	case 14:
-		m_currentPage = level.run("2-1");
+		m_currentPage = level.run("1");
 		break;
 	case 15:
-		m_currentPage = level.run("2-2");
+		m_currentPage = level.run("2");
 		break;
 	case 16:
-		m_currentPage = level.run("2-3");
+		m_currentPage = level.run("3");
 		break;
 	case 17:
-		m_currentPage = level.run("3-1");
+		m_currentPage = level.run("1");
 		break;
 	case 18:
-		m_currentPage = level.run("3-2");
+		m_currentPage = level.run("2");
 		break;
 	case 19:
-		m_currentPage = level.run("3-3");
+		m_currentPage = level.run("3");
 		break;
 
 	default:
