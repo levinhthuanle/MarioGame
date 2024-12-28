@@ -53,13 +53,15 @@ void Goomba::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMa
 	int x1 = round(m_sprite.getPosition().x / 54.4);
 	int y1 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x1][y1] = nullptr;
-
-	int collisionDir = checkObstacle(deltaTime, map, objMap, collision);
-	if (collisionDir == 11 or (velocity.x == 250 and !collisionDir and lastCollision >= 10)) {
+	
+	std::pair<int, int> nothing = { 0, 0 };
+	vector<GameObject*> whatUJustTouch;
+	int collisionDir = checkObstacleE(deltaTime, map, objMap, collision, whatUJustTouch);
+	if (collisionDir == 11 or (velocity.x == 250 and !collisionDir and lastCollision >= 10) or whatUJustTouch[3] != nullptr) {
 		velocity.y = 0;
 		velocity.x = -250;
 	}
-	else if (collisionDir == 12 or (velocity.x == -250 and !collisionDir and lastCollision >= 10)) {
+	else if (collisionDir == 12 or (velocity.x == -250 and !collisionDir and lastCollision >= 10) or whatUJustTouch[2] != nullptr) {
 		velocity.y = 0;
 		velocity.x = 250;
 	}
@@ -106,7 +108,10 @@ void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap
 	int y1 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x1][y1] = nullptr;
 
-	int collisionDir = checkObstacle(deltaTime, map, objMap, collision);
+
+	std::pair<int, int> nothing = { 0, 0 };
+	vector<GameObject*> whatUJustTouch;
+	int collisionDir = checkObstacleE(deltaTime, map, objMap, collision, whatUJustTouch);
 
 	if (rolling) {
 		chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
@@ -115,15 +120,15 @@ void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap
 	}
 
 	if (!rolling) {
-		if (collisionDir == 1 or collisionDir == 11)
+		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -280;
-		else if (collisionDir == 2 or collisionDir == 12)
+		else if (collisionDir == 2 or collisionDir == 12 or whatUJustTouch[2] != nullptr)
 			velocity.x = 280;
 	}
 	else {
-		if (collisionDir == 1 or collisionDir == 11)
+		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -400;
-		else if (collisionDir == 2 or collisionDir == 12)
+		else if (collisionDir == 2 or collisionDir == 12 or whatUJustTouch[3] != nullptr)
 			velocity.x = 400;
 	}
 

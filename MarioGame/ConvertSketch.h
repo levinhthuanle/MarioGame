@@ -10,4 +10,6 @@
 using namespace std;
 using namespace sf;
 
-void convertSketch(string lv, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Sprite& character);
+void convertSketch(string fileName, Map& new_map, vector<vector<GameObject*>>& objMap, vector<GameObject*>& gameObjects, vector<GameObject*>& bricks, vector<GameObject*>& luckyblocks, vector<GameObject*>& enemies, vector<GameObject*>& items, Character* character);
+
+void convertToSketch(const vector<vector<GameObject*>>& objMap, const vector<vector<Cell>>& cellGrid, const string& outputFilePath, Character* character);

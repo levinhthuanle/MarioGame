@@ -118,22 +118,13 @@ int Level::selectCharacter()
 	return 0;
 }
 
+bool Level::continueScreen() {
+	return 0;
+}
+
 int Level::win()
 {
-	sf::RenderWindow winWindow(sf::VideoMode(700, 400), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
-
-	sf::Texture bgTexture;
-	sf::Texture textLoseTexture;
-	textLoseTexture.loadFromFile("Resources/Background/winText.png");
-	bgTexture.loadFromFile("Resources/Background/YouWinBg.jpg");
-	sf::Sprite bgSprite(bgTexture);
-	sf::Sprite textLoseSprite(textLoseTexture);
-
-	// Scale the image to fit the winWindow
-	bgSprite.setScale(static_cast<float>(winWindow.getSize().x) / bgSprite.getTexture()->getSize().x,
-		static_cast<float>(winWindow.getSize().y) / bgSprite.getTexture()->getSize().y);
-	textLoseSprite.setPosition(90, 150);
-	textLoseSprite.setScale(0.5, 0.5);
+	sf::RenderWindow winWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
 	while (winWindow.isOpen()) {
 		sf::Event event;
@@ -145,8 +136,6 @@ int Level::win()
 		}
 
 		winWindow.clear();
-		winWindow.draw(bgSprite);
-		winWindow.draw(textLoseSprite);
 		winWindow.display();
 	}
 
@@ -200,7 +189,14 @@ int Level::run(string lv) {
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
-	convertSketch(lv, map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character->m_sprite);
+	Image sketch;
+	if (!sketch.loadFromFile("./Resources/Continue/" + lv + ".png") or !continueScreen()) {
+		convertSketch("./Resources/Stages/" + lv + "/sketch_edited.png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+	}
+	else {
+		convertSketch("./Resources/Continue/" + lv + ".png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+	}
+	
 
 	for (auto x : enemies) {
 		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
@@ -229,7 +225,7 @@ int Level::run(string lv) {
 	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
 	pointText.setFillColor(sf::Color::White);
 
-	
+
 	sf::Event event;
 
 	sf::Clock clock;
@@ -246,6 +242,7 @@ int Level::run(string lv) {
 		pointText.setText("Point: " + std::to_string(point));
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
+				convertToSketch(objMap, map.getMap(), "./Resources/Continue/" + lv + ".png", character);
 				window.close();
 				return 4;
 			}
@@ -284,7 +281,7 @@ int Level::run(string lv) {
 					physicsManager.addObserver(obj);
 				}
 			}
-			else {	
+			else {
 				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
 					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
 					physicsManager.removeObserver(obj);
@@ -303,7 +300,7 @@ int Level::run(string lv) {
 		physicsManager.updatePhysics(deltaTime, map, objMap, Collision::getInstance());
 
 		for (pair<int, GameObject*> x : Collision::getInstance()->character) {
-			if (x.second) {	
+			if (x.second) {
 				if (x.first == 0) {
 					cout << x.second->m_name << endl;
 					if (x.second->m_name == "Lucky Block") {
@@ -398,7 +395,7 @@ int Level::run(string lv) {
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
 						character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x.second);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					break;
 				}
 			}
@@ -441,13 +438,13 @@ int Level::run(string lv) {
 		}
 
 		window.setView(uiView);
-		pauseBtn.draw(window, 100, 50); 
+		pauseBtn.draw(window, 100, 50);
 		pointText.draw(window);
 		heartBtn.draw(window);
 		if (lifeHealth >= 2) heart1Btn.draw(window);
-			else heartWhiteBtn.draw(window);
+		else heartWhiteBtn.draw(window);
 		if (lifeHealth == 3) heart2Btn.draw(window);
-			else heartwhite2Btn.draw(window);
+		else heartwhite2Btn.draw(window);
 
 		window.display();
 	}

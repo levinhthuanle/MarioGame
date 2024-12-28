@@ -18,7 +18,7 @@ protected:
 	// Map map;
 	PhysicsManager physicsManager;
 	vector<GameObject*> gameObjects;
-	vector<GameObject*> bricks;	
+	vector<GameObject*> bricks;
 	vector<GameObject*> luckyblocks;
 
 	vector<GameObject*> enemies;
@@ -40,6 +40,8 @@ public:
 	int pause();
 
 	int selectCharacter();
+
+	bool continueScreen();
 
 	int run(string lv);
 
