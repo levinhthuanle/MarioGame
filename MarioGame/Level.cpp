@@ -119,7 +119,46 @@ int Level::selectCharacter()
 }
 
 bool Level::continueScreen() {
-	return 1;
+	sf::RenderWindow continueWindow(sf::VideoMode(740, 450), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+
+	Button pauseTxt("./Resources/Background/PagesBackground/GamePauseText.png", 20, 50);
+	Button resumeBtn("./Resources/Background/PagesBackground/ContinueText.png", 50, 50);
+	Button exitBtn("./Resources/Background/PagesBackground/newGame.png", 50, 150);
+	continueWindow.clear(sf::Color(5, 113, 211)); // Set background color to #0571d3
+
+	while (continueWindow.isOpen()) {
+		sf::Event event;
+		while (continueWindow.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				continueWindow.close();
+				return 4;
+			}
+			if (resumeBtn.isClicked(continueWindow, event)) {
+				std::cout << "Start Button clicked\n";
+				return 1;
+			}
+			if (resumeBtn.isHover(continueWindow))
+				resumeBtn.setOpacity(255);
+			else
+				resumeBtn.setOpacity(127);
+
+			if (exitBtn.isClicked(continueWindow, event)) {
+				std::cout << "Start Button clicked\n";
+				return 0;
+			}
+			if (exitBtn.isHover(continueWindow))
+				exitBtn.setOpacity(255);
+			else
+				exitBtn.setOpacity(127);
+
+		}
+		continueWindow.clear(sf::Color(5, 113, 211));
+		pauseTxt.draw(continueWindow, 130, 5);
+		resumeBtn.draw(continueWindow, 220, 220);
+		exitBtn.draw(continueWindow, 300, 400);
+		continueWindow.display();
+	}
+	return 0;
 }
 
 int Level::win()
@@ -267,6 +306,7 @@ int Level::run(string lv) {
 				std::cout << "Pause clicked!\n";
 				int cmd = pause();
 				if (cmd == 4) {
+					convertToSketch(objMap, map.getMap(), "./Resources/Continue/" + lv + ".png", character);
 					return 3;
 				}
 			}
