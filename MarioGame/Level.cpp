@@ -206,7 +206,7 @@ int Level::run(string lv) {
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
-	if (lv == "1-3") {
+	if (lv == "3") {
 		character->setJumpForce(1400);
 	}
 
@@ -257,7 +257,7 @@ int Level::run(string lv) {
 			}
 		}
 
-		int view_x = character->m_sprite.getGlobalBounds().left - WIDTH / 2;
+		int view_x = character->m_sprite.getGlobalBounds().left - WIDTH;
 		if (view_x < CELL_SIZE) {
 			view_x = CELL_SIZE;
 		}
@@ -265,7 +265,7 @@ int Level::run(string lv) {
 			view_x = (objMap.size() - 1) * CELL_SIZE - window.getSize().x;
 		}
 
-		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT / 2;
+		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT;
 		if (veiw_y < CELL_SIZE) {
 			veiw_y = CELL_SIZE;
 		}
@@ -274,8 +274,8 @@ int Level::run(string lv) {
 		}
 
 		for (auto x : enemies) {
-			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + WIDTH
-				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + WIDTH) {
+			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + WIDTH * 2
+				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + HEIGHT * 2) {
 				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
 					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
 					physicsManager.addObserver(obj);
