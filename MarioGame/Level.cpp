@@ -120,7 +120,20 @@ int Level::selectCharacter()
 
 int Level::win()
 {
-	sf::RenderWindow winWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+	sf::RenderWindow winWindow(sf::VideoMode(700, 400), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+
+	sf::Texture bgTexture;
+	sf::Texture textLoseTexture;
+	textLoseTexture.loadFromFile("Resources/Background/winText.png");
+	bgTexture.loadFromFile("Resources/Background/YouWinBg.jpg");
+	sf::Sprite bgSprite(bgTexture);
+	sf::Sprite textLoseSprite(textLoseTexture);
+
+	// Scale the image to fit the winWindow
+	bgSprite.setScale(static_cast<float>(winWindow.getSize().x) / bgSprite.getTexture()->getSize().x,
+		static_cast<float>(winWindow.getSize().y) / bgSprite.getTexture()->getSize().y);
+	textLoseSprite.setPosition(90, 150);
+	textLoseSprite.setScale(0.5, 0.5);
 
 	while (winWindow.isOpen()) {
 		sf::Event event;
@@ -132,6 +145,8 @@ int Level::win()
 		}
 
 		winWindow.clear();
+		winWindow.draw(bgSprite);
+		winWindow.draw(textLoseSprite);
 		winWindow.display();
 	}
 
@@ -278,26 +293,14 @@ int Level::run(string lv) {
 		}
 
 		sf::Time elapsed = clock.restart();
-		if (elapsed.asSeconds() < deltaTime) {
-			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
-		}
+		//if (elapsed.asSeconds() < deltaTime) {
+		//	sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
+		//}
 
 		// Move and jump for character
 		character->checkAction(&physicsManager, fireballFactory);
 
 		physicsManager.updatePhysics(deltaTime, map, objMap, Collision::getInstance());
-		//if (!objTouch.empty() && objTouch[0].second != nullptr) {
-		//}
-
-		//if (!objTouch.empty() && objTouch[1].second != nullptr) {
-		//}
-
-		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
-		//	std::cout << "Teleport \n";
-		//	Pipe* pipe = dynamic_cast<Pipe*>(objTouch[1]);
-		//	pipe->teleport(character);
-		//	objTouch[1] = nullptr;
-		//}
 
 		for (pair<int, GameObject*> x : Collision::getInstance()->character) {
 			if (x.second) {	
@@ -372,8 +375,15 @@ int Level::run(string lv) {
 					}
 				}
 
-				if (x.second->m_name == "Coin") {
-					std::cout << "Touch " << x.second->m_name << std::endl;
+		for (auto x : objTouch) {
+			if (x != nullptr) {
+				if (x->m_name == "Flag") {
+					std::cout << "Touch " << x->m_name << std::endl;
+					win();
+					return 3;
+				}
+				if (x->m_name == "Coin") {
+					std::cout << "Touch " << x->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
 					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
@@ -409,11 +419,6 @@ int Level::run(string lv) {
 			}
 		}
 
-		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
-		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
-		std::cout << "Item size: " << items.size() << std::endl;*/
-
-
 		int charPos = (character->m_sprite).getGlobalBounds().left;
 		mainView.setCenter(charPos, HEIGHT / 2);
 
@@ -436,13 +441,6 @@ int Level::run(string lv) {
 				++it;
 			}
 		}
-
-		//for (Fireball* fireball : fireballs) {
-		//	if (fireball->isDeleted())
-		//		fireballs.erase(remove(fireballs.begin(), fireballs.end(), fireball), fireballs.end());
-		//	else
-		//		window.draw(fireball->m_sprite);
-		//}
 
 		window.setView(uiView);
 		pauseBtn.draw(window, 100, 50); 
