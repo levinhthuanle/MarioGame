@@ -119,7 +119,7 @@ int Level::selectCharacter()
 }
 
 bool Level::continueScreen() {
-	return 0;
+	return 1;
 }
 
 int Level::win()

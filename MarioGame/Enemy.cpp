@@ -108,7 +108,6 @@ void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap
 	int y1 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x1][y1] = nullptr;
 
-
 	std::pair<int, int> nothing = { 0, 0 };
 	vector<GameObject*> whatUJustTouch;
 	int collisionDir = checkObstacleE(deltaTime, map, objMap, collision, whatUJustTouch);
