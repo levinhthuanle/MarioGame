@@ -8,7 +8,7 @@ class TextureManager
 private:
 	static TextureManager* instance;
 	vector<sf::Texture> goombaTextures = vector<sf::Texture>(3);
-	vector<sf::Texture> koopaTextures = vector<sf::Texture>(8);
+	vector<sf::Texture> koopaTextures = vector<sf::Texture>(10);
 
 	TextureManager() = default;
 
@@ -38,7 +38,7 @@ protected:
 	const chrono::milliseconds updateInterval{ 100 };
 
 public:
-	virtual void update(float deltaTime, Map map) = 0;
+	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) = 0;
 
 	virtual ~Enemy() = default;
 };
@@ -51,7 +51,7 @@ private:
 public:
 	Goomba();
 
-	void update(float deltaTime, Map map) override;
+	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) override;
 };
 
 class Koopa : public Enemy
@@ -63,7 +63,9 @@ private:
 public:
 	Koopa();
 
-	void update(float deltaTime, Map map) override;
+	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) override;
+
+	bool isRolling();
 
 	void startRolling();
 };

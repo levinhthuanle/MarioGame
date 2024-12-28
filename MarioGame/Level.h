@@ -30,6 +30,8 @@ protected:
 
 	sf::Sprite bg_sprite;
 
+	chrono::high_resolution_clock::time_point lastCollisionEnemy = chrono::high_resolution_clock::now();
+
 public:
 	Level() {}
 

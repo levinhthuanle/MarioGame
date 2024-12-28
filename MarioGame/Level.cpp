@@ -4,6 +4,8 @@
 #include "ConvertSketch.h"
 using namespace std;
 
+Collision* Collision::instance = nullptr;
+
 // Enemies' textures
 TextureManager* TextureManager::instance = nullptr;
 
@@ -275,9 +277,15 @@ int Level::run(string lv) {
 			}
 		}
 
-		//std::pair<int, int> objectBreakPos = { 0, 0 };
-		vector<pair<int, GameObject*>> objTouch;
-		int objectBreak = character->checkObstacle(deltaTime, map, /*objectBreakPos, */objMap, objTouch);
+		sf::Time elapsed = clock.restart();
+		if (elapsed.asSeconds() < deltaTime) {
+			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
+		}
+
+		// Move and jump for character
+		character->checkAction(&physicsManager, fireballFactory);
+
+		physicsManager.updatePhysics(deltaTime, map, objMap, Collision::getInstance());
 		//if (!objTouch.empty() && objTouch[0].second != nullptr) {
 		//}
 
@@ -291,7 +299,7 @@ int Level::run(string lv) {
 		//	objTouch[1] = nullptr;
 		//}
 
-		for (pair<int, GameObject*> x : objTouch) {
+		for (pair<int, GameObject*> x : Collision::getInstance()->character) {
 			if (x.second) {	
 				if (x.first == 0) {
 					cout << x.second->m_name << endl;
@@ -306,6 +314,7 @@ int Level::run(string lv) {
 					}
 				}
 
+				chrono::high_resolution_clock::time_point now = chrono::high_resolution_clock::now();
 				if (x.first == 1) {
 					if (x.second->m_name == "Dead") {
 						std::cout << "Dead \n";
@@ -321,16 +330,35 @@ int Level::run(string lv) {
 							character->setVelocity(0, -800);
 						}
 					}
-					else if (x.second->m_name == "Goomba") {
+					else if (x.second->m_name == "Goomba" and now - lastCollisionEnemy >= chrono::milliseconds(500)) {
+						lastCollisionEnemy = now;
 						physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
 						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 						character->setVelocity(0, -400);
 					}
+					else if (x.second->m_name == "Koopa" and now - lastCollisionEnemy >= chrono::milliseconds(500)) {
+						lastCollisionEnemy = now;
+						Koopa* koopa = dynamic_cast<Koopa*>(x.second);
+						if (koopa->isRolling()) {
+							physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(koopa));
+							map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+							character->setVelocity(0, -400);
+						}
+						else {
+							koopa->startRolling();
+							character->setVelocity(0, -400);
+						}
+					}
 				}
 
 				if (x.first != 1) {
-					if (x.second->m_name == "Goomba") {
+					if (now - lastCollisionEnemy >= chrono::milliseconds(500) and (x.second->m_name == "Goomba" or x.second->m_name == "Koopa")) {
+						lastCollisionEnemy = now;
 						--lifeHealth;
+						if (dynamic_cast<SuperState*>(character->getState()) or dynamic_cast<FireState*>(character->getState()))
+							character->setNormalState();
+						cout << "Touch " << x.second->m_name << endl;
+						cout << "Life health: " << lifeHealth << endl;
 						SoundManager::getInstance()->playSoundKick();
 						if (lifeHealth == 0) {
 							std::cout << "Game Over \n";
@@ -362,26 +390,29 @@ int Level::run(string lv) {
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
 						character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x.second);
 					break;
 				}
 			}
 		}
-		
 
-		sf::Time elapsed = clock.restart();
-		if (elapsed.asSeconds() < deltaTime) {
-			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
+		for (pair<Fireball*, GameObject*> x : Collision::getInstance()->fireball) {
+			if (x.second) {
+				if (x.second->m_name == "Goomba") {
+					physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+				}
+				else if (x.second->m_name == "Koopa") {
+					physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+				}
+			}
 		}
-
-		// Move and jump for character
-		character->checkAction(&physicsManager, fireballFactory);
 
 		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
 		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
 		std::cout << "Item size: " << items.size() << std::endl;*/
 
-		physicsManager.updatePhysics(deltaTime, map);
 
 		int charPos = (character->m_sprite).getGlobalBounds().left;
 		mainView.setCenter(charPos, HEIGHT / 2);
@@ -397,6 +428,7 @@ int Level::run(string lv) {
 		vector<Fireball*>::iterator it = fireballs.begin();
 		while (it != fireballs.end()) {
 			if ((*it)->isDeleted()) {
+				delete (*it);
 				it = fireballs.erase(it);
 			}
 			else {
