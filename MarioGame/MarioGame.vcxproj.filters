@@ -80,6 +80,11 @@
     <ClCompile Include="PhysicsManager.cpp">
       <Filter>Managers\Physics And Movement</Filter>
     </ClCompile>
+    <ClCompile Include="Flag.cpp" />
+    <ClCompile Include="LuckyBlock.cpp" />
+    <ClCompile Include="Fireball.cpp">
+      <Filter>GameObjects\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasePage.h">
@@ -159,6 +164,11 @@
     </ClInclude>
     <ClInclude Include="PhysicsManager.h">
       <Filter>Managers\Physics And Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Flag.h" />
+    <ClInclude Include="LuckyBlock.h" />
+    <ClInclude Include="Fireball.h">
+      <Filter>GameObjects\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

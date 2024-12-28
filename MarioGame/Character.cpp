@@ -2,6 +2,8 @@
 
 using namespace std;
 
+
+
 NormalState::NormalState(Character& character)
 {
 	character.breakBrick = false;
@@ -172,48 +174,6 @@ void FireState::crouch(Character& character)
 
 
 
-Fireball::Fireball(const shared_ptr<sf::Texture> texture, float x, float y, int vel)
-{
-	m_sprite.setTexture(*texture.get());
-	m_sprite.setScale(4, 4);
-	m_sprite.setPosition(x, y);
-
-	velocity.x = vel;
-}
-
-void Fireball::update(float deltaTime, Map map)
-{
-	m_sprite.move(velocity.x * deltaTime, 0);
-	pair<int, int> nothing = { 0, 0 };
-	if (checkObstacle(deltaTime, map, nothing))
-	{
-		deleteMark = true;
-	}
-}
-
-FireballFactory::FireballFactory()
-{
-	texture = make_shared<sf::Texture>();
-	texture->loadFromFile("./Resources/Item/Items_Blocks.png", sf::IntRect(6, 83, 8, 8));
-}
-
-Fireball* FireballFactory::createFireball(PhysicsManager* physicsManager, float x, float y, int vel)
-{
-	Fireball* fireball = new Fireball(texture, x, y, vel);
-	fireballs.push_back(fireball);
-	physicsManager->addObserver(fireball);
-	return fireball;
-}
-
-vector<Fireball*>& FireballFactory::getFireballs()
-{
-	return fireballs;
-}
-
-
-
-
-
 Character::Character() : currentState(new NormalState(*this))
 {
 	m_sprite.setPosition(300, 300);
@@ -231,6 +191,21 @@ void Character::setState(CharacterState* newState)
 	currentState = newState;
 }
 
+void Character::setNormalState()
+{
+	setState(new NormalState(*this));
+
+	m_sprite.setTextureRect(sf::IntRect(0, 0, 14, 16));
+	m_sprite.setScale(4, 4);
+
+	sf::FloatRect b = m_sprite.getGlobalBounds();
+
+	if (!direction)
+		m_sprite.setTexture(superTextures[0]);
+	else
+		m_sprite.setTexture(superTextures[1]);
+}
+
 void Character::setSuperState()
 {
 	setState(new SuperState(*this));
@@ -241,13 +216,12 @@ void Character::setFireState()
 	setState(new FireState(*this));
 }
 
-void Character::update(float deltaTime, Map map)
+void Character::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision)
 {
 	velocity.y += gravity * deltaTime;
 	jumping = true;
 
-	std::pair<int, int> nothing = { 0, 0 };
-	if (checkObstacle(deltaTime, map, nothing) >= 10)
+	if (checkObstacle(deltaTime, map, objMap, collision) >= 10)
 		jumping = false;
 
 	updateTexture();
@@ -266,6 +240,107 @@ void Character::update(float deltaTime, Map map)
 	}
 
 	crouching = false;
+}
+
+int Character::checkObstacle(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision)
+{
+	collision->getInstance()->character.clear();
+	const vector<vector<Cell>>& grids = map.getMap();
+	//const vector<vector<Sprite>>& sprites = map.getSpriteGrid();
+
+	// Changing these float to int would create gaps before collisions.
+	// Consult Phan Tan Dat before change it. Please!
+	float x = m_sprite.getPosition().x;
+	float y = m_sprite.getPosition().y;
+
+	float left = x / static_cast<float>(CELL_SIZE);
+	float right = (x + m_sprite.getGlobalBounds().width) / static_cast<float>(CELL_SIZE);
+	float top = y / static_cast<float>(CELL_SIZE);
+	float bottom = (y + m_sprite.getGlobalBounds().height) / static_cast<float>(CELL_SIZE);
+	float midX = (left + right) / 2;
+	float midY = (top + bottom) / 2;
+
+	float futureX = x + velocity.x * deltaTime;
+	float futureY = y + velocity.y * deltaTime;
+
+	float futureLeft = futureX / static_cast<float>(CELL_SIZE);
+	float futureRight = (futureX + m_sprite.getGlobalBounds().width) / static_cast<float>(CELL_SIZE);
+	float futureTop = futureY / static_cast<float>(CELL_SIZE);
+	float futureBottom = (futureY + m_sprite.getGlobalBounds().height) / static_cast<float>(CELL_SIZE);
+	float futureMidX = (futureLeft + futureRight) / 2;
+	float futureMidY = (futureTop + futureBottom) / 2;
+
+	// Check bounds to prevent out-of-range access
+	if (left < 0 || right >= grids.size() || top < 0 || bottom >= grids[0].size()) {
+		cout << "Out of bounds access detected!" << endl;
+		return 0;
+	}
+
+	int ans = 0;
+
+	//top
+	collision->getInstance()->character.push_back(make_pair(0, objMap[int(left)][int(futureTop)]));
+	collision->getInstance()->character.push_back(make_pair(0, objMap[int(midX)][int(futureTop)]));
+	collision->getInstance()->character.push_back(make_pair(0, objMap[int(right)][int(futureTop)]));
+
+	//bottom
+	collision->getInstance()->character.push_back(make_pair(1, objMap[int(left)][int(futureBottom)]));
+	collision->getInstance()->character.push_back(make_pair(1, objMap[int(midX)][int(futureBottom)]));
+	collision->getInstance()->character.push_back(make_pair(1, objMap[int(right)][int(futureBottom)]));
+
+	//left
+	collision->getInstance()->character.push_back(make_pair(2, objMap[int(futureLeft)][int(top)]));
+	collision->getInstance()->character.push_back(make_pair(2, objMap[int(futureLeft)][int(midY)]));
+	collision->getInstance()->character.push_back(make_pair(2, objMap[int(futureLeft)][int(bottom)]));
+
+	//right
+	collision->getInstance()->character.push_back(make_pair(3, objMap[int(futureRight)][int(top)]));
+	collision->getInstance()->character.push_back(make_pair(3, objMap[int(futureRight)][int(midY)]));
+	collision->getInstance()->character.push_back(make_pair(3, objMap[int(futureRight)][int(bottom)]));
+
+	// right
+	if (grids[int(futureRight)][int(top)].getType() != 0
+		or grids[int(futureRight)][int((top + midY) / 2)].getType() != 0
+		or grids[int(futureRight)][int(midY)].getType() != 0
+		or grids[int(futureRight)][int((midY + bottom) / 2)].getType() != 0
+		or grids[int(futureRight)][int(bottom)].getType() != 0) {
+		velocity.x = 0;
+		ans += 1;
+	}
+	// left
+	if (grids[int(futureLeft)][int(top)].getType() != 0
+		or grids[int(futureLeft)][int((top + midY) / 2)].getType() != 0
+		or grids[int(futureLeft)][int(midY)].getType() != 0
+		or grids[int(futureLeft)][int((midY + bottom) / 2)].getType() != 0
+		or grids[int(futureLeft)][int(bottom)].getType() != 0) {
+		velocity.x = 0;
+		ans += 2;
+	}
+	// down
+	if (grids[int(left)][int(futureBottom)].getType() != 0
+		or grids[int(right)][int(futureBottom)].getType() != 0
+		or grids[int(midX)][int(futureBottom)].getType() != 0) {
+		velocity.y = 0;
+		ans += 10;
+	}
+	// up
+	if (grids[int(left)][int(futureTop)].getType() != 0
+		or grids[int(right)][int(futureTop)].getType() != 0
+		or grids[int(midX)][int(futureTop)].getType() != 0) {
+		velocity.y = 0;
+
+		// 1 brick
+		// 2 lucky box
+		//if (grids[x][y].getType())
+		std::string type = "Brick";
+		if (grids[int(midX)][int(futureTop)].getType() == 2)
+			type = "Lucky Box";
+		if (grids[int(midX)][int(futureTop)].getType() == 0)
+			type = "Nothing";
+		std::cout << "Try to break " << type << std::endl;
+		return grids[int(midX)][int(futureTop)].getType();
+	}
+	return ans;
 }
 
 void Character::updateTexture()
@@ -322,10 +397,11 @@ void Character::fire(PhysicsManager* physicsManager, FireballFactory& fireballFa
 			lastFire = now;
 
 			sf::FloatRect b = m_sprite.getGlobalBounds();
+			cout << b.width << endl;
 			if (!direction)
-				fireballFactory.createFireball(physicsManager, b.left + 125, b.top + 50, 500);
+				fireballFactory.createFireball(physicsManager, b.left + 50, b.top + 70, 500);
 			else
-				fireballFactory.createFireball(physicsManager, b.left - 33, b.top + 50, -500);
+				fireballFactory.createFireball(physicsManager, b.left - 20, b.top + 70, -500);
 		}
 	}
 }

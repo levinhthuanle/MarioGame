@@ -4,6 +4,8 @@
 #include "ConvertSketch.h"
 using namespace std;
 
+Collision* Collision::instance = nullptr;
+
 // Enemies' textures
 TextureManager* TextureManager::instance = nullptr;
 
@@ -283,32 +285,66 @@ int Level::run(string lv) {
 			}
 		}
 
-		std::pair<int, int> objectBreakPos = { 0, 0 };
-		vector<GameObject*> objTouch;
-		int objectBreak = character->checkObstacle(deltaTime, map, objectBreakPos, objMap, objTouch);
-		if (!objTouch.empty() && objTouch[0] != nullptr) {
-			cout<< objTouch[0]->m_name << endl;
-			if (objTouch[0]->m_name == "Lucky Block") {
-				objTouch[0]->tryBreak();
-				map.spawnMushroom(objMap, gameObjects, objTouch[0]);
-				objTouch[0]->m_name = "Steel";
-				SoundManager::getInstance()->playSoundBreakBlock();
-			}
-			else if (objTouch[0]->m_name == "Brick" && character->canUBreakBrick()) {
-				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[0]);
-			}
+		sf::Time elapsed = clock.restart();
+		if (elapsed.asSeconds() < deltaTime) {
+			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
 		}
 
-		if (!objTouch.empty() && objTouch[1] != nullptr) {
-			if (objTouch[1]->m_name == "Dead") {
-				std::cout << "Dead \n";
-				lifeHealth--;
-				SoundManager::getInstance()->playSoundKick();
-				if (lifeHealth == 0) {
-					std::cout << "Game Over \n";
-					SoundManager::getInstance()->playSoundGameOver();
-					lose();
-					return 3;
+		// Move and jump for character
+		character->checkAction(&physicsManager, fireballFactory);
+
+		physicsManager.updatePhysics(deltaTime, map, objMap, Collision::getInstance());
+
+		for (pair<int, GameObject*> x : Collision::getInstance()->character) {
+			if (x.second) {	
+				if (x.first == 0) {
+					cout << x.second->m_name << endl;
+					if (x.second->m_name == "Lucky Block") {
+						x.second->tryBreak();
+						map.spawnMushroom(objMap, gameObjects, x.second);
+						x.second->m_name = "Steel";
+						SoundManager::getInstance()->playSoundBreakBlock();
+					}
+					else if (x.second->m_name == "Brick" && character->canUBreakBrick()) {
+						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+					}
+				}
+
+				chrono::high_resolution_clock::time_point now = chrono::high_resolution_clock::now();
+				if (x.first == 1) {
+					if (x.second->m_name == "Dead") {
+						std::cout << "Dead \n";
+						lifeHealth--;
+						SoundManager::getInstance()->playSoundKick();
+						if (lifeHealth == 0) {
+							std::cout << "Game Over \n";
+							SoundManager::getInstance()->playSoundGameOver();
+							lose();
+							return 3;
+						}
+						else {
+							character->setVelocity(0, -800);
+						}
+					}
+					else if (x.second->m_name == "Goomba" and now - lastCollisionEnemy >= chrono::milliseconds(500)) {
+						lastCollisionEnemy = now;
+						physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+						map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+						character->setVelocity(0, -400);
+					}
+					else if (x.second->m_name == "Koopa" and now - lastCollisionEnemy >= chrono::milliseconds(500)) {
+						lastCollisionEnemy = now;
+						Koopa* koopa = dynamic_cast<Koopa*>(x.second);
+						if (koopa->isRolling()) {
+							physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(koopa));
+							map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+							character->setVelocity(0, -400);
+						}
+						else {
+							koopa->startRolling();
+							character->setVelocity(0, -400);
+						}
+					}
 				}
 				else {
 					character->setVelocity(0, -800);
@@ -322,17 +358,34 @@ int Level::run(string lv) {
 			}
 		}
 
-		//if (objTouch[1] != nullptr && objTouch[1]->m_name == "Pipe") {
-		//	std::cout << "Teleport \n";
-		//	Pipe* pipe = dynamic_cast<Pipe*>(objTouch[1]);
-		//	pipe->teleport(character);
-		//	objTouch[1] = nullptr;
-		//}
+				if (x.first != 1) {
+					if (now - lastCollisionEnemy >= chrono::milliseconds(500) and (x.second->m_name == "Goomba" or x.second->m_name == "Koopa")) {
+						lastCollisionEnemy = now;
+						--lifeHealth;
+						if (dynamic_cast<SuperState*>(character->getState()) or dynamic_cast<FireState*>(character->getState()))
+							character->setNormalState();
+						cout << "Touch " << x.second->m_name << endl;
+						cout << "Life health: " << lifeHealth << endl;
+						SoundManager::getInstance()->playSoundKick();
+						if (lifeHealth == 0) {
+							std::cout << "Game Over \n";
+							SoundManager::getInstance()->playSoundGameOver();
+							lose();
+							return 3;
+						}
+						else {
+							character->setVelocity(0, -800);
+						}
+					}
+				}
 
-		for (auto x : objTouch) {
-			if (x != nullptr) {
-				if (x->m_name == "Coin") {
-					std::cout << "Touch " << x->m_name << std::endl;
+				if (x.second->m_name == "Flag") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
+					win();
+					return 3;
+				}
+				if (x.second->m_name == "Coin") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
 					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
@@ -349,26 +402,24 @@ int Level::run(string lv) {
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
 						character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x.second);
 					break;
 				}
 			}
 		}
-		
 
-		sf::Time elapsed = clock.restart();
-		if (elapsed.asSeconds() < deltaTime) {
-			sf::sleep(sf::seconds(deltaTime - elapsed.asSeconds()));
+		for (pair<Fireball*, GameObject*> x : Collision::getInstance()->fireball) {
+			if (x.second) {
+				if (x.second->m_name == "Goomba") {
+					physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+				}
+				else if (x.second->m_name == "Koopa") {
+					physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+				}
+			}
 		}
-
-		// Move and jump for character
-		character->checkAction(&physicsManager, fireballFactory);
-
-		/*std::cout << "Bricks size: " << bricks.size() << std::endl;
-		std::cout << "Lucky block size: " << luckyblocks.size() << std::endl;
-		std::cout << "Item size: " << items.size() << std::endl;*/
-
-		physicsManager.updatePhysics(deltaTime, map);
 
 		int charPos = (character->m_sprite).getGlobalBounds().left;
 		mainView.setCenter(charPos, HEIGHT / 2);
@@ -384,6 +435,7 @@ int Level::run(string lv) {
 		vector<Fireball*>::iterator it = fireballs.begin();
 		while (it != fireballs.end()) {
 			if ((*it)->isDeleted()) {
+				delete (*it);
 				it = fireballs.erase(it);
 			}
 			else {

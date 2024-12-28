@@ -1,7 +1,11 @@
 #pragma once
 #include "PhysicsManager.h"
 #include "SoundManager.h"
+#include "Fireball.h"
+
 using namespace std;
+
+
 
 class Character;
 
@@ -50,33 +54,6 @@ public:
 
 
 
-// Flyweight Factory
-class Fireball : public PhysicsAppliedObject {
-protected:
-
-public:
-	Fireball(const shared_ptr<sf::Texture> texture, float x, float y, int vel);
-
-	void update(float deltaTime, Map map);
-};
-
-class FireballFactory {
-private:
-	vector<Fireball*> fireballs;
-	shared_ptr<sf::Texture> texture;
-
-public:
-	FireballFactory();
-
-	Fireball* createFireball(PhysicsManager* physicsManager, float x, float y, int vel);
-
-	vector<Fireball*>& getFireballs();
-};
-
-
-
-
-
 class Character : public PhysicsAppliedObject
 {
 protected:
@@ -112,7 +89,7 @@ protected:
 	// Constant attributes
 	float maxVelocityX = -1;
 	int jumpForce = 700;
-	int inertia = 15;
+	int inertia = 20;
 	bool breakBrick = 0;
 	bool fireable = 0;
 
@@ -129,6 +106,8 @@ public:
 
 	void setState(CharacterState* newState);
 
+	void setNormalState();
+
 	void setSuperState();
 
 	void setFireState();
@@ -143,7 +122,9 @@ public:
 		return this->breakBrick;
 	}
 
-	void update(float deltaTime, Map map) override;
+	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) override;
+
+	int checkObstacle(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) override;
 
 	virtual void updateTexture();
 

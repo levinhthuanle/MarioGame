@@ -15,12 +15,14 @@ void TextureManager::loadTextures()
 
 	koopaTextures[0].loadFromFile("./Resources/Enemy/Koopas/Normal/walk.png", sf::IntRect(2, 3, 16, 23));
 	koopaTextures[1].loadFromFile("./Resources/Enemy/Koopas/Normal/walk.png", sf::IntRect(21, 2, 16, 24));
-	koopaTextures[2].loadFromFile("./Resources/Enemy/Koopas/Normal/shelled.png", sf::IntRect(2, 12, 16, 14));
-	koopaTextures[3].loadFromFile("./Resources/Enemy/Koopas/Normal/shelled.png", sf::IntRect(21, 12, 16, 14));
-	koopaTextures[4].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(2, 12, 16, 14));
-	koopaTextures[5].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(21, 12, 16, 14));
-	koopaTextures[6].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(40, 12, 16, 14));
-	koopaTextures[7].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(59, 12, 16, 14));
+	koopaTextures[2].loadFromFile("./Resources/Enemy/Koopas/Normal/walk.png", sf::IntRect(40, 3, 16, 23));
+	koopaTextures[3].loadFromFile("./Resources/Enemy/Koopas/Normal/walk.png", sf::IntRect(59, 2, 16, 24));
+	koopaTextures[4].loadFromFile("./Resources/Enemy/Koopas/Normal/shelled.png", sf::IntRect(2, 12, 16, 14));
+	koopaTextures[5].loadFromFile("./Resources/Enemy/Koopas/Normal/shelled.png", sf::IntRect(21, 12, 16, 14));
+	koopaTextures[6].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(2, 12, 16, 14));
+	koopaTextures[7].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(21, 12, 16, 14));
+	koopaTextures[8].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(40, 12, 16, 14));
+	koopaTextures[9].loadFromFile("./Resources/Enemy/Koopas/Normal/roll.png", sf::IntRect(59, 12, 16, 14));
 }
 
 sf::Texture& TextureManager::getGoombaTexture(int i)
@@ -40,11 +42,10 @@ Goomba::Goomba()
 	m_sprite.setTexture(textureManager->getGoombaTexture(0));
 }
 
-void Goomba::update(float deltaTime, Map map)
+void Goomba::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision)
 {
 	velocity.y += gravity * deltaTime;
 
-	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
 	Map& mapData = ResourcesManager::getInstance().getMap();
 
 	vector<vector<Sprite*>>& mapSprites = mapData.getSpriteGrid();
@@ -52,20 +53,21 @@ void Goomba::update(float deltaTime, Map map)
 	int x1 = round(m_sprite.getPosition().x / 54.4);
 	int y1 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x1][y1] = nullptr;
-
+	
 	std::pair<int, int> nothing = { 0, 0 };
 	vector<GameObject*> whatUJustTouch;
 	int collision = checkObstacleE(deltaTime, map, nothing, objMap, whatUJustTouch);
-	if (collision == 11 or (velocity.x == 250 and !collision and lastCollision >= 10) or whatUJustTouch[3] != nullptr) {
-		velocity.y = 0 ;
+	int collisionDir = checkObstacle(deltaTime, map, objMap, collision);
+	if (collisionDir == 11 or (velocity.x == 250 and !collisionDir and lastCollision >= 10) or whatUJustTouch[3] != nullptr) {
+		velocity.y = 0;
 		velocity.x = -250;
 	}
-	else if (collision == 12 or (velocity.x == -250 and !collision and lastCollision >= 10 or whatUJustTouch[2] != nullptr)) {
+	else if (collisionDir == 12 or (velocity.x == -250 and !collisionDir and lastCollision >= 10) or whatUJustTouch[2] != nullptr) {
 		velocity.y = 0;
 		velocity.x = 250;
 	}
 
-	lastCollision = collision;
+	lastCollision = collisionDir;
 
 	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
 	if (now - lastUpdate >= updateInterval) {
@@ -90,11 +92,15 @@ Koopa::Koopa()
 	m_sprite.setTexture(textureManager->getKoopaTexture(0));
 }
 
-void Koopa::update(float deltaTime, Map map)
+bool Koopa::isRolling()
+{
+	return rolling;
+}
+
+void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision)
 {
 	velocity.y += gravity * deltaTime;
 
-	vector<vector<GameObject*>>& objMap = ResourcesManager::getInstance().getObjMap();
 	Map& mapData = ResourcesManager::getInstance().getMap();
 
 	vector<vector<Sprite*>>& mapSprites = mapData.getSpriteGrid();
@@ -103,9 +109,11 @@ void Koopa::update(float deltaTime, Map map)
 	int y1 = round(m_sprite.getPosition().y / 54.4);
 	objMap[x1][y1] = nullptr;
 
+
 	std::pair<int, int> nothing = { 0, 0 };
 	vector<GameObject*> whatUJustTouch;
 	int collision = checkObstacleE(deltaTime, map, nothing, objMap, whatUJustTouch);
+	int collisionDir = checkObstacle(deltaTime, map, objMap, collision);
 
 	if (rolling) {
 		chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
@@ -114,15 +122,15 @@ void Koopa::update(float deltaTime, Map map)
 	}
 
 	if (!rolling) {
-		if (collision == 1 or collision == 11 or whatUJustTouch[3] != nullptr)
+		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -280;
-		else if (collision == 2 or collision == 12 or whatUJustTouch[2] != nullptr)
+		else if (collisionDir == 2 or collisionDir == 12whatUJustTouch[2] != nullptr)
 			velocity.x = 280;
 	}
 	else {
-		if (collision == 1 or collision == 11 or whatUJustTouch[3] != nullptr)
+		if (collisionDir == 1 or collisionDir == 11 whatUJustTouch[3] != nullptr)
 			velocity.x = -400;
-		else if (collision == 2 or collision == 12 or whatUJustTouch[2] != nullptr)
+		else if (collisionDir == 2 or collisionDir == 12 whatUJustTouch[3] != nullptr)
 			velocity.x = 400;
 	}
 
@@ -131,12 +139,18 @@ void Koopa::update(float deltaTime, Map map)
 		lastUpdate = now;
 
 		if (!rolling) {
-			currentTexture = (currentTexture + 1) % 2;
-			m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture));
+			if (velocity.x > 0) {
+				currentTexture = (currentTexture + 1) % 2;
+				m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture));
+			}
+			if (velocity.x < 0) {
+				currentTexture = (currentTexture + 1) % 2 + 2;
+				m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture));
+			}
 		}
 		else {
 			currentTexture = (currentTexture + 1) % 4;
-			m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture + 4));
+			m_sprite.setTexture(textureManager->getKoopaTexture(currentTexture + 6));
 		}
 	}
 
