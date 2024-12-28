@@ -124,22 +124,37 @@ bool Level::continueScreen() {
 
 int Level::win()
 {
-	sf::RenderWindow winWindow(sf::VideoMode(200, 300), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow winWindow(sf::VideoMode(700, 400), "Mario Game", sf::Style::Titlebar | sf::Style::Close);
 
-	while (winWindow.isOpen()) {
-		sf::Event event;
-		while (winWindow.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				winWindow.close();
-				return 4;
-			}
-		}
+    sf::Texture bgTexture;
+    sf::Texture textWinTexture;
+    textWinTexture.loadFromFile("Resources/Background/youwinText.png");
+    bgTexture.loadFromFile("Resources/Background/youWinBackground.jpg");
+    sf::Sprite bgSprite(bgTexture);
+    sf::Sprite textWinSprite(textWinTexture);
 
-		winWindow.clear();
-		winWindow.display();
-	}
+    // Scale the image to fit the winWindow
+    bgSprite.setScale(static_cast<float>(winWindow.getSize().x) / bgSprite.getTexture()->getSize().x,
+                      static_cast<float>(winWindow.getSize().y) / bgSprite.getTexture()->getSize().y);
+    textWinSprite.setPosition(90, 10);
+    textWinSprite.setScale(0.5, 0.5);
 
-	return 0;
+    while (winWindow.isOpen()) {
+        sf::Event event;
+        while (winWindow.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                winWindow.close();
+                return 4;
+            }
+        }
+
+        winWindow.clear();
+        winWindow.draw(bgSprite);
+        winWindow.draw(textWinSprite);
+        winWindow.display();
+    }
+
+    return 0;
 }
 
 int Level::lose()
@@ -206,7 +221,7 @@ int Level::run(string lv) {
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
-	if (lv == "1-3") {
+	if (lv == "3") {
 		character->setJumpForce(1400);
 	}
 
@@ -257,7 +272,7 @@ int Level::run(string lv) {
 			}
 		}
 
-		int view_x = character->m_sprite.getGlobalBounds().left - WIDTH / 2;
+		int view_x = character->m_sprite.getGlobalBounds().left - WIDTH;
 		if (view_x < CELL_SIZE) {
 			view_x = CELL_SIZE;
 		}
@@ -265,7 +280,7 @@ int Level::run(string lv) {
 			view_x = (objMap.size() - 1) * CELL_SIZE - window.getSize().x;
 		}
 
-		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT / 2;
+		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT;
 		if (veiw_y < CELL_SIZE) {
 			veiw_y = CELL_SIZE;
 		}
@@ -274,8 +289,8 @@ int Level::run(string lv) {
 		}
 
 		for (auto x : enemies) {
-			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + WIDTH
-				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + WIDTH) {
+			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + WIDTH * 2
+				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + HEIGHT * 2) {
 				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
 					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
 					physicsManager.addObserver(obj);
@@ -386,7 +401,6 @@ int Level::run(string lv) {
 				}
 				if (x.second->m_name == "Mushroom") {
 					std::cout << "Touch " << x.second->m_name << std::endl;
-					lifeHealth++;
 					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
@@ -443,7 +457,7 @@ int Level::run(string lv) {
 		heartBtn.draw(window);
 		if (lifeHealth >= 2) heart1Btn.draw(window);
 		else heartWhiteBtn.draw(window);
-		if (lifeHealth == 3) heart2Btn.draw(window);
+		if (lifeHealth >= 3) heart2Btn.draw(window);
 		else heartwhite2Btn.draw(window);
 
 		window.display();
