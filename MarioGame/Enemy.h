@@ -37,6 +37,8 @@ protected:
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
 	const chrono::milliseconds updateInterval{ 100 };
 
+	int lastCollision = 0;
+
 public:
 	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) = 0;
 
@@ -46,7 +48,6 @@ public:
 class Goomba : public Enemy
 {
 private:
-	int lastCollision = 0;
 
 public:
 	Goomba();

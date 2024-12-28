@@ -119,17 +119,18 @@ void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap
 	}
 
 	if (!rolling) {
-		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
+		if ((velocity.x >0 and !collisionDir and lastCollision >= 10) or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -280;
-		else if (collisionDir == 2 or collisionDir == 12 or whatUJustTouch[2] != nullptr)
+		else if ((velocity.x < 0 and !collisionDir and lastCollision >= 10) or collisionDir == 12 or whatUJustTouch[2] != nullptr)
 			velocity.x = 280;
 	}
 	else {
-		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
+		if ((velocity.x > 0 and !collisionDir and lastCollision >= 10) or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -400;
-		else if (collisionDir == 2 or collisionDir == 12 or whatUJustTouch[3] != nullptr)
+		else if ((velocity.x < 0 and !collisionDir and lastCollision >= 10) or collisionDir == 12 or whatUJustTouch[3] != nullptr)
 			velocity.x = 400;
 	}
+	lastCollision = collisionDir;
 
 	chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
 	if (now - lastUpdate >= updateInterval) {

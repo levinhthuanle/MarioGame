@@ -457,13 +457,10 @@ int Level::run(string lv) {
 
 		for (pair<Fireball*, GameObject*> x : Collision::getInstance()->fireball) {
 			if (x.second) {
-				if (x.second->m_name == "Goomba") {
+				if (x.second->m_name == "Goomba" or x.second->m_name == "Koopa") {
 					physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
 					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
-				}
-				else if (x.second->m_name == "Koopa") {
-					physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(x.second));
-					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
+
 				}
 			}
 		}
