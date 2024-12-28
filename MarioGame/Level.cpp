@@ -119,7 +119,7 @@ int Level::selectCharacter()
 }
 
 bool Level::continueScreen() {
-	return 1;
+	return 0;
 }
 
 int Level::win()
@@ -189,18 +189,24 @@ int Level::run(string lv) {
 	std::cout << "Start play game with level " << lv << std::endl;
 	selectCharacter();
 
-	sf::Image sketch;
-
-	if (!sketch.loadFromFile("Resources/Continue/" + lv + ".png") or !continueScreen()) {
-		convertSketch("Resources/Stages/" + lv + "/sketch_edited.png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+	Image sketch;
+	if (!sketch.loadFromFile("./Resources/Continue/" + lv + ".png") or !continueScreen()) {
+		convertSketch("./Resources/Stages/" + lv + "/sketch_edited.png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
 	}
 	else {
-		convertSketch("Resources/Continue/" + lv + ".png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+		convertSketch("./Resources/Continue/" + lv + ".png", map, objMap, gameObjects, bricks, luckyblocks, enemies, items, character);
+	}
+	
+
+	for (auto x : enemies) {
+		PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
+		if (obj)
+			physicsManager.addObserver(obj);
 	}
 
 	/*map.removeGameObj(objMap, bricks, luckyblocks, items, 17, 10);*/
 
-	if (lv == "3") {
+	if (lv == "1-3") {
 		character->setJumpForce(1400);
 	}
 
@@ -219,7 +225,7 @@ int Level::run(string lv) {
 	TextRemake pointText("Point: " + std::to_string(point), 25, 170, 50);
 	pointText.setFillColor(sf::Color::White);
 
-	
+
 	sf::Event event;
 
 	sf::Clock clock;
@@ -236,9 +242,7 @@ int Level::run(string lv) {
 		pointText.setText("Point: " + std::to_string(point));
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
-				int charX = round(character->m_sprite.getGlobalBounds().left / CELL_SIZE);
-				int charY = round(character->m_sprite.getGlobalBounds().top / CELL_SIZE) - 1;
-				convertToSketch(objMap, map.getMap(), "Resources/Continue/" + lv + ".png", character);
+				convertToSketch(objMap, map.getMap(), "./Resources/Continue/" + lv + ".png", character);
 				window.close();
 				return 4;
 			}
@@ -253,7 +257,7 @@ int Level::run(string lv) {
 			}
 		}
 
-		int view_x = character->m_sprite.getGlobalBounds().left - 0.75*WIDTH;
+		int view_x = character->m_sprite.getGlobalBounds().left - WIDTH / 2;
 		if (view_x < CELL_SIZE) {
 			view_x = CELL_SIZE;
 		}
@@ -261,7 +265,7 @@ int Level::run(string lv) {
 			view_x = (objMap.size() - 1) * CELL_SIZE - window.getSize().x;
 		}
 
-		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT*0.75;
+		int veiw_y = character->m_sprite.getGlobalBounds().top - HEIGHT / 2;
 		if (veiw_y < CELL_SIZE) {
 			veiw_y = CELL_SIZE;
 		}
@@ -270,14 +274,14 @@ int Level::run(string lv) {
 		}
 
 		for (auto x : enemies) {
-			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + 1.5*WIDTH
-				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + 1.5*WIDTH) {
+			if (x->m_sprite.getGlobalBounds().left >= view_x && x->m_sprite.getGlobalBounds().left <= view_x + WIDTH
+				&& x->m_sprite.getGlobalBounds().top >= veiw_y && x->m_sprite.getGlobalBounds().top <= veiw_y + WIDTH) {
 				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
 					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
 					physicsManager.addObserver(obj);
 				}
 			}
-			else {	
+			else {
 				if (dynamic_cast<PhysicsAppliedObject*>(x)) {
 					PhysicsAppliedObject* obj = dynamic_cast<PhysicsAppliedObject*>(x);
 					physicsManager.removeObserver(obj);
@@ -296,7 +300,7 @@ int Level::run(string lv) {
 		physicsManager.updatePhysics(deltaTime, map, objMap, Collision::getInstance());
 
 		for (pair<int, GameObject*> x : Collision::getInstance()->character) {
-			if (x.second) {	
+			if (x.second) {
 				if (x.first == 0) {
 					cout << x.second->m_name << endl;
 					if (x.second->m_name == "Lucky Block") {
@@ -346,17 +350,6 @@ int Level::run(string lv) {
 						}
 					}
 				}
-				else {
-					character->setVelocity(0, -800);
-				}
-			}
-			else if (objTouch[1]->m_name == "Goomba") {
-				physicsManager.removeObserver(dynamic_cast<PhysicsObserver*>(objTouch[1]));
-				map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, objTouch[1]);
-				character->setVelocity(0, -400);
-				cout<<enemies.size()<<endl;
-			}
-		}
 
 				if (x.first != 1) {
 					if (now - lastCollisionEnemy >= chrono::milliseconds(500) and (x.second->m_name == "Goomba" or x.second->m_name == "Koopa")) {
@@ -388,13 +381,13 @@ int Level::run(string lv) {
 					std::cout << "Touch " << x.second->m_name << std::endl;
 					point += 5;
 					SoundManager::getInstance()->playSoundCoin();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					break;
 				}
-				if (x->m_name == "Mushroom") {
-					std::cout << "Touch " << x->m_name << std::endl;
+				if (x.second->m_name == "Mushroom") {
+					std::cout << "Touch " << x.second->m_name << std::endl;
 					lifeHealth++;
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
 
@@ -402,7 +395,7 @@ int Level::run(string lv) {
 						character->setSuperState();
 					else if (dynamic_cast<SuperState*>(character->getState()))
 						character->setFireState();
-					map.removeGameObj(objMap, bricks, luckyblocks, items,enemies, x.second);
+					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					break;
 				}
 			}
@@ -444,21 +437,14 @@ int Level::run(string lv) {
 			}
 		}
 
-		//for (Fireball* fireball : fireballs) {
-		//	if (fireball->isDeleted())
-		//		fireballs.erase(remove(fireballs.begin(), fireballs.end(), fireball), fireballs.end());
-		//	else
-		//		window.draw(fireball->m_sprite);
-		//}
-
 		window.setView(uiView);
-		pauseBtn.draw(window, 100, 50); 
+		pauseBtn.draw(window, 100, 50);
 		pointText.draw(window);
 		heartBtn.draw(window);
 		if (lifeHealth >= 2) heart1Btn.draw(window);
-			else heartWhiteBtn.draw(window);
+		else heartWhiteBtn.draw(window);
 		if (lifeHealth == 3) heart2Btn.draw(window);
-			else heartwhite2Btn.draw(window);
+		else heartwhite2Btn.draw(window);
 
 		window.display();
 	}

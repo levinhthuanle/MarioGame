@@ -56,8 +56,7 @@ void Goomba::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMa
 	
 	std::pair<int, int> nothing = { 0, 0 };
 	vector<GameObject*> whatUJustTouch;
-	int collision = checkObstacleE(deltaTime, map, nothing, objMap, whatUJustTouch);
-	int collisionDir = checkObstacle(deltaTime, map, objMap, collision);
+	int collisionDir = checkObstacleE(deltaTime, map, objMap, collision, whatUJustTouch);
 	if (collisionDir == 11 or (velocity.x == 250 and !collisionDir and lastCollision >= 10) or whatUJustTouch[3] != nullptr) {
 		velocity.y = 0;
 		velocity.x = -250;
@@ -112,8 +111,7 @@ void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap
 
 	std::pair<int, int> nothing = { 0, 0 };
 	vector<GameObject*> whatUJustTouch;
-	int collision = checkObstacleE(deltaTime, map, nothing, objMap, whatUJustTouch);
-	int collisionDir = checkObstacle(deltaTime, map, objMap, collision);
+	int collisionDir = checkObstacleE(deltaTime, map, objMap, collision, whatUJustTouch);
 
 	if (rolling) {
 		chrono::time_point<chrono::high_resolution_clock> now = chrono::high_resolution_clock::now();
@@ -124,13 +122,13 @@ void Koopa::update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap
 	if (!rolling) {
 		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -280;
-		else if (collisionDir == 2 or collisionDir == 12whatUJustTouch[2] != nullptr)
+		else if (collisionDir == 2 or collisionDir == 12 or whatUJustTouch[2] != nullptr)
 			velocity.x = 280;
 	}
 	else {
-		if (collisionDir == 1 or collisionDir == 11 whatUJustTouch[3] != nullptr)
+		if (collisionDir == 1 or collisionDir == 11 or whatUJustTouch[3] != nullptr)
 			velocity.x = -400;
-		else if (collisionDir == 2 or collisionDir == 12 whatUJustTouch[3] != nullptr)
+		else if (collisionDir == 2 or collisionDir == 12 or whatUJustTouch[3] != nullptr)
 			velocity.x = 400;
 	}
 

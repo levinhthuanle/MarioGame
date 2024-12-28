@@ -202,13 +202,10 @@ int PhysicsAppliedObject::checkObstacle(float deltaTime, Map map, std::pair<int,
     return ground;
 }
 
-int PhysicsAppliedObject::checkObstacleE(float deltaTime, Map map, std::pair<int, int>& pos, vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch)
+int PhysicsAppliedObject::checkObstacleE(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision, vector<GameObject*>& whatUJustTouch)
 {
     const vector<vector<Cell>>& grids = map.getMap();
-    //const vector<vector<Sprite>>& sprites = map.getSpriteGrid();
 
-    // Changing these float to int would create gaps before collisions.
-    // Consult Phan Tan Dat before change it. Please!
     float x = m_sprite.getPosition().x;
     float y = m_sprite.getPosition().y;
 
@@ -229,8 +226,6 @@ int PhysicsAppliedObject::checkObstacleE(float deltaTime, Map map, std::pair<int
     float futureMidX = (futureLeft + futureRight) / 2;
     float futureMidY = (futureTop + futureBottom) / 2;
 
-    // cout << left << " " << right << " " << top << " " << bottom << endl;
-
     // Check bounds to prevent out-of-range access
     if (left < 0 || right >= grids.size() || top < 0 || bottom >= grids[0].size()) {
         cout << "Out of bounds access detected!" << endl;
@@ -244,46 +239,32 @@ int PhysicsAppliedObject::checkObstacleE(float deltaTime, Map map, std::pair<int
     whatUJustTouch.push_back(objMap[floor(futureLeft)][int(midY)]); //left
     whatUJustTouch.push_back(objMap[floor(futureRight)][int(midY)]); //right
 
-
     // right
-    if (grids[floor(futureRight)][int(top)].getType() != 0
-        or grids[floor(futureRight)][int(bottom)].getType() != 0
-        or grids[floor(futureRight)][int(midY)].getType() != 0) {
+    if (grids[int(futureRight)][int(top)].getType() != 0
+        or grids[int(futureRight)][int(midY)].getType() != 0
+        or grids[int(futureRight)][int(bottom)].getType() != 0) {
         velocity.x = 0;
         ans += 1;
     }
     // left
-    if (grids[floor(futureLeft)][int(top)].getType() != 0
-        or grids[floor(futureLeft)][int(bottom)].getType() != 0
-        or grids[floor(futureLeft)][int(midY)].getType() != 0) {
+    if (grids[int(futureLeft)][int(top)].getType() != 0
+        or grids[int(futureLeft)][int(midY)].getType() != 0
+        or grids[int(futureLeft)][int(bottom)].getType() != 0) {
         velocity.x = 0;
         ans += 2;
     }
     // down
-    if (grids[int(left)][floor(futureBottom)].getType() != 0
-        or grids[int(right)][floor(futureBottom)].getType() != 0
-        or grids[int(midX)][floor(futureBottom)].getType() != 0) {
+    if (grids[int(left)][int(futureBottom)].getType() != 0
+        or grids[int(right)][int(futureBottom)].getType() != 0
+        or grids[int(midX)][int(futureBottom)].getType() != 0) {
         velocity.y = 0;
         ans += 10;
     }
     // up
-    if (grids[int(left)][floor(futureTop)].getType() != 0
-        or grids[int(right)][floor(futureTop)].getType() != 0
-        or grids[int(midX)][floor(futureTop)].getType() != 0) {
+    if (grids[int(left)][int(futureTop)].getType() != 0
+        or grids[int(right)][int(futureTop)].getType() != 0
+        or grids[int(midX)][int(futureTop)].getType() != 0) {
         velocity.y = 0;
-
-        // 1 brick
-        // 2 lucky box
-        //if (grids[x][y].getType())
-        std::string type = "Brick";
-        if (grids[int(midX)][floor(futureTop)].getType() == 2)
-            type = "Lucky Box";
-        if (grids[int(midX)][floor(futureTop)].getType() == 0)
-            type = "Nothing";
-        std::cout << "Try to break " << type << std::endl;
-        pos.first = int(midX);
-        pos.second = floor(futureTop);
-        return grids[int(midX)][floor(futureTop)].getType();
     }
     return ans;
 }

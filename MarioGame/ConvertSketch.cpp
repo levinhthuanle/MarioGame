@@ -196,7 +196,7 @@ void convertSketch(string fileName, Map& new_map, vector<vector<GameObject*>>& o
             }
             if (color == Color(160, 160, 160)) {
                 character->m_sprite.setPosition(x* CELL_SIZE, y* CELL_SIZE);
-                character->setSuperState();
+                character->setFireState();
                 objMap[x][y] = nullptr;
             }
         }
@@ -241,10 +241,10 @@ void convertToSketch(const vector<vector<GameObject*>>& objMap, const vector<vec
         for (int x = 0; x < width; ++x) {
             if (x == charPosX && y == charPosY) {
                 if (dynamic_cast<SuperState*>(character->getState())) {
-					sketch.setPixel(x, y, sf::Color(160, 160, 160));
+					sketch.setPixel(x, y, sf::Color(83, 83, 83));
 				}
                 else if (dynamic_cast<FireState*>(character->getState())) {
-					sketch.setPixel(x, y, sf::Color(83, 83, 83));
+					sketch.setPixel(x, y, sf::Color(160, 160, 160));
 				}
                 else {
                     sketch.setPixel(x, y, sf::Color(85, 42, 83));

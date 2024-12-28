@@ -67,9 +67,7 @@ protected:
 public:
 	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) override;
 
-	int checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos);
-
-	int checkObstacleE(float deltaTime, Map map, std::pair<int, int>& pos, vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch);
+	int checkObstacleE(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision, vector<GameObject*>& whatUJustTouch);
 
 	int checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos,vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch);
 
