@@ -395,6 +395,7 @@ void Character::fire(PhysicsManager* physicsManager, FireballFactory& fireballFa
 		chrono::high_resolution_clock::time_point now = chrono::high_resolution_clock::now();
 		if (now - lastFire >= chrono::milliseconds(1000)) {
 			lastFire = now;
+			SoundManager::getInstance()->playSoundFireBall();
 
 			sf::FloatRect b = m_sprite.getGlobalBounds();
 			cout << b.width << endl;
@@ -501,41 +502,42 @@ Luigi::Luigi()
 	textures[11].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(3, 16, 14, 16));
 	textures[12].loadFromFile("./Resources/Character/Luigi/SmallLuigi/slide.png", sf::IntRect(24, 16, 14, 16));
 
-	superTextures[0].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigStand.png", sf::IntRect(3, 1, 16, 31));
-	superTextures[1].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigStand.png", sf::IntRect(24, 1, 16, 31));
-	superTextures[2].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigCrouch.png", sf::IntRect(3, 1, 16, 31));
-	superTextures[3].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigCrouch.png", sf::IntRect(24, 1, 16, 31));
-	superTextures[4].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigJump.png", sf::IntRect(3, 1, 16, 31));
-	superTextures[5].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigJump.png", sf::IntRect(24, 1, 16, 31));
-	superTextures[6].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigSlide.png", sf::IntRect(3, 1, 16, 31));
-	superTextures[7].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigSlide.png", sf::IntRect(24, 1, 16, 31));
-	superTextures[8].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(3, 1, 16, 31));
-	superTextures[9].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(24, 1, 16, 31));
-	superTextures[10].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(45, 1, 16, 31));
-	superTextures[11].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(66, 1, 16, 31));
-	superTextures[12].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(87, 1, 16, 31));
-	superTextures[13].loadFromFile("./Resources/Character/Luigi/BigLuigi/bigWalk.png", sf::IntRect(108, 1, 16, 31));
+	superTextures[0].loadFromFile("./Resources/Character/Luigi/BigLuigi/stand.png", sf::IntRect(3, 1, 16, 31));
+	superTextures[1].loadFromFile("./Resources/Character/Luigi/BigLuigi/stand.png", sf::IntRect(24, 1, 16, 31));
+	superTextures[2].loadFromFile("./Resources/Character/Luigi/BigLuigi/crouch.png", sf::IntRect(3, 1, 16, 31));
+	superTextures[3].loadFromFile("./Resources/Character/Luigi/BigLuigi/crouch.png", sf::IntRect(24, 1, 16, 31));
+	superTextures[4].loadFromFile("./Resources/Character/Luigi/BigLuigi/jump.png", sf::IntRect(3, 1, 16, 31));
+	superTextures[5].loadFromFile("./Resources/Character/Luigi/BigLuigi/jump.png", sf::IntRect(24, 1, 16, 31));
+	superTextures[6].loadFromFile("./Resources/Character/Luigi/BigLuigi/slide.png", sf::IntRect(3, 1, 16, 31));
+	superTextures[7].loadFromFile("./Resources/Character/Luigi/BigLuigi/slide.png", sf::IntRect(24, 1, 16, 31));
+	superTextures[8].loadFromFile("./Resources/Character/Luigi/BigLuigi/walk.png", sf::IntRect(3, 1, 16, 31));
+	superTextures[9].loadFromFile("./Resources/Character/Luigi/BigLuigi/walk.png", sf::IntRect(24, 1, 16, 31));
+	superTextures[10].loadFromFile("./Resources/Character/Luigi/BigLuigi/walk.png", sf::IntRect(45, 1, 16, 31));
+	superTextures[11].loadFromFile("./Resources/Character/Luigi/BigLuigi/walk.png", sf::IntRect(66, 1, 16, 31));
+	superTextures[12].loadFromFile("./Resources/Character/Luigi/BigLuigi/walk.png", sf::IntRect(87, 1, 16, 31));
+	superTextures[13].loadFromFile("./Resources/Character/Luigi/BigLuigi/walk.png", sf::IntRect(108, 1, 16, 31));
 
-	fireTextures[0].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireStand.png", sf::IntRect(3, 1, 16, 31));
-	fireTextures[1].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireStand.png", sf::IntRect(24, 1, 16, 31));
-	fireTextures[2].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireCrouch.png", sf::IntRect(3, 1, 16, 31));
-	fireTextures[3].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireCrouch.png", sf::IntRect(24, 1, 16, 31));
-	fireTextures[4].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireJump.png", sf::IntRect(3, 1, 16, 31));
-	fireTextures[5].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireJump.png", sf::IntRect(24, 1, 16, 31));
-	fireTextures[6].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireSlide.png", sf::IntRect(3, 1, 16, 31));
-	fireTextures[7].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireSlide.png", sf::IntRect(24, 1, 16, 31));
-	fireTextures[8].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(3, 1, 16, 31));
-	fireTextures[9].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(24, 1, 16, 31));
-	fireTextures[10].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(45, 1, 16, 31));
-	fireTextures[11].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(66, 1, 16, 31));
-	fireTextures[12].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(87, 1, 16, 31));
-	fireTextures[13].loadFromFile("./Resources/Character/Luigi/FireLuigi/fireWalk.png", sf::IntRect(108, 1, 16, 31));
+	fireTextures[0].loadFromFile("./Resources/Character/Luigi/FireLuigi/stand.png", sf::IntRect(3, 1, 16, 31));
+	fireTextures[1].loadFromFile("./Resources/Character/Luigi/FireLuigi/stand.png", sf::IntRect(24, 1, 16, 31));
+	fireTextures[2].loadFromFile("./Resources/Character/Luigi/FireLuigi/crouch.png", sf::IntRect(3, 1, 16, 31));
+	fireTextures[3].loadFromFile("./Resources/Character/Luigi/FireLuigi/crouch.png", sf::IntRect(24, 1, 16, 31));
+	fireTextures[4].loadFromFile("./Resources/Character/Luigi/FireLuigi/jump.png", sf::IntRect(3, 1, 16, 31));
+	fireTextures[5].loadFromFile("./Resources/Character/Luigi/FireLuigi/jump.png", sf::IntRect(24, 1, 16, 31));
+	fireTextures[6].loadFromFile("./Resources/Character/Luigi/FireLuigi/slide.png", sf::IntRect(3, 1, 16, 31));
+	fireTextures[7].loadFromFile("./Resources/Character/Luigi/FireLuigi/slide.png", sf::IntRect(24, 1, 16, 31));
+	fireTextures[8].loadFromFile("./Resources/Character/Luigi/FireLuigi/walk.png", sf::IntRect(3, 1, 16, 31));
+	fireTextures[9].loadFromFile("./Resources/Character/Luigi/FireLuigi/walk.png", sf::IntRect(24, 1, 16, 31));
+	fireTextures[10].loadFromFile("./Resources/Character/Luigi/FireLuigi/walk.png", sf::IntRect(45, 1, 16, 31));
+	fireTextures[11].loadFromFile("./Resources/Character/Luigi/FireLuigi/walk.png", sf::IntRect(66, 1, 16, 31));
+	fireTextures[12].loadFromFile("./Resources/Character/Luigi/FireLuigi/walk.png", sf::IntRect(87, 1, 16, 31));
+	fireTextures[13].loadFromFile("./Resources/Character/Luigi/FireLuigi/walk.png", sf::IntRect(108, 1, 16, 31));
 }
 
 void Luigi::jump()
 {
 	if (!jumping) {
 		jumping = true;
-		velocity.y = -jumpForce-200 ;
+		SoundManager::getInstance()->playSoundJumpSmall();
+		velocity.y = -jumpForce - 200;
 	}
 }
