@@ -72,4 +72,6 @@ public:
 	int checkObstacle(float deltaTime, Map map, std::pair<int, int>& pos,vector<vector<GameObject*>>& objMap, vector<GameObject*>& whatUJustTouch);
 
 	virtual int checkObstacle(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision);
+
+	virtual ~PhysicsAppliedObject() = default;
 };
