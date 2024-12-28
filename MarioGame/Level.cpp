@@ -386,7 +386,6 @@ int Level::run(string lv) {
 				}
 				if (x.second->m_name == "Mushroom") {
 					std::cout << "Touch " << x.second->m_name << std::endl;
-					lifeHealth++;
 					map.removeGameObj(objMap, bricks, luckyblocks, items, enemies, x.second);
 					if (lifeHealth < 3) lifeHealth++;
 					SoundManager::getInstance()->playSoundFireworks();
@@ -443,7 +442,7 @@ int Level::run(string lv) {
 		heartBtn.draw(window);
 		if (lifeHealth >= 2) heart1Btn.draw(window);
 		else heartWhiteBtn.draw(window);
-		if (lifeHealth == 3) heart2Btn.draw(window);
+		if (lifeHealth >= 3) heart2Btn.draw(window);
 		else heartwhite2Btn.draw(window);
 
 		window.display();
