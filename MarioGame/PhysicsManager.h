@@ -68,6 +68,4 @@ public:
 	void update(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision) override;
 
 	virtual int checkObstacle(float deltaTime, Map map, vector<vector<GameObject*>>& objMap, Collision* collision);
-
-	bool isObjectCollision(GameObject* gameObject);
 };

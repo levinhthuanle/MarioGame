@@ -462,8 +462,6 @@ Mario::Mario()
 	fireTextures[12].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(87, 1, 16, 31));
 	fireTextures[13].loadFromFile("./Resources/Character/Mario/FireMario/fireWalk.png", sf::IntRect(108, 1, 16, 31));
 
-	toSuper[0].loadFromFile("./Resources/Character/Mario/FireMario/fireShoot.png", sf::IntRect(1, 1, 20, 30));
-
 	m_sprite.setTexture(textures[0]);
 }
 

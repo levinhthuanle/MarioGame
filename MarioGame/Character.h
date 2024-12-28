@@ -20,7 +20,7 @@ public:
 	virtual void crouch(Character& character) = 0;
 };
 
-class NormalState : public CharacterState
+class NormalState : public CharacterState	
 {
 public:
 	NormalState(Character& character);
@@ -74,11 +74,6 @@ protected:
 	// 14-17: climb
 	vector<sf::Texture> superTextures = vector<sf::Texture>(14);
 	vector<sf::Texture> fireTextures = vector<sf::Texture>(16);
-
-	vector<sf::Texture> toSuper = vector<sf::Texture>(10);
-	vector<sf::Texture> toFire = vector<sf::Texture>(10);
-	vector<sf::Texture> Super2Small = vector<sf::Texture>(10);
-	vector<sf::Texture> Fire2Small = vector<sf::Texture>(10);
 
 	// Texture's time control attributes
 	chrono::high_resolution_clock::time_point lastUpdate = chrono::high_resolution_clock::now();
