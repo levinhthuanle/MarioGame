@@ -269,13 +269,6 @@ int PhysicsAppliedObject::checkObstacleE(float deltaTime, Map map, vector<vector
     return ans;
 }
 
-bool PhysicsAppliedObject::isObjectCollision(GameObject* gameObject)
-{
-	if (m_sprite.getGlobalBounds().intersects(gameObject->m_sprite.getGlobalBounds()))
-		return true;
-	return false;
-}
-
 bool PhysicsObserver::isDeleted()
 {
     return deleteMark;
